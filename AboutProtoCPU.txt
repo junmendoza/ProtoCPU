@@ -1,0 +1,10 @@
+
+ProtoCPU is a testbed CPU with the following goals:
+
+1. Implement a softcore CPU on FPGA
+2. Implement a RISC assembly language to program ProtocPU
+3. Prototype Associativity and multi-language support on ProtoCPU
+ 
+
+
+ProtoCPU technical documentation at: https://docs.google.com/document/d/1PZ4gM4Dv4kgjbD5brNstjvaUqR-JI9IskjNmZ4EuOH0/edit

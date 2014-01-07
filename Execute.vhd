@@ -34,13 +34,12 @@ use cpu_types.ALL;
 entity Execute is
 	Port( 
 			clock : in STD_LOGIC;
-			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			exec_alu : in STD_LOGIC; 
-			exec_logical : in STD_LOGIC; 
-			exec_branch : in STD_LOGIC; 
-			exec_mem : in STD_LOGIC; 
-			exec_system : in STD_LOGIC; 
-			cmd_id : in STD_LOGIC_VECTOR(15 downto 0); 
+			instruction : in STD_LOGIC_VECTOR(15 downto 0); 
+			exec_alu : in STD_LOGIC_VECTOR(15 downto 0); 
+			exec_logical : in STD_LOGIC_VECTOR(15 downto 0); 
+			exec_branch : in STD_LOGIC_VECTOR(15 downto 0); 
+			exec_mem : in STD_LOGIC_VECTOR(15 downto 0); 
+			exec_system : in STD_LOGIC_VECTOR(15 downto 0); 
 			nextpc : out STD_LOGIC;
 			endprogram : out STD_LOGIC;
 			memregion_register : inout t_MemRegister_15_32
@@ -59,7 +58,6 @@ architecture Behavioral of Execute is
 	component ALU_Select is
 		Port( 
 				clock : in STD_LOGIC;
-				exec : in STD_LOGIC; 
 				alu_exec_sel : in STD_LOGIC_VECTOR(15 downto 0);
 				alu_exec_add : out STD_LOGIC;
 				alu_exec_sub : out STD_LOGIC;
@@ -76,12 +74,13 @@ architecture Behavioral of Execute is
 				vB : in STD_LOGIC_VECTOR (31 downto 0);
 				vS : out STD_LOGIC_VECTOR (31 downto 0)
 			 );
-	end alu_adder32;
+	end component alu_adder32;
 	
 begin
 
 	-- ALU component mapping
-	ALU : ALU_Select port map(clock, exec_alu, cmd_id, add, sub, mul, div);
+	-- Select the ALU command, given the 
+	ALU : ALU_Select port map(clock, cmd_id, add, sub, mul, div);
 	--ALU_Add32 : alu_adder32 port map(clock, add, )
 	
 	-- Logical component mapping

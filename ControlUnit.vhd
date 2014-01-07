@@ -69,25 +69,23 @@ architecture Behavioral of ControlUnit is
 		Port( 
 				clock : in STD_LOGIC;
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				exec_alu : out STD_LOGIC; 
-				exec_logical : out STD_LOGIC; 
-				exec_branch : out STD_LOGIC; 
-				exec_mem : out STD_LOGIC; 
-				exec_system : out STD_LOGIC; 
-				command : out STD_LOGIC_VECTOR(15 downto 0)
+				exec_alu : out STD_LOGIC_VECTOR(15 downto 0); 
+				exec_logical : out STD_LOGIC_VECTOR(15 downto 0); 
+				exec_branch : out STD_LOGIC_VECTOR(15 downto 0); 
+				exec_mem : out STD_LOGIC_VECTOR(15 downto 0); 
+				exec_system : out STD_LOGIC_VECTOR(15 downto 0); 
 			 );
 	end component Decode;
 	
 	component Execute is  
 		Port( 
 				clock : in STD_LOGIC;
-				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				exec_alu : in STD_LOGIC; 
-				exec_logical : in STD_LOGIC; 
-				exec_branch : in STD_LOGIC; 
-				exec_mem : in STD_LOGIC; 
-				exec_system : in STD_LOGIC; 
-				cmd_id : in STD_LOGIC_VECTOR(15 downto 0); 
+				instruction : in STD_LOGIC_VECTOR(15 downto 0); 
+				exec_alu : in STD_LOGIC_VECTOR(15 downto 0); 
+				exec_logical : in STD_LOGIC_VECTOR(15 downto 0); 
+				exec_branch : in STD_LOGIC_VECTOR(15 downto 0); 
+				exec_mem : in STD_LOGIC_VECTOR(15 downto 0); 
+				exec_system : in STD_LOGIC_VECTOR(15 downto 0); 
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC;
 				memregion_register : inout t_MemRegister_15_32
@@ -127,12 +125,11 @@ architecture Behavioral of ControlUnit is
 	signal R15 : STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- Command signals
-	signal execute_alu  		: STD_LOGIC;
-	signal execute_logical  : STD_LOGIC;
-	signal execute_branch  	: STD_LOGIC;
-	signal execute_mem  		: STD_LOGIC;
-	signal execute_system  	: STD_LOGIC;
-	signal cmd_id 				: STD_LOGIC_VECTOR(15 downto 0);
+	signal execute_alu  		: STD_LOGIC_VECTOR(15 downto 0);
+	signal execute_logical  : STD_LOGIC_VECTOR(15 downto 0);
+	signal execute_branch  	: STD_LOGIC_VECTOR(15 downto 0);
+	signal execute_mem  		: STD_LOGIC_VECTOR(15 downto 0);
+	signal execute_system  	: STD_LOGIC_VECTOR(15 downto 0);
 
 	
 	------------------------------------
@@ -167,8 +164,7 @@ begin
 		execute_logical,
 		execute_branch,
 		execute_mem,
-		execute_system,
-		cmd_id
+		execute_system
 	);
 	
 	ExecuteCommand: Execute port map
@@ -180,7 +176,6 @@ begin
 		execute_branch,
 		execute_mem,
 		execute_system,
-		cmd_id,
 		endexecution, 
 		exec_getpc,
 		

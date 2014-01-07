@@ -33,7 +33,6 @@ use cpu_types.ALL;
 entity ALU_Select is
 	Port( 
 			clock : in STD_LOGIC;
-			exec : in STD_LOGIC; 
 			alu_exec_sel : in STD_LOGIC_VECTOR(15 downto 0);
 			alu_exec_add : out STD_LOGIC;
 			alu_exec_sub : out STD_LOGIC;
@@ -46,11 +45,12 @@ architecture Behavioral of ALU_Select is
 
 begin
 
-	sel : process(exec)
+	sel : process(alu_exec_sel)
 	begin
+	
 		ClockSync : if rising_edge(clock) then
 
-		case_sel : case alu_exec_sel is
+			case_sel : case alu_exec_sel is
 			
 				when alu_add =>
 					alu_exec_add <= '1';

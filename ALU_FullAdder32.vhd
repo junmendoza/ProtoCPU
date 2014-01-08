@@ -22,16 +22,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity alu_adder32 is
 	Port( 
-			clock : in STD_LOGIC;
 			exec_add : in STD_LOGIC;
 			vA : in STD_LOGIC_VECTOR (31 downto 0);
 			vB : in STD_LOGIC_VECTOR (31 downto 0);
@@ -49,12 +48,10 @@ architecture Behavioral of alu_adder32 is
 begin
 		proc_add : process(exec_add)
 		begin
-			ClockSync : if rising_edge(clock) then
-				op1 <= to_integer(vA);
-				op2 <= to_integer(vB);
-				op3 <= op1 + op2;	
-				vS <= conv_std_logic_vector(op3, 32);
-			end if ClockSync;
+			op1 <= to_integer(unsigned(vA));
+			op2 <= to_integer(unsigned(vB));
+			op3 <= op1 + op2;	
+			vS <= std_logic_vector(to_unsigned(op3, 32));
 		end process proc_add;
 		
 end Behavioral;

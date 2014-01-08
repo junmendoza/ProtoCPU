@@ -32,11 +32,11 @@ use IEEE.NUMERIC_STD.ALL;
 use cpu_types.ALL;
 
 entity ControlUnit is
-    Port ( 
-		clock : in STD_LOGIC;
-		reset : in STD_LOGIC;
-		result : out STD_LOGIC
-			);
+    Port( 
+			clock : in STD_LOGIC;
+			reset : in STD_LOGIC;
+			result : out STD_LOGIC
+		  );
 			
 end ControlUnit;
 
@@ -58,7 +58,8 @@ architecture Behavioral of ControlUnit is
 	-- Component definitions 
 	------------------------------------
 	component Fetch is 
-		Port( clock : in STD_LOGIC; 
+		Port( 
+				clock : in STD_LOGIC; 
 				pc : in STD_LOGIC_VECTOR(31 downto 0);
 				programdata : in t_MemProgramData_32_32;
 				instr : out STD_LOGIC_VECTOR(31 downto 0)
@@ -69,23 +70,62 @@ architecture Behavioral of ControlUnit is
 		Port( 
 				clock : in STD_LOGIC;
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				exec_alu : out STD_LOGIC_VECTOR(15 downto 0); 
-				exec_logical : out STD_LOGIC_VECTOR(15 downto 0); 
-				exec_branch : out STD_LOGIC_VECTOR(15 downto 0); 
-				exec_mem : out STD_LOGIC_VECTOR(15 downto 0); 
-				exec_system : out STD_LOGIC_VECTOR(15 downto 0); 
+				memregion_register : in t_MemRegister_15_32;
+				alu_add  : out STD_LOGIC;
+				alu_sub  : out STD_LOGIC;
+				alu_mul  : out STD_LOGIC;
+				alu_div  :out STD_LOGIC;
+				alu_shl  : out STD_LOGIC;
+				alu_shr  : out STD_LOGIC;
+				logic_and  : out STD_LOGIC;
+				logic_nand : out STD_LOGIC;
+				logic_or   : out STD_LOGIC;
+				logic_nor  : out STD_LOGIC;
+				logic_xor  : out STD_LOGIC;
+				logic_xnor : out STD_LOGIC;
+				logic_not  : out STD_LOGIC;
+				mem_mov  : out STD_LOGIC;
+				mem_ldr  : out STD_LOGIC;
+				mem_str  : out STD_LOGIC;
+				mem_push : out STD_LOGIC;
+				mem_pop  : out STD_LOGIC;
+				br_jmp   : out STD_LOGIC;
+				sys_int  : out STD_LOGIC;
+				operand1 : out STD_LOGIC_VECTOR(31 downto 0);
+				operand2 : out STD_LOGIC_VECTOR(31 downto 0);
+				operand3 : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
 	component Execute is  
 		Port( 
 				clock : in STD_LOGIC;
-				instruction : in STD_LOGIC_VECTOR(15 downto 0); 
-				exec_alu : in STD_LOGIC_VECTOR(15 downto 0); 
-				exec_logical : in STD_LOGIC_VECTOR(15 downto 0); 
-				exec_branch : in STD_LOGIC_VECTOR(15 downto 0); 
-				exec_mem : in STD_LOGIC_VECTOR(15 downto 0); 
-				exec_system : in STD_LOGIC_VECTOR(15 downto 0); 
+
+				alu_add  : in STD_LOGIC;
+				alu_sub  : in STD_LOGIC;
+				alu_mul  : in STD_LOGIC;
+				alu_div  : in STD_LOGIC;
+				alu_shl  : in STD_LOGIC;
+				alu_shr  : in STD_LOGIC;
+				logic_and  : in STD_LOGIC;
+				logic_nand : in STD_LOGIC;
+				logic_or   : in STD_LOGIC;
+				logic_nor  : in STD_LOGIC;
+				logic_xor  : in STD_LOGIC;
+				logic_xnor : in STD_LOGIC;
+				logic_not  : in STD_LOGIC;
+				mem_mov  : in STD_LOGIC;
+				mem_ldr  : in STD_LOGIC;
+				mem_str  : in STD_LOGIC;
+				mem_push : in STD_LOGIC;
+				mem_pop  : in STD_LOGIC;
+				br_jmp   : in STD_LOGIC;
+				sys_int  : in STD_LOGIC;
+				
+				operand1 : in STD_LOGIC_VECTOR(31 downto 0); 
+				operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
+				operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
+
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC;
 				memregion_register : inout t_MemRegister_15_32
@@ -93,7 +133,8 @@ architecture Behavioral of ControlUnit is
 	end component Execute;
 	
 	component GetNextPC is 
-		Port( clock : in STD_LOGIC;
+		Port( 
+				clock : in STD_LOGIC;
 				nextpc : in STD_LOGIC;	
 			   pc : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -125,12 +166,34 @@ architecture Behavioral of ControlUnit is
 	signal R15 : STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- Command signals
-	signal execute_alu  		: STD_LOGIC_VECTOR(15 downto 0);
-	signal execute_logical  : STD_LOGIC_VECTOR(15 downto 0);
-	signal execute_branch  	: STD_LOGIC_VECTOR(15 downto 0);
-	signal execute_mem  		: STD_LOGIC_VECTOR(15 downto 0);
-	signal execute_system  	: STD_LOGIC_VECTOR(15 downto 0);
+	signal exec_alu_add  	: STD_LOGIC;
+	signal exec_alu_sub  	: STD_LOGIC;
+	signal exec_alu_mul  	: STD_LOGIC;
+	signal exec_alu_div  	: STD_LOGIC;
+	signal exec_alu_shl  	: STD_LOGIC;
+	signal exec_alu_shr  	: STD_LOGIC;
+	
+	signal exec_logic_and  	: STD_LOGIC;
+	signal exec_logic_nand 	: STD_LOGIC;
+	signal exec_logic_or   	: STD_LOGIC;
+	signal exec_logic_nor  	: STD_LOGIC;
+	signal exec_logic_xor  	: STD_LOGIC;
+	signal exec_logic_xnor 	: STD_LOGIC;
+	signal exec_logic_not  	: STD_LOGIC;
 
+	signal exec_mem_mov		: STD_LOGIC;
+	signal exec_mem_ldr  	: STD_LOGIC;
+	signal exec_mem_str  	: STD_LOGIC;
+	signal exec_mem_push 	: STD_LOGIC;
+	signal exec_mem_pop  	: STD_LOGIC;
+
+	signal exec_br_jmp   	: STD_LOGIC;
+
+	signal exec_sys_int  	: STD_LOGIC;
+	
+	signal op1 : STD_LOGIC_VECTOR(31 downto 0);
+	signal op2 : STD_LOGIC_VECTOR(31 downto 0);
+	signal op3 : STD_LOGIC_VECTOR(31 downto 0);
 	
 	------------------------------------
 	-- Initialize program region (Instruction Stream)
@@ -160,22 +223,60 @@ begin
 	(
 		clock,
 		R2,
-		execute_alu,
-		execute_logical,
-		execute_branch,
-		execute_mem,
-		execute_system
+		memregion_register,
+		exec_alu_add,  	
+		exec_alu_sub,  	
+		exec_alu_mul,  	
+		exec_alu_div,  	
+		exec_alu_shl,  	
+		exec_alu_shr,  	
+		exec_logic_and,  	
+		exec_logic_nand, 	
+		exec_logic_or,   	
+		exec_logic_nor,  	
+		exec_logic_xor,  	
+		exec_logic_xnor, 	
+		exec_logic_not,  	
+		exec_mem_mov,		
+		exec_mem_ldr,  	
+		exec_mem_str,  	
+		exec_mem_push, 	
+		exec_mem_pop,  	
+		exec_br_jmp,   	
+		exec_sys_int,  	
+		op1,
+		op2,
+		op3
 	);
 	
 	ExecuteCommand: Execute port map
 	(
 		clock,
-		R2,
-		execute_alu,
-		execute_logical,
-		execute_branch,
-		execute_mem,
-		execute_system,
+		exec_alu_add,  	
+		exec_alu_sub,  	
+		exec_alu_mul,  	
+		exec_alu_div,  	
+		exec_alu_shl,  	
+		exec_alu_shr,  	
+		exec_logic_and,  	
+		exec_logic_nand, 	
+		exec_logic_or,   	
+		exec_logic_nor,  	
+		exec_logic_xor,  	
+		exec_logic_xnor, 	
+		exec_logic_not,  	
+		exec_mem_mov,		
+		exec_mem_ldr,  	
+		exec_mem_str,  	
+		exec_mem_push, 	
+		exec_mem_pop,  	
+		exec_br_jmp,   	
+		exec_sys_int, 
+		
+		op1,
+		op2,
+		op3,
+		
 		endexecution, 
 		exec_getpc,
 		

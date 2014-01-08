@@ -34,12 +34,35 @@ entity Decode is
 	Port( 
 			clock : in STD_LOGIC;
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			exec_alu : out STD_LOGIC; 
-			exec_logical : out STD_LOGIC; 
-			exec_branch : out STD_LOGIC; 
-			exec_mem : out STD_LOGIC; 
-			exec_system : out STD_LOGIC; 
-			command : out STD_LOGIC_VECTOR(15 downto 0)
+			memregion_register : in t_MemRegister_15_32;
+--			exec_alu : out STD_LOGIC_VECTOR(15 downto 0); 
+--			exec_logical : out STD_LOGIC_VECTOR(15 downto 0); 
+--			exec_branch : out STD_LOGIC_VECTOR(15 downto 0); 
+--			exec_mem : out STD_LOGIC_VECTOR(15 downto 0); 
+--			exec_system : out STD_LOGIC_VECTOR(15 downto 0);
+			alu_add  : out STD_LOGIC;
+			alu_sub  : out STD_LOGIC;
+			alu_mul  : out STD_LOGIC;
+			alu_div  :out STD_LOGIC;
+			alu_shl  : out STD_LOGIC;
+			alu_shr  : out STD_LOGIC;
+			logic_and  : out STD_LOGIC;
+			logic_nand : out STD_LOGIC;
+			logic_or   : out STD_LOGIC;
+			logic_nor  : out STD_LOGIC;
+			logic_xor  : out STD_LOGIC;
+			logic_xnor : out STD_LOGIC;
+			logic_not  : out STD_LOGIC;
+			mem_mov  : out STD_LOGIC;
+			mem_ldr  : out STD_LOGIC;
+			mem_str  : out STD_LOGIC;
+			mem_push : out STD_LOGIC;
+			mem_pop  : out STD_LOGIC;
+			br_jmp   : out STD_LOGIC;
+			sys_int  : out STD_LOGIC;
+			operand1 : out STD_LOGIC_VECTOR(31 downto 0);
+			operand2 : out STD_LOGIC_VECTOR(31 downto 0);
+			operand3 : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
@@ -94,99 +117,75 @@ begin
 
 	DecodeInstr : process(instruction)
 	begin
-		ClockSync : if rising_edge(clock) then
+		opcode <= instruction(31 downto 24);
+		 
+		case_opcode : case opcode is
+		
+			when op_add =>
+				alu_add <= '1';
+				
+			when op_sub =>
+				alu_sub <= '1';
+				
+			when op_mul =>
+				alu_mul <= '1';
+				
+			when op_div =>
+				alu_div <= '1';
+				
+			when op_shl =>
+				alu_shl <= '1';
+				
+			when op_shr =>
+				alu_shr <= '1';
+				
+			when op_and =>
+				logic_and <= '1';
+				
+			when op_nand =>
+				logic_nand <= '1';
+				
+			when op_or =>
+				logic_or <= '1';
+				
+			when op_nor =>
+				logic_nor <= '1';
+				
+			when op_xor =>
+				logic_xor <= '1';
+				
+			when op_xnor =>
+				logic_xnor <= '1';
+				
+			when op_not =>
+				logic_not <= '1';
 			
-			opcode <= instruction(31 downto 24);
-			 
-			case_opcode : case opcode is
+			when op_mov =>
+				mem_mov <= '1';
+				
+			when op_ldr =>
+				mem_ldr <= '1';
+				
+			when op_str =>
+				mem_str <= '1';
+				
+			when op_push =>
+				mem_push <= '1';
+				
+			when op_pop =>
+				mem_pop <= '1';
 			
-				when op_add =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_add;
-					
-				when op_sub =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_sub;
-					
-				when op_mul =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_add;
-					
-				when op_div =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_mul;
-					
-				when op_shl =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_shl;
-					
-				when op_shr =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_shr;
-					
-				when op_and =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_div;
-					
-				when op_nand =>
-					exec_alu <= '1';
-					command(15 downto 0) <= alu_nand;
-					
-				when op_or =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_or;
-					
-				when op_nor =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_nor;
-					
-				when op_xor =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_xor;
-					
-				when op_xnor =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_xnor;
-					
-				when op_not =>
-					exec_logical <= '1';
-					command(15 downto 0) <= alu_not;
-				
-				when op_mov =>
-					exec_mem <= '1';
-					command(15 downto 0) <= mem_mov;
-					
-				when op_ldr =>
-					exec_mem <= '1';
-					command(15 downto 0) <= mem_ldr;
-					
-				when op_str =>
-					exec_mem <= '1';
-					command(15 downto 0) <= mem_str;
-					
-				when op_push =>
-					exec_mem <= '1';
-					command(15 downto 0) <= mem_push;
-					
-				when op_pop =>
-					exec_mem <= '1';
-					command(15 downto 0) <= mem_pop;
-				
-				when op_jmp =>
-					exec_branch <= '1';
-					command(15 downto 0) <= br_jmp;
-				
-				when op_int =>
-					exec_system <= '1';
-					command(15 downto 0) <= sys_int;
-				
-				when others =>
-					
-			end case case_opcode;
+			when op_jmp =>
+				br_jmp <= '1';
 			
-		end if ClockSync;
+			when op_int =>
+				sys_int <= '1';
+			
+			when others =>
+				
+		end case case_opcode;
 		
 	end process DecodeInstr;
-
+	
 end Behavioral;
 

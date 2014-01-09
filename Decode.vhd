@@ -34,35 +34,11 @@ entity Decode is
 	Port( 
 			clock : in STD_LOGIC;
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			memregion_register : in t_MemRegister_15_32;
---			exec_alu : out STD_LOGIC_VECTOR(15 downto 0); 
---			exec_logical : out STD_LOGIC_VECTOR(15 downto 0); 
---			exec_branch : out STD_LOGIC_VECTOR(15 downto 0); 
---			exec_mem : out STD_LOGIC_VECTOR(15 downto 0); 
---			exec_system : out STD_LOGIC_VECTOR(15 downto 0);
-			alu_add  : out STD_LOGIC;
-			alu_sub  : out STD_LOGIC;
-			alu_mul  : out STD_LOGIC;
-			alu_div  :out STD_LOGIC;
-			alu_shl  : out STD_LOGIC;
-			alu_shr  : out STD_LOGIC;
-			logic_and  : out STD_LOGIC;
-			logic_nand : out STD_LOGIC;
-			logic_or   : out STD_LOGIC;
-			logic_nor  : out STD_LOGIC;
-			logic_xor  : out STD_LOGIC;
-			logic_xnor : out STD_LOGIC;
-			logic_not  : out STD_LOGIC;
-			mem_mov  : out STD_LOGIC;
-			mem_ldr  : out STD_LOGIC;
-			mem_str  : out STD_LOGIC;
-			mem_push : out STD_LOGIC;
-			mem_pop  : out STD_LOGIC;
-			br_jmp   : out STD_LOGIC;
-			sys_int  : out STD_LOGIC;
-			operand1 : out STD_LOGIC_VECTOR(31 downto 0);
-			operand2 : out STD_LOGIC_VECTOR(31 downto 0);
-			operand3 : out STD_LOGIC_VECTOR(31 downto 0)
+			mem_regs : in t_MemRegister_15_32;
+			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
+			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
+			op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
+			op_system : out STD_LOGIC_VECTOR(7 downto 0)
 		 );
 end Decode;
 
@@ -122,64 +98,64 @@ begin
 		case_opcode : case opcode is
 		
 			when op_add =>
-				alu_add <= '1';
+				op_alu <= op_add;
 				
 			when op_sub =>
-				alu_sub <= '1';
+				op_alu <= op_sub;
 				
 			when op_mul =>
-				alu_mul <= '1';
+				op_alu <= op_mul;
 				
 			when op_div =>
-				alu_div <= '1';
+				op_alu <= op_div;
 				
 			when op_shl =>
-				alu_shl <= '1';
+				op_alu <= op_shl;
 				
 			when op_shr =>
-				alu_shr <= '1';
+				op_alu <= op_shr;
 				
 			when op_and =>
-				logic_and <= '1';
+				op_alu <= op_and;
 				
 			when op_nand =>
-				logic_nand <= '1';
+				op_alu <= op_nand;
 				
 			when op_or =>
-				logic_or <= '1';
+				op_alu <= op_or;
 				
 			when op_nor =>
-				logic_nor <= '1';
+				op_alu <= op_nor;
 				
 			when op_xor =>
-				logic_xor <= '1';
+				op_alu <= op_xor;
 				
 			when op_xnor =>
-				logic_xnor <= '1';
+				op_alu <= op_xnor;
 				
 			when op_not =>
-				logic_not <= '1';
+				op_alu <= op_not;
 			
 			when op_mov =>
-				mem_mov <= '1';
+				op_mem <= op_mov;
 				
 			when op_ldr =>
-				mem_ldr <= '1';
+				op_mem <= op_ldr;
 				
 			when op_str =>
-				mem_str <= '1';
+				op_mem <= op_str;
 				
 			when op_push =>
-				mem_push <= '1';
+				op_mem <= op_push;
 				
 			when op_pop =>
-				mem_pop <= '1';
+				op_mem <= op_pop;
 			
 			when op_jmp =>
-				br_jmp <= '1';
+				op_branch <= op_jmp;
 			
 			when op_int =>
-				sys_int <= '1';
+				op_system <= op_int;
 			
 			when others =>
 				

@@ -22,36 +22,62 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 use cpu_types.ALL;
 
-entity ALU_Exec is
-    Port ( clock : in STD_LOGIC;
-           alu_sel : in STD_LOGIC_VECTOR(15 downto 0);
-           op1 : in STD_LOGIC_VECTOR(31 downto 0);
-           op2 : in STD_LOGIC_VECTOR(31 downto 0);
-           result : out STD_LOGIC_VECTOR(31 downto 0));
-end ALU_Exec;
+entity ALU is
+    Port( 
+          alu_sel : in STD_LOGIC_VECTOR(7 downto 0);
+          op1 : in STD_LOGIC_VECTOR(31 downto 0);
+          op2 : in STD_LOGIC_VECTOR(31 downto 0);
+          dest : out STD_LOGIC_VECTOR(31 downto 0));
+end ALU;
 
-architecture Behavioral of ALU_Exec is
+architecture Behavioral of ALU is
 
---component adder32 is
---    Port( clock : in STD_LOGIC;
---			 vA : in STD_LOGIC_VECTOR (31 downto 0);
---			 vB : in STD_LOGIC_VECTOR (31 downto 0);
---          vS : out STD_LOGIC_VECTOR (31 downto 0)
---			);
---			  
---end component adder32;
-
+	signal iOp1 : integer;
+	signal iOp2 : integer;
+	signal iDest : integer;
+	
 begin
 
-
+	select_op : process (alu_sel)
+	begin
+	
+		iOp1 <= to_integer(unsigned(op1));
+		iOp2 <= to_integer(unsigned(op1));
+	
+		case_select_op : case alu_sel is
+					
+			when alu_add =>  
+				iDest <= iOp1 + iOp2;
+				
+			when alu_sub =>  
+				iDest <= iOp1 - iOp2;
+				
+			when alu_mul =>  
+			when alu_div =>  
+			when alu_and => 
+			when alu_nand =>
+			when alu_or  =>  
+			when alu_nor =>  
+			when alu_xor =>  
+			when alu_xnor => 
+			when alu_not =>  
+			when alu_shl =>  
+			when alu_shr =>  
+			when others =>
+				
+		end case case_select_op;
+		
+		dest <= std_logic_vector(to_unsigned(iDest, 32));
+		
+	end process select_op;
 	
 end Behavioral;
 

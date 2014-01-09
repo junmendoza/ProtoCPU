@@ -62,30 +62,30 @@ package cpu_types is
 --	
 --	
 	-- command id
-	subtype cmd_id_size is STD_LOGIC_VECTOR(15 downto 0);
-	constant alu_add  : cmd_id_size := X"0000";
-	constant alu_sub  : cmd_id_size := X"0001";
-	constant alu_mul  : cmd_id_size := X"0002";
-	constant alu_div  : cmd_id_size := X"0003";
-	constant alu_and  : cmd_id_size := X"0004";
-	constant alu_nand : cmd_id_size := X"0005";
-	constant alu_or   : cmd_id_size := X"0006";
-	constant alu_nor  : cmd_id_size := X"0007";
-	constant alu_xor  : cmd_id_size := X"0008";
-	constant alu_xnor : cmd_id_size := X"0009";
-	constant alu_not  : cmd_id_size := X"000A";
-	constant alu_shl  : cmd_id_size := X"000B";
-	constant alu_shr  : cmd_id_size := X"000C";
+	subtype cmd_id_size is STD_LOGIC_VECTOR(7 downto 0);
+	constant alu_add  : cmd_id_size := X"00";
+	constant alu_sub  : cmd_id_size := X"01";
+	constant alu_mul  : cmd_id_size := X"02";
+	constant alu_div  : cmd_id_size := X"03";
+	constant alu_and  : cmd_id_size := X"04";
+	constant alu_nand : cmd_id_size := X"05";
+	constant alu_or   : cmd_id_size := X"06";
+	constant alu_nor  : cmd_id_size := X"07";
+	constant alu_xor  : cmd_id_size := X"08";
+	constant alu_xnor : cmd_id_size := X"09";
+	constant alu_not  : cmd_id_size := X"0A";
+	constant alu_shl  : cmd_id_size := X"0B";
+	constant alu_shr  : cmd_id_size := X"0C";
 	
-	constant mem_mov  : cmd_id_size := X"0000";
-	constant mem_ldr  : cmd_id_size := X"0001";
-	constant mem_str  : cmd_id_size := X"0002";
-	constant mem_push : cmd_id_size := X"0003";
-	constant mem_pop  : cmd_id_size := X"0004";
+	constant mem_mov  : cmd_id_size := X"00";
+	constant mem_ldr  : cmd_id_size := X"01";
+	constant mem_str  : cmd_id_size := X"02";
+	constant mem_push : cmd_id_size := X"03";
+	constant mem_pop  : cmd_id_size := X"04";
 	
-	constant br_jmp   : cmd_id_size := X"0000";
+	constant br_jmp   : cmd_id_size := X"00";
 	
-	constant sys_int  : cmd_id_size := X"0000";
+	constant sys_int  : cmd_id_size := X"00";
 
 end cpu_types;
 

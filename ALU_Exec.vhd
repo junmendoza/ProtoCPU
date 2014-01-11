@@ -28,7 +28,7 @@ use IEEE.NUMERIC_STD.ALL;
 -- any Xilinx primitives in this code.
 library UNISIM;
 use UNISIM.VComponents.all;
-use cpu_types.ALL;
+use work.cpu_types.ALL;
 
 entity ALU is
     Port( 
@@ -46,7 +46,7 @@ architecture Behavioral of ALU is
 	
 begin
 
-	select_op : process (alu_sel)
+	select_op : process (alu_sel, op1, op2)
 	begin
 	
 		iOp1 <= to_integer(unsigned(op1));
@@ -56,26 +56,41 @@ begin
 					
 			when alu_add =>  
 				iDest <= iOp1 + iOp2;
+				dest <= std_logic_vector(to_unsigned(iDest, 32));
 				
 			when alu_sub =>  
 				iDest <= iOp1 - iOp2;
+				dest <= std_logic_vector(to_unsigned(iDest, 32));
 				
-			when alu_mul =>  
-			when alu_div =>  
+			when alu_mul => 
+			when alu_div => 
+				 
 			when alu_and => 
+				dest <= op1 and op2;
+				
 			when alu_nand =>
-			when alu_or  =>  
-			when alu_nor =>  
+				dest <= op1 and op2;
+				
+			when alu_or  => 
+				dest <= op1 or op2; 
+				
+			when alu_nor => 
+				dest <= op1 nor op2; 
+				
 			when alu_xor =>  
+				dest <= op1 xor op2;
+				
 			when alu_xnor => 
+				dest <= op1 xnor op2;
+				
 			when alu_not =>  
+				dest <= not op1;
+				
 			when alu_shl =>  
 			when alu_shr =>  
 			when others =>
 				
 		end case case_select_op;
-		
-		dest <= std_logic_vector(to_unsigned(iDest, 32));
 		
 	end process select_op;
 	

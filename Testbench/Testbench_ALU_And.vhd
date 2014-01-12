@@ -4,7 +4,7 @@
 --
 -- Create Date:   16:47:44 01/12/2014
 -- Design Name:   
--- Module Name:   C:/jun/sourcecode/Research/ProtoCPU/ALU_Sub_Testbench.vhd
+-- Module Name:   C:/jun/sourcecode/Research/ProtoCPU/Testbench_ALU_And.vhd
 -- Project Name:  ProtoCPU
 -- Target Device:  
 -- Tool versions:  
@@ -34,10 +34,10 @@ USE ieee.std_logic_1164.ALL;
 
 use work.cpu_types.all;
  
-ENTITY ALU_Sub_Testbench IS
-END ALU_Sub_Testbench;
+ENTITY Testbench_ALU_And IS
+END Testbench_ALU_And;
  
-ARCHITECTURE behavior OF ALU_Sub_Testbench IS 
+ARCHITECTURE behavior OF Testbench_ALU_And IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -74,11 +74,11 @@ BEGIN
    stim_proc: process
    begin		
 		wait for 20 ns;
-		op1 <= X"0000000A";
+		op1 <= "00000000000000000000000000000011";
 		wait for 30 ns;
-		op2 <= X"00000001";
+		op2 <= "00000000000000000000000000000001";
 		wait for 40 ns;
-		alu_sel <= alu_sub;
+		alu_sel <= alu_and;
    end process;
 
 END;

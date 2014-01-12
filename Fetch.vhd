@@ -32,11 +32,12 @@ use IEEE.NUMERIC_STD.ALL;
 use work.cpu_types.ALL;
 
 entity Fetch is
-    Port( clock : in STD_LOGIC; 
-			 pc : in STD_LOGIC_VECTOR(31 downto 0);
-			 programdata : in t_MemProgramData_32_32;
-			 instr : out STD_LOGIC_VECTOR(31 downto 0)
-		  );
+	Port( 
+			clock : in STD_LOGIC; 
+			pc : in STD_LOGIC_VECTOR(31 downto 0);
+			programdata : in t_MemProgramData_32_32;
+			instr : out STD_LOGIC_VECTOR(31 downto 0)
+		 );
 end Fetch;
 
 architecture Behavioral of Fetch is

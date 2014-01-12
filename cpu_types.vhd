@@ -77,15 +77,17 @@ package cpu_types is
 	constant alu_shl  : cmd_id_size := X"0B";
 	constant alu_shr  : cmd_id_size := X"0C";
 	
-	constant mem_mov  : cmd_id_size := X"00";
-	constant mem_ldr  : cmd_id_size := X"01";
-	constant mem_str  : cmd_id_size := X"02";
-	constant mem_push : cmd_id_size := X"03";
-	constant mem_pop  : cmd_id_size := X"04";
+	constant mem_mov  : cmd_id_size := X"0D";
+	constant mem_ldr  : cmd_id_size := X"0E";
+	constant mem_str  : cmd_id_size := X"0F";
+	constant mem_push : cmd_id_size := X"10";
+	constant mem_pop  : cmd_id_size := X"11";
 	
-	constant br_jmp   : cmd_id_size := X"00";
+	constant br_jmp   : cmd_id_size := X"12";
 	
-	constant sys_int  : cmd_id_size := X"00";
+	constant sys_int  : cmd_id_size := X"13";
+	
+	constant cmd_none : cmd_id_size := X"14";
 
 end cpu_types;
 

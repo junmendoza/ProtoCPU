@@ -29,7 +29,7 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all; 
 
-use cpu_types.ALL;
+use work.cpu_types.ALL;
 
 entity Fetch is
     Port( clock : in STD_LOGIC; 

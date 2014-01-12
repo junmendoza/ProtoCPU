@@ -29,7 +29,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-use cpu_types.ALL;
+use work.cpu_types.ALL;
 
 entity Execute is
 	Port( 
@@ -49,13 +49,6 @@ end Execute;
 
 architecture Behavioral of Execute is
 				
---	-- ALU execution signals
---	signal alu_sel : STD_LOGIC_VECTOR(15 downto 0);
---	signal add : STD_LOGIC;
---	signal sub : STD_LOGIC;
---	signal mul : STD_LOGIC;
---	signal div : STD_LOGIC;
---	
 	component alu_adder32 is
 		Port( 
 				exec_add : in STD_LOGIC;

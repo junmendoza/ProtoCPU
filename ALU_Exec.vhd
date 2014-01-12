@@ -39,28 +39,29 @@ entity ALU is
 end ALU;
 
 architecture Behavioral of ALU is
-
-	signal iOp1 : integer;
-	signal iOp2 : integer;
-	signal iDest : integer;
-	
+		
 begin
-
-	select_op : process (alu_sel, op1, op2)
+	
+	select_op : process (alu_sel)
+	
+	variable tempDest : integer;
+	variable iOp1 : integer;
+	variable iOp2 : integer;
+	
 	begin
-	
-		iOp1 <= to_integer(unsigned(op1));
-		iOp2 <= to_integer(unsigned(op1));
-	
+		
+		iOp1 := to_integer(signed(op1));
+		iOp2 := to_integer(signed(op2));
+		
 		case_select_op : case alu_sel is
 					
 			when alu_add =>  
-				iDest <= iOp1 + iOp2;
-				dest <= std_logic_vector(to_unsigned(iDest, 32));
+				tempDest := iOp1 + iOp2;
+				dest <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_sub =>  
-				iDest <= iOp1 - iOp2;
-				dest <= std_logic_vector(to_unsigned(iDest, 32));
+				tempDest := iOp1 - iOp2;
+				dest <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_mul => 
 			when alu_div => 
@@ -69,7 +70,7 @@ begin
 				dest <= op1 and op2;
 				
 			when alu_nand =>
-				dest <= op1 and op2;
+				dest <= op1 nand op2;
 				
 			when alu_or  => 
 				dest <= op1 or op2; 

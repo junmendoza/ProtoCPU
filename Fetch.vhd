@@ -42,17 +42,18 @@ end Fetch;
 
 architecture Behavioral of Fetch is
 	
-	signal pc_instr_address : integer;
-	
 begin
 
-	FetchInstr : process(pc)
+	FetchInstr : process(clock, pc)
+	
+	variable pc_instr_address : integer;
+	
 	begin
 		ClockSync : if rising_edge(clock) then
 			-- Retrieve the instruction from the instruction stream given the pc input
 			-- Store the instruction in the instruction register
 			-- instr = memregion_instrstream[pc]
-			pc_instr_address <= to_integer(signed(pc));
+			pc_instr_address := to_integer(signed(pc));
 			instr <= programdata(pc_instr_address);
 			
 		end if ClockSync;

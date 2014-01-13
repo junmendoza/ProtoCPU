@@ -52,14 +52,47 @@ ARCHITECTURE behavior OF Testbench_Fetch IS
 
    --Inputs
    signal clock : std_logic := '0';
-   signal pc : std_logic_vector(31 downto 0) := (others => '0');
-   signal programdata : t_MemProgramData_32_32;
+   signal pc : std_logic_vector(31 downto 0) := X"00000000";
 
  	--Outputs
    signal instr : std_logic_vector(31 downto 0);
 
-   -- Clock period definitions
-   constant clock_period : time := 10 ns;
+	-- Simulate the program memory
+	signal memregion_program : t_MemProgramData_32_32 := 
+	(
+		X"10000000", 
+		X"10000001",
+		X"10000002",
+		X"10000003",
+		X"10000004",
+		X"10000005",
+		X"10000006",
+		X"10000007",
+		X"10000008",
+		X"10000009",
+		X"1000000A",
+		X"1000000B",
+		X"1000000C",
+		X"1000000D",
+		X"1000000E",
+		X"1000000F",
+		X"10000000", 
+		X"10000001",
+		X"10000002",
+		X"10000003",
+		X"10000004",
+		X"10000005",
+		X"10000006",
+		X"10000007",
+		X"10000008",
+		X"10000009",
+		X"1000000A",
+		X"1000000B",
+		X"1000000C",
+		X"1000000D",
+		X"1000000E",
+		X"1000000F"
+	);
  
 BEGIN
  
@@ -67,31 +100,156 @@ BEGIN
    uut: Fetch PORT MAP (
           clock => clock,
           pc => pc,
-          programdata => programdata,
+          programdata => memregion_program,
           instr => instr
         );
 
-   -- Clock process definitions
-   clock_process :process
-   begin
-		clock <= '0';
-		wait for clock_period/2;
+
+	-- Stimulus process
+	stim_proc: process
+	begin	
+		
+		-- fetch cycle start
+		pc <= X"00000000"; 
 		clock <= '1';
-		wait for clock_period/2;
-   end process;
- 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000001"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000002"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000003"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000004"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000005"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000006"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000007"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000008"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"00000009"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000A"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000B"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000C"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000D"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000E"; 
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		clock <= '1';
+		pc <= X"0000000F"; 
+		wait;
+		
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
-
-      wait for clock_period*10;
-
-      -- insert stimulus here 
-
-      wait;
-   end process;
+	end process;
 
 END;

@@ -32,26 +32,28 @@ use work.cpu_types.ALL;
 
 entity Decode is
 	Port( 
-			clock : in STD_LOGIC;
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 			mem_regs : in t_MemRegister_15_32;
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
-			op_system : out STD_LOGIC_VECTOR(7 downto 0)
+			op_system : out STD_LOGIC_VECTOR(7 downto 0);
+			operand1 : out STD_LOGIC_VECTOR(31 downto 0);
+			operand2 : out STD_LOGIC_VECTOR(31 downto 0);
+			operand3 : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
 architecture Behavioral of Decode is
-
-	signal opcode : STD_LOGIC_VECTOR(7 downto 0);
 	
 begin
 
 	DecodeInstr : process(instruction)
+	
+	variable opcode : STD_LOGIC_VECTOR(7 downto 0); 
+	
 	begin
-		opcode <= instruction(31 downto 24);
-		 
+		opcode := instruction(31 downto 24);
 		case_opcode : case opcode is
 		
 			when alu_add =>

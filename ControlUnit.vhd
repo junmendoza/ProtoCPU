@@ -68,13 +68,15 @@ architecture Behavioral of ControlUnit is
 	
 	component Decode is  
 		Port( 
-				clock : in STD_LOGIC;
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 				mem_regs : in t_MemRegister_15_32;
 				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_system : out STD_LOGIC_VECTOR(7 downto 0)
+				op_system : out STD_LOGIC_VECTOR(7 downto 0);
+				operand1 : out STD_LOGIC_VECTOR(31 downto 0);
+				operand2 : out STD_LOGIC_VECTOR(31 downto 0);
+				operand3 : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
@@ -172,7 +174,6 @@ begin
 
 	DecodeInstruction : Decode port map 
 	(
-		clock,
 		R2,
 		memregion_register,
 		exec_alu,  	

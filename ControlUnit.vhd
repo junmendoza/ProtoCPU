@@ -74,9 +74,12 @@ architecture Behavioral of ControlUnit is
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
-				operand1 : out STD_LOGIC_VECTOR(31 downto 0);
-				operand2 : out STD_LOGIC_VECTOR(31 downto 0);
-				operand3 : out STD_LOGIC_VECTOR(31 downto 0)
+				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
+				Rd : out STD_LOGIC_VECTOR(31 downto 0);
+				Rn : out STD_LOGIC_VECTOR(31 downto 0);
+				op3 : out STD_LOGIC_VECTOR(31 downto 0);
+				shifter : out STD_LOGIC_VECTOR(11 downto 0);
+				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
 			 );
 	end component Decode;
 	
@@ -87,13 +90,14 @@ architecture Behavioral of ControlUnit is
 				op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_mem : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : in STD_LOGIC_VECTOR(7 downto 0);
+				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 				operand1 : in STD_LOGIC_VECTOR(31 downto 0); 
 				operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
-				operand3 : out STD_LOGIC_VECTOR(31 downto 0); 
+				operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC;
 				mem_regs : inout t_MemRegister_15_32
-		    );
+			);
 	end component Execute;
 	
 	component GetNextPC is 
@@ -136,9 +140,12 @@ architecture Behavioral of ControlUnit is
 	signal exec_system : STD_LOGIC_VECTOR(7 downto 0);
 	
 	
-	signal op1 : STD_LOGIC_VECTOR(31 downto 0);
-	signal op2 : STD_LOGIC_VECTOR(31 downto 0);
-	signal op3 : STD_LOGIC_VECTOR(31 downto 0);
+	signal RegD_Addr : STD_LOGIC_VECTOR(3 downto 0);
+	signal RegD : STD_LOGIC_VECTOR(31 downto 0);
+	signal RegN : STD_LOGIC_VECTOR(31 downto 0);
+	signal Op3 : STD_LOGIC_VECTOR(31 downto 0);
+	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
+	signal AddrMode : STD_LOGIC_VECTOR(11 downto 0);
 	
 	------------------------------------
 	-- Initialize program region (Instruction Stream)
@@ -179,7 +186,13 @@ begin
 		exec_alu,  	
 		exec_mem,
 		exec_branch,
-		exec_system
+		exec_system,
+		RegD_Addr,
+		RegD,
+		RegN,
+		Op3,
+		Shift,
+		AddrMode
 	);
 	
 	ExecuteCommand: Execute port map
@@ -191,13 +204,13 @@ begin
 		exec_branch,
 		exec_system,	
 		
-		op1,
-		op2,
-		op3,
+		RegD_Addr,
+		RegD,
+		RegN,
+		Op3,
 		
-		endexecution, 
 		exec_getpc,
-		
+		endexecution, 
 		mem_regs(R1_addr) => R1, 
 		mem_regs(R2_addr) => R2, 
 		mem_regs(R3_addr) => R3, 

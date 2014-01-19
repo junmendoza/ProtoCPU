@@ -38,13 +38,14 @@ entity Execute is
 			op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_mem : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : in STD_LOGIC_VECTOR(7 downto 0);
+			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 			operand1 : in STD_LOGIC_VECTOR(31 downto 0); 
 			operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
-			operand3 : out STD_LOGIC_VECTOR(31 downto 0); 
+			operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
 			nextpc : out STD_LOGIC;
 			endprogram : out STD_LOGIC;
 			mem_regs : inout t_MemRegister_15_32
-	 );
+		);
 end Execute;
 
 architecture Behavioral of Execute is
@@ -67,10 +68,12 @@ architecture Behavioral of Execute is
 			 );
 	end component;
 	
+	signal op_result : STD_LOGIC_VECTOR(31 downto 0); 
+	
 begin
-
+	
 	-- ALU component mapping
-	ALU_Exec : ALU port map(op_alu, operand1, operand2, operand3);
+	ALU_Exec : ALU port map(op_alu, operand1, operand2, op_result);
 	
 	-- Branch component mapping
 	-- Memory component mapping

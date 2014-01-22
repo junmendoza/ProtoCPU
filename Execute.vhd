@@ -36,7 +36,7 @@ entity Execute is
 			clock : in STD_LOGIC;
 			op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
-			op_mem : in STD_LOGIC_VECTOR(7 downto 0); 
+			op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : in STD_LOGIC_VECTOR(7 downto 0);
 			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 			operand1 : in STD_LOGIC_VECTOR(31 downto 0); 

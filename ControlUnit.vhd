@@ -72,7 +72,7 @@ architecture Behavioral of ControlUnit is
 				mem_regs : in t_MemRegister_15_32;
 				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
+				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
@@ -88,7 +88,7 @@ architecture Behavioral of ControlUnit is
 				clock : in STD_LOGIC;
 				op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
-				op_mem : in STD_LOGIC_VECTOR(7 downto 0); 
+				op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : in STD_LOGIC_VECTOR(7 downto 0);
 				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 				operand1 : in STD_LOGIC_VECTOR(31 downto 0); 

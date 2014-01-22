@@ -72,8 +72,7 @@ architecture Behavioral of Decode is
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0);
 				op3 : out STD_LOGIC_VECTOR(31 downto 0);
-				shifter : out STD_LOGIC_VECTOR(11 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)		
+				shifter : out STD_LOGIC_VECTOR(11 downto 0)	
 			);
 	end component DecodeALU;
 	
@@ -88,12 +87,10 @@ architecture Behavioral of Decode is
 	component DecodeDataMove is
 		Port( 
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				op_branch : in STD_LOGIC_VECTOR(7 downto 0);
+				op_datamove : in STD_LOGIC_VECTOR(7 downto 0);
 				mem_regs : in t_MemRegister_15_32;
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0);
-				op3 : out STD_LOGIC_VECTOR(31 downto 0);
-				shifter : out STD_LOGIC_VECTOR(11 downto 0);
 				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
 			 );
 		end component DecodeDataMove;
@@ -117,8 +114,24 @@ begin
 		Rd,
 		Rn,
 		op3,
-		shifter,
+		shifter
+	);
+		
+	Decode_DataMove : DecodeDataMove port map
+	(
+		instruction,
+		opcode_datamove,
+		mem_regs,
+		Rd,
+		Rn,
 		addr_mode
+	);
+	
+	Decode_Branch : DecodeBranch port map
+	(
+		instruction,
+		opcode_branch,
+		mem_regs
 	);
 	
 end Behavioral;

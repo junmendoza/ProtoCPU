@@ -38,8 +38,7 @@ entity DecodeALU is
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn : out STD_LOGIC_VECTOR(31 downto 0);
 			op3 : out STD_LOGIC_VECTOR(31 downto 0);
-			shifter : out STD_LOGIC_VECTOR(11 downto 0);
-			addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
+			shifter : out STD_LOGIC_VECTOR(11 downto 0)
 		 );
 end DecodeALU;
 

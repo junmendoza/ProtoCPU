@@ -36,7 +36,6 @@ entity DecodeDataMove is
 			op_datamove : in STD_LOGIC_VECTOR(7 downto 0);
 			mem_regs : in t_MemRegister_15_32;
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			Rn : out STD_LOGIC_VECTOR(31 downto 0);
 			addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
 		 );
 end DecodeDataMove;

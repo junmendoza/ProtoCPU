@@ -49,18 +49,23 @@ end Decode;
 
 architecture Behavioral of Decode is
 
+	signal optype : STD_LOGIC_VECTOR(3 downto 0);  
 	signal opcode_alu : STD_LOGIC_VECTOR(7 downto 0);  
 	signal opcode_branch : STD_LOGIC_VECTOR(7 downto 0); 
 	signal opcode_datamove : STD_LOGIC_VECTOR(7 downto 0); 
-	signal opcode_system : STD_LOGIC_VECTOR(7 downto 0) ;
+	signal opcode_system : STD_LOGIC_VECTOR(7 downto 0);
 
+	signal Rd_alu : STD_LOGIC_VECTOR(31 downto 0);
+	signal Rd_datamove : STD_LOGIC_VECTOR(31 downto 0);
+	
 	component DecodeOpcode is  
 		Port( 
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_system : out STD_LOGIC_VECTOR(7 downto 0)
+				op_system : out STD_LOGIC_VECTOR(7 downto 0);
+				optype : out STD_LOGIC_VECTOR(3 downto 0)
 			 );
 	end component DecodeOpcode;
 	
@@ -90,11 +95,19 @@ architecture Behavioral of Decode is
 				op_datamove : in STD_LOGIC_VECTOR(7 downto 0);
 				mem_regs : in t_MemRegister_15_32;
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				Rn : out STD_LOGIC_VECTOR(31 downto 0);
 				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
 			 );
 		end component DecodeDataMove;
-	
+		
+	component Mux_Rd is
+		Port( 
+				optype : in STD_LOGIC_VECTOR(3 downto 0);
+				Rd_alu : in STD_LOGIC_VECTOR(31 downto 0);
+				Rd_datamove : in STD_LOGIC_VECTOR(31 downto 0);
+				Rd : out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component Mux_Rd;
+		
 begin
 
 	Decode : DecodeOpcode port map
@@ -103,7 +116,8 @@ begin
 		op_alu => opcode_alu, 
 		op_branch => opcode_branch, 
 		op_datamove => opcode_datamove, 
-		op_system => opcode_system
+		op_system => opcode_system,
+		optype => optype
 	);
 	
 	Decode_ALU : DecodeALU port map
@@ -111,7 +125,7 @@ begin
 		instruction,
 		opcode_alu,
 		mem_regs,
-		Rd,
+		Rd_alu,
 		Rn,
 		op3,
 		shifter
@@ -122,8 +136,7 @@ begin
 		instruction,
 		opcode_datamove,
 		mem_regs,
-		Rd,
-		Rn,
+		Rd_datamove,
 		addr_mode
 	);
 	
@@ -132,6 +145,14 @@ begin
 		instruction,
 		opcode_branch,
 		mem_regs
+	);
+	
+	Mux_RegisterDest : Mux_Rd port map
+	(
+		optype,
+		Rd_alu,
+		Rd_datamove,
+		Rd
 	);
 	
 end Behavioral;

@@ -88,6 +88,14 @@ package cpu_types is
 	constant sys_int  : cmd_id_size := X"13";
 	
 	constant cmd_none : cmd_id_size := X"14";
+	
+	
+	-- Instruction operation type
+	constant optype_alu  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+	constant optype_datamove  : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+	constant optype_branch  : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+	constant optype_compare  : STD_LOGIC_VECTOR(3 downto 0) := "0011";
+	constant optype_system  : STD_LOGIC_VECTOR(3 downto 0) := "0100";
 
 end cpu_types;
 

@@ -41,12 +41,15 @@ ARCHITECTURE behavior OF Testbench_DecodeOpcode IS
  
     COMPONENT DecodeOpcode
     PORT(
-         instruction : IN  std_logic_vector(31 downto 0);
-         op_alu : OUT  std_logic_vector(7 downto 0);
-         op_branch : OUT  std_logic_vector(7 downto 0);
-         op_datamove : OUT  std_logic_vector(7 downto 0);
-         op_system : OUT  std_logic_vector(7 downto 0);
-         optype : OUT  std_logic_vector(3 downto 0)
+			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			ALU_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+			ALU_Rn : out STD_LOGIC_VECTOR(3 downto 0); 
+			ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
+			Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
+			DataMove_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+			DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
+			System_Data : out STD_LOGIC_VECTOR(23 downto 0);
+			optype : out STD_LOGIC_VECTOR(3 downto 0)
         );
     END COMPONENT;
     
@@ -55,22 +58,28 @@ ARCHITECTURE behavior OF Testbench_DecodeOpcode IS
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
-   signal op_alu : std_logic_vector(7 downto 0);
-   signal op_branch : std_logic_vector(7 downto 0);
-   signal op_datamove : std_logic_vector(7 downto 0);
-   signal op_system : std_logic_vector(7 downto 0);
+	signal ALU_Rd : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Rn : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Shifter : STD_LOGIC_VECTOR(11 downto 0); 
+	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
+	signal DataMove_Rd : STD_LOGIC_VECTOR(3 downto 0); 
+	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
+	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
    signal optype : std_logic_vector(3 downto 0);
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeOpcode PORT MAP (
-          instruction => instruction,
-          op_alu => op_alu,
-          op_branch => op_branch,
-          op_datamove => op_datamove,
-          op_system => op_system,
-          optype => optype
+				instruction, 
+				ALU_Rd => ALU_Rd, 
+				ALU_Rn => ALU_Rn, 
+				ALU_Shifter => ALU_Shifter, 
+				Branch_Target => Branch_Target, 
+				DataMove_Rd => DataMove_Rd, 
+				DataMove_AddrMode => DataMove_AddrMode, 
+				System_Data => System_Data, 
+				optype => optype
         );
 
   
@@ -79,7 +88,7 @@ BEGIN
    stim_proc: process
    begin		
      
-	  -- [0] ldr R5, %10	
+	   -- [0] ldr R5, %10	
 		-- [1] str R5, 0x0000000B
 		-- [2] ldr R5, 0x0000000B
 		-- [3] ldr R6, %2	

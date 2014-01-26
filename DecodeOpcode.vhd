@@ -37,8 +37,8 @@ entity DecodeOpcode is
 			ALU_Rn : out STD_LOGIC_VECTOR(3 downto 0); 
 			ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
 			Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
-			DataMove_Rd : out STD_LOGIC_VECTOR(7 downto 0); 
-			DataMove_AddrMode : out STD_LOGIC_VECTOR(7 downto 0); 
+			DataMove_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+			DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 			System_Data : out STD_LOGIC_VECTOR(23 downto 0);
 			optype : out STD_LOGIC_VECTOR(3 downto 0)
 		 );
@@ -57,19 +57,18 @@ begin
 		
 		if_opcode : 
 			if opcode = alu_add 
-							or opcode = alu_add
-							or opcode = alu_sub
-							or opcode = alu_mul
-							or opcode = alu_div
-							or opcode = alu_and 
-							or opcode = alu_nand
-							or opcode = alu_or
-							or opcode = alu_nor
-							or opcode = alu_xor
-							or opcode = alu_xnor
-							or opcode = alu_not
-							or opcode = alu_shl
-							or opcode = alu_shr then
+					or opcode = alu_sub
+					or opcode = alu_mul
+					or opcode = alu_div
+					or opcode = alu_and 
+					or opcode = alu_nand
+					or opcode = alu_or
+					or opcode = alu_nor
+					or opcode = alu_xor
+					or opcode = alu_xnor
+					or opcode = alu_not 
+					or opcode = alu_shl
+					or opcode = alu_shr then
 		
 				optype <= optype_alu;
 				ALU_Rd <= instruction(19 downto 16);
@@ -83,6 +82,8 @@ begin
 					or opcode = mem_pop then
 		
 				optype <= optype_datamove;
+				DataMove_Rd <= instruction(19 downto 16);
+				DataMove_AddrMode <= instruction(11 downto 0);
 				
 			elsif opcode = br_jmp then
 		

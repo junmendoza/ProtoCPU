@@ -53,8 +53,8 @@ architecture Behavioral of Decode is
 	signal ALU_Rn : STD_LOGIC_VECTOR(3 downto 0); 
 	signal ALU_Shifter : STD_LOGIC_VECTOR(11 downto 0); 
 	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
-	signal DataMove_Rd : STD_LOGIC_VECTOR(7 downto 0); 
-	signal DataMove_AddrMode : STD_LOGIC_VECTOR(7 downto 0); 
+	signal DataMove_Rd : STD_LOGIC_VECTOR(3 downto 0); 
+	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
 
 	signal Rd_alu : STD_LOGIC_VECTOR(31 downto 0);
@@ -69,8 +69,8 @@ architecture Behavioral of Decode is
 				ALU_Rn : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
 				Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
-				DataMove_Rd : out STD_LOGIC_VECTOR(7 downto 0); 
-				DataMove_AddrMode : out STD_LOGIC_VECTOR(7 downto 0); 
+				DataMove_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+				DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 				System_Data : out STD_LOGIC_VECTOR(23 downto 0);
 				optype : out STD_LOGIC_VECTOR(3 downto 0)
 			 );
@@ -98,10 +98,10 @@ architecture Behavioral of Decode is
 	component DecodeDataMove is
 		Port( 
 				mem_regs : in t_MemRegister_15_32;
-				DataMove_Rd : in STD_LOGIC_VECTOR(7 downto 0); 
-				DataMove_AddrMode : in STD_LOGIC_VECTOR(7 downto 0); 
+				DataMove_Rd : in STD_LOGIC_VECTOR(3 downto 0); 
+				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
+				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
 			 );
 		end component DecodeDataMove;
 		

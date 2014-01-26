@@ -49,53 +49,59 @@ end Decode;
 
 architecture Behavioral of Decode is
 
-	signal optype : STD_LOGIC_VECTOR(3 downto 0);  
-	signal opcode_alu : STD_LOGIC_VECTOR(7 downto 0);  
-	signal opcode_branch : STD_LOGIC_VECTOR(7 downto 0); 
-	signal opcode_datamove : STD_LOGIC_VECTOR(7 downto 0); 
-	signal opcode_system : STD_LOGIC_VECTOR(7 downto 0);
+	signal ALU_Rd : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Rn : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Shifter : STD_LOGIC_VECTOR(11 downto 0); 
+	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
+	signal DataMove_Rd : STD_LOGIC_VECTOR(7 downto 0); 
+	signal DataMove_AddrMode : STD_LOGIC_VECTOR(7 downto 0); 
+	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
 
 	signal Rd_alu : STD_LOGIC_VECTOR(31 downto 0);
 	signal Rd_datamove : STD_LOGIC_VECTOR(31 downto 0);
 	
+	signal optype : STD_LOGIC_VECTOR(3 downto 0);
+	
 	component DecodeOpcode is  
-		Port( 
+		Port(
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
-				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_system : out STD_LOGIC_VECTOR(7 downto 0);
+				ALU_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+				ALU_Rn : out STD_LOGIC_VECTOR(3 downto 0); 
+				ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
+				Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
+				DataMove_Rd : out STD_LOGIC_VECTOR(7 downto 0); 
+				DataMove_AddrMode : out STD_LOGIC_VECTOR(7 downto 0); 
+				System_Data : out STD_LOGIC_VECTOR(23 downto 0);
 				optype : out STD_LOGIC_VECTOR(3 downto 0)
 			 );
 	end component DecodeOpcode;
 	
 	component DecodeALU is  
 		Port( 			
-				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				op_alu : in STD_LOGIC_VECTOR(7 downto 0);
 				mem_regs : in t_MemRegister_15_32;
+				ALU_Rd : in STD_LOGIC_VECTOR(3 downto 0); 
+				ALU_Rn : in STD_LOGIC_VECTOR(3 downto 0); 
+				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0);
-				op3 : out STD_LOGIC_VECTOR(31 downto 0);
-				shifter : out STD_LOGIC_VECTOR(11 downto 0)	
+				op3 : out STD_LOGIC_VECTOR(31 downto 0)
 			);
 	end component DecodeALU;
 	
 	component DecodeBranch is
 		Port( 
-				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				op_branch : in STD_LOGIC_VECTOR(7 downto 0);
-				mem_regs : in t_MemRegister_15_32
+				mem_regs : in t_MemRegister_15_32;
+				Branch_Target : in STD_LOGIC_VECTOR(19 downto 0)
 			 );
 		end component DecodeBranch;
 	
 	component DecodeDataMove is
 		Port( 
-				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-				op_datamove : in STD_LOGIC_VECTOR(7 downto 0);
 				mem_regs : in t_MemRegister_15_32;
+				DataMove_Rd : in STD_LOGIC_VECTOR(7 downto 0); 
+				DataMove_AddrMode : in STD_LOGIC_VECTOR(7 downto 0); 
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
+				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
 			 );
 		end component DecodeDataMove;
 		
@@ -113,38 +119,40 @@ begin
 	Decode : DecodeOpcode port map
 	(
 		instruction, 
-		op_alu => opcode_alu, 
-		op_branch => opcode_branch, 
-		op_datamove => opcode_datamove, 
-		op_system => opcode_system,
+		ALU_Rd => ALU_Rd, 
+		ALU_Rn => ALU_Rn, 
+		ALU_Shifter => ALU_Shifter, 
+		Branch_Target => Branch_Target, 
+		DataMove_Rd => DataMove_Rd, 
+		DataMove_AddrMode => DataMove_AddrMode, 
+		System_Data => System_Data, 
 		optype => optype
 	);
 	
 	Decode_ALU : DecodeALU port map
 	(
-		instruction,
-		opcode_alu,
 		mem_regs,
-		Rd_alu,
-		Rn,
-		op3,
-		shifter
+		ALU_Rd => ALU_Rd, 
+		ALU_Rn => ALU_Rn, 
+		ALU_Shifter => ALU_Shifter, 
+		Rd => Rd_alu,
+		Rn => Rn,
+		op3 => op3
 	);
 		
 	Decode_DataMove : DecodeDataMove port map
 	(
-		instruction,
-		opcode_datamove,
 		mem_regs,
-		Rd_datamove,
-		addr_mode
+		DataMove_Rd => DataMove_Rd, 
+		DataMove_AddrMode => DataMove_AddrMode, 
+		Rd => Rd_datamove,
+		addr_mode => addr_mode
 	);
 	
 	Decode_Branch : DecodeBranch port map
 	(
-		instruction,
-		opcode_branch,
-		mem_regs
+		mem_regs,
+		Branch_Target => Branch_Target
 	);
 	
 	Mux_RegisterDest : Mux_Rd port map

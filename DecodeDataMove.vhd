@@ -32,9 +32,9 @@ use work.cpu_types.ALL;
 
 entity DecodeDataMove is
 	Port( 
-			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			op_datamove : in STD_LOGIC_VECTOR(7 downto 0);
 			mem_regs : in t_MemRegister_15_32;
+			DataMove_Rd : in STD_LOGIC_VECTOR(7 downto 0); 
+			DataMove_AddrMode : in STD_LOGIC_VECTOR(7 downto 0); 
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
 		 );
@@ -44,7 +44,7 @@ architecture Behavioral of DecodeDataMove is
 	
 begin
 
-	ProcDecodeDataMove : process(op_datamove)
+	ProcDecodeDataMove : process(DataMove_Rd, DataMove_AddrMode)
 	
 	begin
 

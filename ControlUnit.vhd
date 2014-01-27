@@ -79,7 +79,7 @@ architecture Behavioral of ControlUnit is
 				Rn : out STD_LOGIC_VECTOR(31 downto 0);
 				op3 : out STD_LOGIC_VECTOR(31 downto 0);
 				shifter : out STD_LOGIC_VECTOR(11 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
+				addr_mode : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
@@ -145,7 +145,7 @@ architecture Behavioral of ControlUnit is
 	signal RegN : STD_LOGIC_VECTOR(31 downto 0);
 	signal Op3 : STD_LOGIC_VECTOR(31 downto 0);
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
-	signal AddrMode : STD_LOGIC_VECTOR(11 downto 0);
+	signal AddrMode : STD_LOGIC_VECTOR(31 downto 0);
 	
 	------------------------------------
 	-- Initialize program region (Instruction Stream)

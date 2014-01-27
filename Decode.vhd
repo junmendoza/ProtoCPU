@@ -43,7 +43,7 @@ entity Decode is
 			Rn : out STD_LOGIC_VECTOR(31 downto 0);
 			op3 : out STD_LOGIC_VECTOR(31 downto 0);
 			shifter : out STD_LOGIC_VECTOR(11 downto 0);
-			addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
+			addr_mode : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
@@ -80,13 +80,19 @@ architecture Behavioral of Decode is
 		Port( 			
 				mem_regs : in t_MemRegister_15_32;
 				ALU_Rd : in STD_LOGIC_VECTOR(3 downto 0); 
-				ALU_Rn : in STD_LOGIC_VECTOR(3 downto 0); 
-				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
+				ALU_Rn : in STD_LOGIC_VECTOR(3 downto 0);  
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				Rn : out STD_LOGIC_VECTOR(31 downto 0);
-				op3 : out STD_LOGIC_VECTOR(31 downto 0)
+				Rn : out STD_LOGIC_VECTOR(31 downto 0)
 			);
 	end component DecodeALU;
+	
+	component DecodeShifter is
+		Port( 
+				mem_regs : in t_MemRegister_15_32;
+				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
+				op3 : out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component DecodeShifter;
 	
 	component DecodeBranch is
 		Port( 
@@ -98,12 +104,18 @@ architecture Behavioral of Decode is
 	component DecodeDataMove is
 		Port( 
 				mem_regs : in t_MemRegister_15_32;
-				DataMove_Rd : in STD_LOGIC_VECTOR(3 downto 0); 
-				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
-				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(11 downto 0)	
+				DataMove_Rd : in STD_LOGIC_VECTOR(3 downto 0);
+				Rd : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
-		end component DecodeDataMove;
+	end component DecodeDataMove;
+	
+	component DecodeAddrMode is
+		Port( 
+				mem_regs : in t_MemRegister_15_32;
+				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
+				AddrMode : out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component DecodeAddrMode;
 		
 	component Mux_Rd is
 		Port( 
@@ -134,9 +146,14 @@ begin
 		mem_regs,
 		ALU_Rd => ALU_Rd, 
 		ALU_Rn => ALU_Rn, 
-		ALU_Shifter => ALU_Shifter, 
 		Rd => Rd_alu,
-		Rn => Rn,
+		Rn => Rn
+	);
+	
+	Decode_Shifter : DecodeShifter port map
+	(
+		mem_regs,
+		ALU_Shifter => ALU_Shifter, 
 		op3 => op3
 	);
 		
@@ -144,9 +161,14 @@ begin
 	(
 		mem_regs,
 		DataMove_Rd => DataMove_Rd, 
+		Rd => Rd_datamove
+	);
+	
+	Decode_AddrMode : DecodeAddrMode port map
+	(
+		mem_regs,
 		DataMove_AddrMode => DataMove_AddrMode, 
-		Rd => Rd_datamove,
-		addr_mode => addr_mode
+		AddrMode => addr_mode
 	);
 	
 	Decode_Branch : DecodeBranch port map

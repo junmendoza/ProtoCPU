@@ -72,6 +72,16 @@ package cpu_types is
 	constant optype_branch  : STD_LOGIC_VECTOR(3 downto 0) := "0010";
 	constant optype_compare  : STD_LOGIC_VECTOR(3 downto 0) := "0011";
 	constant optype_system  : STD_LOGIC_VECTOR(3 downto 0) := "0100";
+	
+	
+	-- Decode contants
+	constant shft_mode_immd  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+	constant shft_mode_memaddr  : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+	constant shft_mode_regaddr  : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+	
+	constant addrmode_mode_immd  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+	constant addrmode_mode_memaddr  : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+	constant addrmode_mode_regaddr  : STD_LOGIC_VECTOR(3 downto 0) := "0010";
 
 end cpu_types;
 

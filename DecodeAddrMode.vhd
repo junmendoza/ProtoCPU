@@ -24,7 +24,6 @@ use work.cpu_types.all;
 
 entity DecodeAddrMode is
 	Port( 
-			mem_regs : in t_MemRegister_15_32;
 			DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
 			addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
 			addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);

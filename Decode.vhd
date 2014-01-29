@@ -91,7 +91,6 @@ architecture Behavioral of Decode is
 	
 	component DecodeShifter is
 		Port( 
-				mem_regs : in t_MemRegister_15_32;
 				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
 				shifter_immd: out STD_LOGIC_VECTOR(7 downto 0);
 				shifter_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
@@ -116,7 +115,6 @@ architecture Behavioral of Decode is
 	
 	component DecodeAddrMode is
 		Port( 
-				mem_regs : in t_MemRegister_15_32;
 				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
 				addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
 				addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
@@ -159,7 +157,6 @@ begin
 	
 	Decode_Shifter : DecodeShifter port map
 	(
-		mem_regs,
 		ALU_Shifter => ALU_Shifter, 
 		shifter_immd => shifter_immd,
 		shifter_immd_addr => shifter_immd_addr,
@@ -175,7 +172,6 @@ begin
 	
 	Decode_AddrMode : DecodeAddrMode port map
 	(
-		mem_regs,
 		DataMove_AddrMode => DataMove_AddrMode, 
 		addrmode_immd => addrmode_immd,
 		addrmode_immd_addr => addrmode_immd_addr,

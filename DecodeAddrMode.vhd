@@ -26,7 +26,9 @@ entity DecodeAddrMode is
 	Port( 
 			mem_regs : in t_MemRegister_15_32;
 			DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
-			AddrMode : out STD_LOGIC_VECTOR(31 downto 0)
+			addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
 		 );
 end DecodeAddrMode;
 
@@ -42,11 +44,11 @@ begin
 	begin
 		
 		if_mode : if mode = addrmode_mode_immd then
-			AddrMode(7 downto 0) <= address;
+			addrmode_immd <= address;
 		elsif mode = addrmode_mode_memaddr then
-			
+			addrmode_immd_addr <= address;
 		elsif mode = addrmode_mode_regaddr then
-		
+			addrmode_reg_addr <= address;
 		end if if_mode;
 		
 	end process ProcAddrMode;

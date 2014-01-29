@@ -77,9 +77,12 @@ architecture Behavioral of ControlUnit is
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0);
-				op3 : out STD_LOGIC_VECTOR(31 downto 0);
-				shifter : out STD_LOGIC_VECTOR(11 downto 0);
-				addr_mode : out STD_LOGIC_VECTOR(31 downto 0)
+				shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
+				shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+				shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
+				addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
+				addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+				addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
 			 );
 	end component Decode;
 	
@@ -147,6 +150,16 @@ architecture Behavioral of ControlUnit is
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
 	signal AddrMode : STD_LOGIC_VECTOR(31 downto 0);
 	
+	-- Shifter signals
+	signal shifter_immd : STD_LOGIC_VECTOR(7 downto 0);
+	signal shifter_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal shifter_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
+	
+	-- AddressMode signals
+	signal addrmode_immd : STD_LOGIC_VECTOR(7 downto 0);
+	signal addrmode_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal addrmode_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
+	
 	------------------------------------
 	-- Initialize program region (Instruction Stream)
 	-- 32 * 16-bit
@@ -190,9 +203,12 @@ begin
 		RegD_Addr,
 		RegD,
 		RegN,
-		Op3,
-		Shift,
-		AddrMode
+		shifter_immd => shifter_immd,
+		shifter_immd_addr => shifter_immd_addr,
+		shifter_reg_addr => shifter_reg_addr,
+		addrmode_immd => addrmode_immd,
+		addrmode_immd_addr => addrmode_immd_addr,
+		addrmode_reg_addr => addrmode_reg_addr
 	);
 	
 	ExecuteCommand: Execute port map

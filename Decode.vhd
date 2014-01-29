@@ -41,9 +41,12 @@ entity Decode is
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn : out STD_LOGIC_VECTOR(31 downto 0);
-			op3 : out STD_LOGIC_VECTOR(31 downto 0);
-			shifter : out STD_LOGIC_VECTOR(11 downto 0);
-			addr_mode : out STD_LOGIC_VECTOR(31 downto 0)
+			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
 		 );
 end Decode;
 
@@ -90,7 +93,9 @@ architecture Behavioral of Decode is
 		Port( 
 				mem_regs : in t_MemRegister_15_32;
 				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
-				op3 : out STD_LOGIC_VECTOR(31 downto 0)
+				shifter_immd: out STD_LOGIC_VECTOR(7 downto 0);
+				shifter_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
+				shifter_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
 			 );
 	end component DecodeShifter;
 	
@@ -113,7 +118,9 @@ architecture Behavioral of Decode is
 		Port( 
 				mem_regs : in t_MemRegister_15_32;
 				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
-				AddrMode : out STD_LOGIC_VECTOR(31 downto 0)
+				addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
+				addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
+				addrmode_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
 			 );
 	end component DecodeAddrMode;
 		
@@ -154,7 +161,9 @@ begin
 	(
 		mem_regs,
 		ALU_Shifter => ALU_Shifter, 
-		op3 => op3
+		shifter_immd => shifter_immd,
+		shifter_immd_addr => shifter_immd_addr,
+		shifter_reg_addr => shifter_reg_addr
 	);
 		
 	Decode_DataMove : DecodeDataMove port map
@@ -168,7 +177,9 @@ begin
 	(
 		mem_regs,
 		DataMove_AddrMode => DataMove_AddrMode, 
-		AddrMode => addr_mode
+		addrmode_immd => addrmode_immd,
+		addrmode_immd_addr => addrmode_immd_addr,
+		addrmode_reg_addr => addrmode_reg_addr
 	);
 	
 	Decode_Branch : DecodeBranch port map

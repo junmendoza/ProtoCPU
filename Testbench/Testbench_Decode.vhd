@@ -46,14 +46,17 @@ ARCHITECTURE behavior OF Testbench_Decode IS
 			mem_regs : in t_MemRegister_15_32;
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
-			op_mem : out STD_LOGIC_VECTOR(7 downto 0); 
+			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : out STD_LOGIC_VECTOR(7 downto 0);
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn : out STD_LOGIC_VECTOR(31 downto 0);
-			op3 : out STD_LOGIC_VECTOR(31 downto 0);
-			shifter : out STD_LOGIC_VECTOR(11 downto 0);
-			addr_mode : out STD_LOGIC_VECTOR(11 downto 0)
+			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
         );
     END COMPONENT;
     
@@ -83,14 +86,17 @@ ARCHITECTURE behavior OF Testbench_Decode IS
  	--Outputs
    signal op_alu : std_logic_vector(7 downto 0);
    signal op_branch : std_logic_vector(7 downto 0);
-   signal op_mem : std_logic_vector(7 downto 0);
+   signal op_datamove : std_logic_vector(7 downto 0);
    signal op_system : std_logic_vector(7 downto 0);
    signal Rd_addr : std_logic_vector(3 downto 0);
    signal Rd : std_logic_vector(31 downto 0);
    signal Rn : std_logic_vector(31 downto 0);
-   signal op3 : std_logic_vector(31 downto 0);
-   signal shifter : std_logic_vector(11 downto 0);
-   signal addr_mode : std_logic_vector(11 downto 0);
+	signal shifter_immd : STD_LOGIC_VECTOR(7 downto 0);
+	signal shifter_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal shifter_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal addrmode_immd : STD_LOGIC_VECTOR(7 downto 0);
+	signal addrmode_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal addrmode_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
  
 BEGIN
  
@@ -100,13 +106,16 @@ BEGIN
           mem_regs => memregion_register,
           op_alu => op_alu,
           op_branch => op_branch,
-          op_mem => op_mem,
+          op_datamove => op_datamove,
           op_system => op_system,
           Rd_addr => Rd_addr,
           Rn => Rn,
-          op3 =>op3,
-          shifter => shifter,
-          addr_mode => addr_mode
+          shifter_immd => shifter_immd,
+          shifter_immd_addr => shifter_immd_addr,
+          shifter_reg_addr => shifter_reg_addr,
+          addrmode_immd => addrmode_immd,
+          addrmode_immd_addr => addrmode_immd_addr,
+          addrmode_reg_addr => addrmode_reg_addr
         );
 
    -- Stimulus process

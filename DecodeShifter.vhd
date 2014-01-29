@@ -26,7 +26,9 @@ entity DecodeShifter is
 	Port( 
 			mem_regs : in t_MemRegister_15_32;
 			ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
-			op3 : out STD_LOGIC_VECTOR(31 downto 0)
+			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
+			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
 		 );
 end DecodeShifter;
 
@@ -42,11 +44,11 @@ begin
 	begin
 		
 		if_mode : if mode = shft_mode_immd then
-			op3(7 downto 0) <= data;
+			shifter_immd <= data;
 		elsif mode = shft_mode_memaddr then
-			
+			shifter_immd_addr <= data;
 		elsif mode = shft_mode_regaddr then
-		
+			shifter_reg_addr <= data;
 		end if if_mode;
 		
 	end process ProcALUShift;

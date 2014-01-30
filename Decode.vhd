@@ -115,7 +115,7 @@ architecture Behavioral of Decode is
 	
 	component DecodeAddrMode is
 		Port( 
-				DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
+				AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
 				addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
 				addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
 				addrmode_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
@@ -172,7 +172,7 @@ begin
 	
 	Decode_AddrMode : DecodeAddrMode port map
 	(
-		DataMove_AddrMode => DataMove_AddrMode, 
+		AddrMode => DataMove_AddrMode, 
 		addrmode_immd => addrmode_immd,
 		addrmode_immd_addr => addrmode_immd_addr,
 		addrmode_reg_addr => addrmode_reg_addr

@@ -41,7 +41,7 @@ ARCHITECTURE behavior OF Testbench_DecodeAddrMode IS
  
     COMPONENT DecodeAddrMode
     PORT(
-         DataMove_AddrMode : IN  std_logic_vector(11 downto 0);
+         AddrMode : IN  std_logic_vector(11 downto 0);
          addrmode_immd : OUT  std_logic_vector(7 downto 0);
          addrmode_immd_addr : OUT  std_logic_vector(7 downto 0);
          addrmode_reg_addr : OUT  std_logic_vector(7 downto 0)
@@ -51,7 +51,7 @@ ARCHITECTURE behavior OF Testbench_DecodeAddrMode IS
 
    --Inputs
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
-   signal DataMove_AddrMode : std_logic_vector(11 downto 0) := (others => '0');
+   signal AddrMode : std_logic_vector(11 downto 0) := (others => '0');
 
  	--Outputs
    signal addrmode_immd : std_logic_vector(7 downto 0);
@@ -62,7 +62,7 @@ BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeAddrMode PORT MAP (
-          DataMove_AddrMode => DataMove_AddrMode,
+          AddrMode => AddrMode,
           addrmode_immd => addrmode_immd,
           addrmode_immd_addr => addrmode_immd_addr,
           addrmode_reg_addr => addrmode_reg_addr
@@ -84,8 +84,8 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001110000001010000000000001010"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00001110000001010000000000001010"; 
+		AddrMode <= "000000001010";
 		wait for 10 ns;
 		
 
@@ -93,8 +93,8 @@ BEGIN
 		-- str
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001111000001010000000100001011"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00001111000001010000000100001011"; 
+		AddrMode <= "000100001011";
 		wait for 10 ns;
 		
 		
@@ -102,8 +102,8 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001110000001010000000100001011"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00001110000001010000000100001011"; 
+		AddrMode <= "000100001011";
 		wait for 10 ns;
 		
 		
@@ -111,16 +111,16 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001110000001100000000000000010"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00001110000001100000000000000010"; 
+		AddrMode <= "000000000010";
 		wait for 10 ns;
 		
 		-- [4] add R5, R5, R6
 		-- add
 		-- 31-24		23-20		19-16		15-12		11-0 		
 		-- opcode	cond		Rd			Rn			Shifter
-		instruction <= "00000000000001010101001000000110"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00000000000001010101001000000110"; 
+		AddrMode <= "001000000110";
 		wait for 10 ns;
 		
 		
@@ -128,8 +128,8 @@ BEGIN
 		-- str
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001111000001010000000100001111"; 
-		DataMove_AddrMode <= instruction(11 downto 0);
+		--instruction <= "00001111000001010000000100001111"; 
+		AddrMode <= "000100001111";
 		wait for 10 ns;
 
       wait;

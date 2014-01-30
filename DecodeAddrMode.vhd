@@ -24,7 +24,7 @@ use work.cpu_types.all;
 
 entity DecodeAddrMode is
 	Port( 
-			DataMove_AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
+			AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
 			addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
 			addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
 			addrmode_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
@@ -35,13 +35,16 @@ architecture Behavioral of DecodeAddrMode is
 
 begin
 	
-	ProcAddrMode : process(DataMove_AddrMode)
+	ProcAddrMode : process(AddrMode)
 	
-	variable mode : STD_LOGIC_VECTOR(3 downto 0) := DataMove_AddrMode(11 downto 8); 
-	variable address : STD_LOGIC_VECTOR(7 downto 0) := DataMove_AddrMode(7 downto 0);
+	variable mode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	variable address : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 	
 	begin
 		
+		mode := AddrMode(11 downto 8); 
+		address := AddrMode(7 downto 0);
+	
 		if_mode : if mode = addrmode_mode_immd then
 			addrmode_immd <= address;
 		elsif mode = addrmode_mode_memaddr then

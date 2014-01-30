@@ -69,8 +69,6 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-	
-		wait for 10 ns;
 		
 		-- [0] ldr R5, %10	
 		-- [1] str R5, 0x0000000B

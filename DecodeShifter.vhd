@@ -37,11 +37,14 @@ begin
 	
 	ProcALUShift : process(ALU_Shifter)
 	
-	variable mode : STD_LOGIC_VECTOR(3 downto 0) := ALU_Shifter(11 downto 8); 
-	variable data : STD_LOGIC_VECTOR(7 downto 0) := ALU_Shifter(7 downto 0);
+	variable mode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	variable data : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 	
 	begin
-		
+	
+		mode := ALU_Shifter(11 downto 8);
+		data := ALU_Shifter(7 downto 0);
+	
 		if_mode : if mode = shft_mode_immd then
 			shifter_immd <= data;
 		elsif mode = shft_mode_memaddr then

@@ -48,8 +48,8 @@ ARCHITECTURE behavior OF Testbench_DecodeShifter IS
     
 
    --Inputs
-   --signal instruction : std_logic_vector(31 downto 0) := (others => '0');
-   signal ALU_Shifter : std_logic_vector(11 downto 0) := "001000000110";
+   signal instruction : std_logic_vector(31 downto 0) := (others => '0');
+   signal ALU_Shifter : std_logic_vector(11 downto 0) := (others => '0');
 
  	--Outputs
    signal shifter_immd : std_logic_vector(7 downto 0);
@@ -70,6 +70,8 @@ BEGIN
    stim_proc: process
    begin		
 	
+		wait for 10 ns;
+		
 		-- [0] ldr R5, %10	
 		-- [1] str R5, 0x0000000B
 		-- [2] ldr R5, 0x0000000B
@@ -78,14 +80,29 @@ BEGIN
 		-- [5] str R5, 0x0000000F
 	
 		
-		-- [4] add R5, R5, R6
-		-- add
+		-- shifter - immediate
+		-- add R5, R5, #12
+		-- 31-24		23-20		19-16		15-12		11-0 		
+		-- opcode	cond		Rd			Rn			Shifter
+		--instruction <= "00000000000001010101000000001100"; 
+		ALU_Shifter <= "000000001100";
+		wait for 10 ns;
+		
+		-- shifter - mem address
+		-- add R5, R5, 0x0A
+		-- 31-24		23-20		19-16		15-12		11-0 		
+		-- opcode	cond		Rd			Rn			Shifter
+		--instruction <= "00000000000001010101000100001010"; 
+		ALU_Shifter <= "000100001010";
+		wait for 10 ns;
+		
+		-- shifter - register
+		-- add R5, R5, R6
 		-- 31-24		23-20		19-16		15-12		11-0 		
 		-- opcode	cond		Rd			Rn			Shifter
 		--instruction <= "00000000000001010101001000000110"; 
 		ALU_Shifter <= "001000000110";
 		wait for 10 ns;
-		
 		
       wait;
    end process;

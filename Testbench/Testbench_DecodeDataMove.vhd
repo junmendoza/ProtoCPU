@@ -40,14 +40,14 @@ ARCHITECTURE behavior OF Testbench_DecodeDataMove IS
     COMPONENT DecodeDataMove
     PORT(
          mem_regs : IN t_MemRegister_15_32;
-         DataMove_Rd : IN std_logic_vector(3 downto 0);
+         Rd_addr : IN std_logic_vector(3 downto 0);
          Rd : OUT std_logic_vector(31 downto 0)
         );
     END COMPONENT;
     
 
    --Inputs
-   signal DataMove_Rd : std_logic_vector(3 downto 0) := (others => '0');
+   signal DataMove_Rd_addr : std_logic_vector(3 downto 0) := (others => '0');
 	
 	signal memregion_register : t_MemRegister_15_32 := 
 	(
@@ -75,7 +75,7 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeDataMove PORT MAP (
           mem_regs => memregion_register,
-          DataMove_Rd => DataMove_Rd,
+          Rd_addr => DataMove_Rd_addr,
           Rd => Rd
         );
 
@@ -83,49 +83,49 @@ BEGIN
    stim_proc: process
    begin		
 	
-		DataMove_Rd <= "0000";
+		DataMove_Rd_addr <= "0000";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0001";
+		DataMove_Rd_addr <= "0001";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0010";
+		DataMove_Rd_addr <= "0010";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0011";
+		DataMove_Rd_addr <= "0011";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0100";
+		DataMove_Rd_addr <= "0100";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0101";
+		DataMove_Rd_addr <= "0101";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0110";
+		DataMove_Rd_addr <= "0110";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "0111";
+		DataMove_Rd_addr <= "0111";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1000";
+		DataMove_Rd_addr <= "1000";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1001";
+		DataMove_Rd_addr <= "1001";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1010";
+		DataMove_Rd_addr <= "1010";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1011";
+		DataMove_Rd_addr <= "1011";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1100";
+		DataMove_Rd_addr <= "1100";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1101";
+		DataMove_Rd_addr <= "1101";
 		wait for 10 ns;
 		
-		DataMove_Rd <= "1110";
+		DataMove_Rd_addr <= "1110";
 		wait for 10 ns;
 		
       wait;

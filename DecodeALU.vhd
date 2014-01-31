@@ -33,8 +33,8 @@ use work.cpu_types.ALL;
 entity DecodeALU is
 	Port( 
 			mem_regs : in t_MemRegister_15_32;
-			ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
-			ALU_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
+			Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
@@ -44,16 +44,16 @@ architecture Behavioral of DecodeALU is
 	
 begin
 
-	ProcDecodeALU : process(ALU_Rd_addr, ALU_Rn_addr)
+	ProcDecodeALU : process(Rd_addr, Rn_addr)
 	
 	variable index : integer; 
 	
 	begin
 	
-		index := to_integer(unsigned(ALU_Rd_addr));
+		index := to_integer(unsigned(Rd_addr));
 		Rd <= mem_regs(index);
 		
-		index := to_integer(unsigned(ALU_Rn_addr));
+		index := to_integer(unsigned(Rn_addr));
 		Rn <= mem_regs(index);
 	
 		

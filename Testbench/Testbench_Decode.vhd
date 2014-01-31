@@ -147,8 +147,8 @@ BEGIN
 		-- str
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		--instruction <= "00001111000001010000000100001011"; 
-		--wait for 10 ns;
+		instruction <= "00001111000001010000000100001011"; 
+		wait for 10 ns;
 		
 		
 		-- [2] ldr R5, 0x0000000B

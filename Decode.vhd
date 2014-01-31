@@ -77,8 +77,8 @@ architecture Behavioral of Decode is
 	component DecodeALU is  
 		Port( 			
 				mem_regs : in t_MemRegister_15_32;
-				ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
-				ALU_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);  
+				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
+				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0)
 			);
@@ -103,7 +103,7 @@ architecture Behavioral of Decode is
 	component DecodeDataMove is
 		Port( 
 				mem_regs : in t_MemRegister_15_32;
-				DataMove_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeDataMove;
@@ -134,8 +134,8 @@ begin
 	Decode_ALU : DecodeALU port map
 	(
 		mem_regs,
-		ALU_Rd_addr => ALU_Rd_addr, 
-		ALU_Rn_addr => ALU_Rn_addr, 
+		Rd_addr => ALU_Rd_addr, 
+		Rn_addr => ALU_Rn_addr, 
 		Rd => ALU_Rd,
 		Rn => ALU_Rn
 	);
@@ -151,7 +151,7 @@ begin
 	Decode_DataMove : DecodeDataMove port map
 	(
 		mem_regs,
-		DataMove_Rd_addr => DataMove_Rd_addr, 
+		Rd_addr => DataMove_Rd_addr, 
 		Rd => DataMove_Rd
 	);
 	

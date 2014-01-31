@@ -39,8 +39,8 @@ ARCHITECTURE behavior OF Testbench_DecodeALU IS
 	 COMPONENT DecodeALU
 		PORT(
 				mem_regs : in t_MemRegister_15_32;
-				ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
-				ALU_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
+				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -76,8 +76,8 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeALU PORT MAP (
           mem_regs => memregion_register,
-          ALU_Rd_addr => ALU_Rd_addr,
-          ALU_Rn_addr => ALU_Rn_addr,
+          Rd_addr => ALU_Rd_addr,
+          Rn_addr => ALU_Rn_addr,
           Rd => Rd,
           Rn => Rn
         );

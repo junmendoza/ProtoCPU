@@ -44,8 +44,13 @@ begin
 
 	ProcDecodeDataMove : process(DataMove_Rd)
 	
+	variable index : integer; 
+	
 	begin
 
+		index := to_integer(unsigned(DataMove_Rd));
+		Rd <= mem_regs(index);
+		
 	end process ProcDecodeDataMove;
 	
 end Behavioral;

@@ -46,7 +46,6 @@ begin
 
 	ProcDecodeALU : process(ALU_Rd, ALU_Rn)
 	
-	variable opcode : STD_LOGIC_VECTOR(7 downto 0); 
 	variable index : integer; 
 	
 	begin

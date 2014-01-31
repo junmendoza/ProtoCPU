@@ -75,8 +75,9 @@ architecture Behavioral of ControlUnit is
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-				Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				Rn : out STD_LOGIC_VECTOR(31 downto 0);
+				ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
+				ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
+				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
 				shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
 				shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
@@ -143,10 +144,11 @@ architecture Behavioral of ControlUnit is
 	signal exec_system : STD_LOGIC_VECTOR(7 downto 0);
 	
 	
-	signal RegD_Addr : STD_LOGIC_VECTOR(3 downto 0);
-	signal RegD : STD_LOGIC_VECTOR(31 downto 0);
-	signal RegN : STD_LOGIC_VECTOR(31 downto 0);
+	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
+	signal ALU_Rd : STD_LOGIC_VECTOR(31 downto 0);
+	signal ALU_Rn : STD_LOGIC_VECTOR(31 downto 0);
 	signal Op3 : STD_LOGIC_VECTOR(31 downto 0);
+	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
 	signal AddrMode : STD_LOGIC_VECTOR(31 downto 0);
 	
@@ -186,11 +188,13 @@ architecture Behavioral of ControlUnit is
 	 
 begin
 	
-	-- Set start PC	
-	--R1 <= X"00000000";
-	
-	
-	FetchInstruction : Fetch port map(clock, R1, memregion_program, R2);
+	FetchInstruction : Fetch port map
+	(
+		clock, 
+		R1, 
+		memregion_program, 
+		R2
+	);
 
 	DecodeInstruction : Decode port map 
 	(
@@ -200,9 +204,10 @@ begin
 		exec_mem,
 		exec_branch,
 		exec_system,
-		RegD_Addr,
-		RegD,
-		RegN,
+		Rd_addr => Rd_addr,
+		ALU_Rd => ALU_Rd,
+		ALU_Rn => ALU_Rn,
+		DataMove_Rd => DataMove_Rd,
 		shifter_immd => shifter_immd,
 		shifter_immd_addr => shifter_immd_addr,
 		shifter_reg_addr => shifter_reg_addr,
@@ -220,9 +225,9 @@ begin
 		exec_branch,
 		exec_system,	
 		
-		RegD_Addr,
-		RegD,
-		RegN,
+		Rd_addr,
+		ALU_Rd,
+		ALU_Rn,
 		Op3,
 		
 		exec_getpc,

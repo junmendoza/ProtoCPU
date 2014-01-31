@@ -42,14 +42,13 @@ ARCHITECTURE behavior OF Testbench_DecodeOpcode IS
     COMPONENT DecodeOpcode
     PORT(
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			ALU_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
-			ALU_Rn : out STD_LOGIC_VECTOR(3 downto 0); 
+			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
+			ALU_Rn_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
 			Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
-			DataMove_Rd : out STD_LOGIC_VECTOR(3 downto 0); 
+			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
-			System_Data : out STD_LOGIC_VECTOR(23 downto 0);
-			optype : out STD_LOGIC_VECTOR(3 downto 0)
+			System_Data : out STD_LOGIC_VECTOR(23 downto 0)
         );
     END COMPONENT;
     
@@ -58,11 +57,11 @@ ARCHITECTURE behavior OF Testbench_DecodeOpcode IS
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
-	signal ALU_Rd : STD_LOGIC_VECTOR(3 downto 0); 
-	signal ALU_Rn : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Rn_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal ALU_Shifter : STD_LOGIC_VECTOR(11 downto 0); 
 	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
-	signal DataMove_Rd : STD_LOGIC_VECTOR(3 downto 0); 
+	signal DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
    signal optype : std_logic_vector(3 downto 0);
@@ -72,14 +71,13 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeOpcode PORT MAP (
 				instruction, 
-				ALU_Rd => ALU_Rd, 
-				ALU_Rn => ALU_Rn, 
+				ALU_Rd_addr => ALU_Rd_addr, 
+				ALU_Rn_addr => ALU_Rn_addr, 
 				ALU_Shifter => ALU_Shifter, 
 				Branch_Target => Branch_Target, 
-				DataMove_Rd => DataMove_Rd, 
+				DataMove_Rd_addr => DataMove_Rd_addr, 
 				DataMove_AddrMode => DataMove_AddrMode, 
-				System_Data => System_Data, 
-				optype => optype
+				System_Data => System_Data
         );
 
   

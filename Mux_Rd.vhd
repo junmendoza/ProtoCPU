@@ -35,7 +35,7 @@ architecture Behavioral of Mux_Rd is
 
 begin
 
-	ProcMuxRd : process(Rd_alu, Rd_datamove)
+	ProcMuxRd : process(optype)
 	begin
 	
 		case_opcode : case optype is

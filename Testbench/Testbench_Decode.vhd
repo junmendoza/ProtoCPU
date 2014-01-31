@@ -49,8 +49,9 @@ ARCHITECTURE behavior OF Testbench_Decode IS
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : out STD_LOGIC_VECTOR(7 downto 0);
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-			Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			Rn : out STD_LOGIC_VECTOR(31 downto 0);
+			ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
+			ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
+			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
 			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
 			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
@@ -89,8 +90,9 @@ ARCHITECTURE behavior OF Testbench_Decode IS
    signal op_datamove : std_logic_vector(7 downto 0);
    signal op_system : std_logic_vector(7 downto 0);
    signal Rd_addr : std_logic_vector(3 downto 0);
-   signal Rd : std_logic_vector(31 downto 0);
-   signal Rn : std_logic_vector(31 downto 0);
+   signal ALU_Rd : std_logic_vector(31 downto 0);
+   signal ALU_Rn : std_logic_vector(31 downto 0);
+   signal DataMove_Rd : std_logic_vector(31 downto 0);
 	signal shifter_immd : STD_LOGIC_VECTOR(7 downto 0);
 	signal shifter_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
 	signal shifter_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
@@ -109,7 +111,9 @@ BEGIN
           op_datamove => op_datamove,
           op_system => op_system,
           Rd_addr => Rd_addr,
-          Rn => Rn,
+          ALU_Rd => ALU_Rd,
+          ALU_Rn => ALU_Rn,
+          DataMove_Rd => DataMove_Rd,
           shifter_immd => shifter_immd,
           shifter_immd_addr => shifter_immd_addr,
           shifter_reg_addr => shifter_reg_addr,

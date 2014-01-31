@@ -39,16 +39,16 @@ ARCHITECTURE behavior OF Testbench_DecodeALU IS
 	 COMPONENT DecodeALU
 		PORT(
 				mem_regs : in t_MemRegister_15_32;
-				ALU_Rd : in STD_LOGIC_VECTOR(3 downto 0); 
-				ALU_Rn : in STD_LOGIC_VECTOR(3 downto 0);
+				ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
+				ALU_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	 END COMPONENT;
    
  	--Outputs
-	signal ALU_Rd : STD_LOGIC_VECTOR(3 downto 0); 
-	signal ALU_Rn : STD_LOGIC_VECTOR(3 downto 0);
+	signal ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
+	signal ALU_Rn_addr : STD_LOGIC_VECTOR(3 downto 0);
    signal Rd : std_logic_vector(31 downto 0);
    signal Rn : std_logic_vector(31 downto 0);
 	
@@ -76,8 +76,8 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeALU PORT MAP (
           mem_regs => memregion_register,
-          ALU_Rd => ALU_Rd,
-          ALU_Rn => ALU_Rn,
+          ALU_Rd_addr => ALU_Rd_addr,
+          ALU_Rn_addr => ALU_Rn_addr,
           Rd => Rd,
           Rn => Rn
         );
@@ -91,32 +91,32 @@ BEGIN
 		-- 31-24		23-20		19-16		15-12		11-0 		
 		-- opcode	cond		Rd			Rn			Shifter
 		--instruction <= "00000000000001010101001000000110"; 
-		ALU_Rd <= "0000";
-		ALU_Rn <= "0001";
+		ALU_Rd_addr <= "0000";
+		ALU_Rn_addr <= "0001";
 		wait for 10 ns;
 		
-		ALU_Rd <= "0010";
-		ALU_Rn <= "0011";
+		ALU_Rd_addr <= "0010";
+		ALU_Rn_addr <= "0011";
 		wait for 10 ns;
 		
-		ALU_Rd <= "0100";
-		ALU_Rn <= "0101";
+		ALU_Rd_addr <= "0100";
+		ALU_Rn_addr <= "0101";
 		wait for 10 ns;
 		
-		ALU_Rd <= "0110";
-		ALU_Rn <= "0111";
+		ALU_Rd_addr <= "0110";
+		ALU_Rn_addr <= "0111";
 		wait for 10 ns;
 		
-		ALU_Rd <= "1000";
-		ALU_Rn <= "1001";
+		ALU_Rd_addr <= "1000";
+		ALU_Rn_addr <= "1001";
 		wait for 10 ns;
 		
-		ALU_Rd <= "1010";
-		ALU_Rn <= "1011";
+		ALU_Rd_addr <= "1010";
+		ALU_Rn_addr <= "1011";
 		wait for 10 ns;
 		
-		ALU_Rd <= "1100";
-		ALU_Rn <= "1101";
+		ALU_Rd_addr <= "1100";
+		ALU_Rn_addr <= "1101";
 		wait for 10 ns;
 		
       wait;

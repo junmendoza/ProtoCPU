@@ -51,19 +51,25 @@ architecture Behavioral of DecodeShifter is
 	
 	-- memory address
 	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-
+	
+	-- Word output from main memory region
+	signal mem_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	
+	-- Word output from register memory region
+	signal memaddr_reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	
 begin
 	
 	memreg_main : MemRegion_Main port map
 	(
 		offset => memaddr_offset,
-		mem_word => data_word
+		mem_word => mem_word
 	);
 	
 	memreg_registers : MemRegion_Registers port map
 	(
 		reg_addr => regaddr_offset,
-		reg_word => memaddr_offset
+		reg_word => memaddr_reg_word
 	);
 	
 	ProcALUShift : process(ALU_Shifter)
@@ -82,9 +88,12 @@ begin
 		elsif mode = shft_mode_memaddr then
 			-- data is the memory address offset where the immediate data is located
 			memaddr_offset(7 downto 0) <= data;
+			data_word <= mem_word;
 		elsif mode = shft_mode_regaddr then
 			-- data is the register address that contains the memory address offset where the immediate data is located
 			regaddr_offset <= data(3 downto 0);
+			memaddr_offset <= memaddr_reg_word;
+			data_word <= mem_word;
 		end if if_mode;
 		
 	end process ProcALUShift;

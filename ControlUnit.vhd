@@ -75,13 +75,9 @@ architecture Behavioral of ControlUnit is
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
+				ALU_Op3 : out STD_LOGIC_VECTOR(31 downto 0);
 				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
-				shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-				shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
-				addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
-				addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-				addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
+				DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
@@ -143,8 +139,9 @@ architecture Behavioral of ControlUnit is
 	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal ALU_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn : STD_LOGIC_VECTOR(31 downto 0);
-	signal Op3 : STD_LOGIC_VECTOR(31 downto 0);
+	signal ALU_Op3 : STD_LOGIC_VECTOR(31 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
+	signal DataMove_Address : STD_LOGIC_VECTOR(31 downto 0);
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
 	signal AddrMode : STD_LOGIC_VECTOR(31 downto 0);
 	
@@ -201,13 +198,9 @@ begin
 		Rd_addr => Rd_addr,
 		ALU_Rd => ALU_Rd,
 		ALU_Rn => ALU_Rn,
+		ALU_Op3 => ALU_Op3,
 		DataMove_Rd => DataMove_Rd,
-		shifter_immd => shifter_immd,
-		shifter_immd_addr => shifter_immd_addr,
-		shifter_reg_addr => shifter_reg_addr,
-		addrmode_immd => addrmode_immd,
-		addrmode_immd_addr => addrmode_immd_addr,
-		addrmode_reg_addr => addrmode_reg_addr
+		DataMove_Address => DataMove_Address
 	);
 	
 	ExecuteCommand: Execute port map
@@ -220,7 +213,7 @@ begin
 		Rd_addr,
 		ALU_Rd,
 		ALU_Rn,
-		Op3,
+		ALU_Op3,
 		
 		exec_getpc,
 		endexecution

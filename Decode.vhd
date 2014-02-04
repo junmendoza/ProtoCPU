@@ -40,13 +40,9 @@ entity Decode is
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
+			ALU_Op3 : out STD_LOGIC_VECTOR(31 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
-			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
+			DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
@@ -85,9 +81,7 @@ architecture Behavioral of Decode is
 	component DecodeShifter is
 		Port( 
 				ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
-				shifter_immd: out STD_LOGIC_VECTOR(7 downto 0);
-				shifter_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
-				shifter_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
+				data_word : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeShifter;
 	
@@ -107,9 +101,7 @@ architecture Behavioral of Decode is
 	component DecodeAddrMode is
 		Port( 
 				AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
-				addrmode_immd: out STD_LOGIC_VECTOR(7 downto 0);
-				addrmode_immd_addr: out STD_LOGIC_VECTOR(7 downto 0);
-				addrmode_reg_addr: out STD_LOGIC_VECTOR(7 downto 0)
+				data_word: out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeAddrMode;
 		
@@ -138,9 +130,7 @@ begin
 	Decode_Shifter : DecodeShifter port map
 	(
 		ALU_Shifter => ALU_Shifter, 
-		shifter_immd => shifter_immd,
-		shifter_immd_addr => shifter_immd_addr,
-		shifter_reg_addr => shifter_reg_addr
+		data_word => ALU_Op3
 	);
 		
 	Decode_DataMove : DecodeDataMove port map
@@ -152,9 +142,7 @@ begin
 	Decode_AddrMode : DecodeAddrMode port map
 	(
 		AddrMode => DataMove_AddrMode, 
-		addrmode_immd => addrmode_immd,
-		addrmode_immd_addr => addrmode_immd_addr,
-		addrmode_reg_addr => addrmode_reg_addr
+		data_word => DataMove_Address
 	);
 	
 	Decode_Branch : DecodeBranch port map

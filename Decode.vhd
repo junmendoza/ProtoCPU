@@ -33,7 +33,6 @@ use work.cpu_types.ALL;
 entity Decode is
 	Port( 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			mem_regs : in t_MemRegister_15_32;
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
@@ -76,7 +75,6 @@ architecture Behavioral of Decode is
 	
 	component DecodeALU is  
 		Port( 			
-				mem_regs : in t_MemRegister_15_32;
 				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0);
@@ -95,14 +93,12 @@ architecture Behavioral of Decode is
 	
 	component DecodeBranch is
 		Port( 
-				mem_regs : in t_MemRegister_15_32;
 				Branch_Target : in STD_LOGIC_VECTOR(19 downto 0)
 			 );
 		end component DecodeBranch;
 	
 	component DecodeDataMove is
 		Port( 
-				mem_regs : in t_MemRegister_15_32;
 				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rd : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -133,7 +129,6 @@ begin
 	
 	Decode_ALU : DecodeALU port map
 	(
-		mem_regs,
 		Rd_addr => ALU_Rd_addr, 
 		Rn_addr => ALU_Rn_addr, 
 		Rd => ALU_Rd,
@@ -150,7 +145,6 @@ begin
 		
 	Decode_DataMove : DecodeDataMove port map
 	(
-		mem_regs,
 		Rd_addr => DataMove_Rd_addr, 
 		Rd => DataMove_Rd
 	);
@@ -165,7 +159,6 @@ begin
 	
 	Decode_Branch : DecodeBranch port map
 	(
-		mem_regs,
 		Branch_Target => Branch_Target
 	);
 	

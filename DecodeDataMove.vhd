@@ -32,24 +32,42 @@ use work.cpu_types.ALL;
 
 entity DecodeDataMove is
 	Port( 
-			mem_regs : in t_MemRegister_15_32;
 			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end DecodeDataMove;
 
 architecture Behavioral of DecodeDataMove is
+
+	component MemRegion_Registers is
+		Port( 
+				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
+			  );
+	end component MemRegion_Registers;
+	
+	signal reg_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
 
+	memreg_registers : MemRegion_Registers port map
+	(
+		reg_addr => reg_addr,
+		reg_word => reg_word
+	);
+	
 	ProcDecodeDataMove : process(Rd_addr)
 	
 	variable index : integer; 
 	
 	begin
 
-		index := to_integer(unsigned(Rd_addr));
-		Rd <= mem_regs(index);
+		reg_addr <= Rd_addr;
+		-- Wait for ns so we get the word from the register component
+		-- Is this wait necessary?
+		--wait for 2 ns;
+		Rd <= reg_word;
 		
 	end process ProcDecodeDataMove;
 	

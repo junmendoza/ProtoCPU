@@ -42,8 +42,7 @@ entity Execute is
 			operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
 			operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
 			nextpc : out STD_LOGIC;
-			endprogram : out STD_LOGIC;
-			mem_regs : inout t_MemRegister_15_32
+			endprogram : out STD_LOGIC
 		);
 end Execute;
 

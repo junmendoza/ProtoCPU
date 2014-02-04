@@ -32,7 +32,6 @@ use work.cpu_types.ALL;
 
 entity DecodeBranch is
 	Port( 
-			mem_regs : in t_MemRegister_15_32;
 			Branch_Target : in STD_LOGIC_VECTOR(19 downto 0)
 		 );
 end DecodeBranch;

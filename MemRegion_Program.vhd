@@ -28,7 +28,7 @@ entity MemRegion_Program is
 			offset : in STD_LOGIC_VECTOR(31 downto 0);
 			mem_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
-end MemRegionProgram;
+end MemRegion_Program;
 
 architecture Behavioral of MemRegion_Program is
 

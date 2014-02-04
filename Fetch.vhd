@@ -35,14 +35,28 @@ entity Fetch is
 	Port( 
 			clock : in STD_LOGIC; 
 			pc : in STD_LOGIC_VECTOR(31 downto 0);
-			programdata : in t_MemProgramData_32_32;
 			instr : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Fetch;
 
 architecture Behavioral of Fetch is
 	
+	component MemRegion_Program is
+		Port( 
+				offset : in STD_LOGIC_VECTOR(31 downto 0);
+				mem_word : out STD_LOGIC_VECTOR(31 downto 0)
+			  );
+	end component MemRegion_Program;
+	
+	signal memaddr_pc : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	
 begin
+
+	memreg_program : MemRegion_Program port map
+	(
+		offset => memaddr_pc,
+		mem_word => instr
+	);
 
 	FetchInstr : process(clock, pc)
 	
@@ -50,11 +64,8 @@ begin
 	
 	begin
 		ClockSync : if rising_edge(clock) then
-			-- Retrieve the instruction from the instruction stream given the pc input
-			-- Store the instruction in the instruction register
-			-- instr = memregion_instrstream[pc]
-			pc_instr_address := to_integer(signed(pc));
-			instr <= programdata(pc_instr_address);
+		
+			memaddr_pc <= pc;
 			
 		end if ClockSync;
 	end process FetchInstr;

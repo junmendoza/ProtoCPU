@@ -89,7 +89,6 @@ architecture Behavioral of ControlUnit is
 	
 	component Execute is  
 		Port( 
-				clock : in STD_LOGIC;
 				op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 

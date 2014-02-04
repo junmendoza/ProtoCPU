@@ -19,7 +19,9 @@ package cpu_types is
 	-- Declare the constant max size of the register region
 	type t_MemRegister_15_32 is array (0 to 14) of STD_LOGIC_VECTOR(31 downto 0);
 	
-	type t_memregion_size is array (0 to 31) of STD_LOGIC_VECTOR(31 downto 0);
+	type t_MemRegion_Main_size is array (0 to 63) of STD_LOGIC_VECTOR(31 downto 0);
+	type t_MemRegion_Regs_size is array (0 to 14) of STD_LOGIC_VECTOR(31 downto 0);
+	type t_MemRegion_Program_size is array (0 to 63) of STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- CPU Registers address
 	constant R1_addr  : integer := 0; 	-- PC

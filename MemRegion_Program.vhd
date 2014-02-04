@@ -4,7 +4,7 @@
 -- 
 -- Create Date:    00:49:20 02/04/2014 
 -- Design Name: 
--- Module Name:    Memory - Behavioral 
+-- Module Name:    MemRegion_Program - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -21,17 +21,18 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 use IEEE.NUMERIC_STD.ALL;
+use work.cpu_types.all;
 
-entity Memory is
+entity MemRegion_Program is
 	Port( 
 			offset : in STD_LOGIC_VECTOR(31 downto 0);
 			mem_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
-end Memory;
+end MemRegionProgram;
 
-architecture Behavioral of Memory is
+architecture Behavioral of MemRegion_Program is
 
-	signal MemoryRegion : t_memregion_size :=
+	signal MemoryRegion : t_MemRegion_Program_size :=
 	(
 		X"00000001", 
 		X"00000002", 

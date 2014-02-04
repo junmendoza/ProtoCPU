@@ -33,11 +33,11 @@ use work.cpu_types.ALL;
 entity DecodeOpcode is
 	Port( 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
-			ALU_Rn_addr : out STD_LOGIC_VECTOR(3 downto 0); 
+			ALU_Rd_addr : out STD_LOGIC_VECTOR(7 downto 0); 
+			ALU_Rn_addr : out STD_LOGIC_VECTOR(7 downto 0); 
 			ALU_Shifter : out STD_LOGIC_VECTOR(11 downto 0); 
 			Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
-			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
+			DataMove_Rd_addr : out STD_LOGIC_VECTOR(7 downto 0); 
 			DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 			System_Data : out STD_LOGIC_VECTOR(23 downto 0)
 		 );
@@ -69,8 +69,8 @@ begin
 					or opcode = alu_shl
 					or opcode = alu_shr then
 		
-				ALU_Rd_addr <= instruction(19 downto 16);
-				ALU_Rn_addr <= instruction(15 downto 12);
+				ALU_Rd_addr(3 downto 0) <= instruction(19 downto 16);
+				ALU_Rn_addr(3 downto 0) <= instruction(15 downto 12);
 				ALU_Shifter <= instruction(11 downto 0);
 				
 			elsif opcode = mem_mov
@@ -79,7 +79,7 @@ begin
 					or opcode = mem_push
 					or opcode = mem_pop then
 		
-				DataMove_Rd_addr <= instruction(19 downto 16);
+				DataMove_Rd_addr(3 downto 0) <= instruction(19 downto 16);
 				DataMove_AddrMode <= instruction(11 downto 0);
 				
 			elsif opcode = br_jmp then

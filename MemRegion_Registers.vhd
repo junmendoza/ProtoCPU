@@ -25,7 +25,7 @@ use work.cpu_types.all;
 
 entity MemRegion_Registers is
 	Port( 
-			reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			reg_addr : in STD_LOGIC_VECTOR(7 downto 0);
 			reg_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
 end MemRegion_Registers;

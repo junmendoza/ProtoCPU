@@ -35,16 +35,14 @@ END Testbench_DecodeShifter;
  
 ARCHITECTURE behavior OF Testbench_DecodeShifter IS 
  
-    -- Component Declaration for the Unit Under Test (UUT)
- 
-    COMPONENT DecodeShifter
-    PORT(
-         ALU_Shifter : IN  std_logic_vector(11 downto 0);
-         shifter_immd : OUT  std_logic_vector(7 downto 0);
-         shifter_immd_addr : OUT  std_logic_vector(7 downto 0);
-         shifter_reg_addr : OUT  std_logic_vector(7 downto 0)
-        );
-    END COMPONENT;
+	-- Component Declaration for the Unit Under Test (UUT)
+
+	COMPONENT DecodeShifter
+	Port( 
+			ALU_Shifter : in STD_LOGIC_VECTOR(11 downto 0); 
+			data_word : out STD_LOGIC_VECTOR(31 downto 0)
+		 );
+	END COMPONENT;
     
 
    --Inputs
@@ -52,18 +50,14 @@ ARCHITECTURE behavior OF Testbench_DecodeShifter IS
    signal ALU_Shifter : std_logic_vector(11 downto 0) := (others => '0');
 
  	--Outputs
-   signal shifter_immd : std_logic_vector(7 downto 0);
-   signal shifter_immd_addr : std_logic_vector(7 downto 0);
-   signal shifter_reg_addr : std_logic_vector(7 downto 0);
+   signal data_word : std_logic_vector(31 downto 0);
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeShifter PORT MAP (
           ALU_Shifter => ALU_Shifter,
-          shifter_immd => shifter_immd,
-          shifter_immd_addr => shifter_immd_addr,
-          shifter_reg_addr => shifter_reg_addr
+          data_word => data_word
         );
 		  
    -- Stimulus process

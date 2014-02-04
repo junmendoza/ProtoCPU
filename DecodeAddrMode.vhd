@@ -41,13 +41,13 @@ architecture Behavioral of DecodeAddrMode is
 	
 	component MemRegion_Registers is
 		Port( 
-				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				reg_addr : in STD_LOGIC_VECTOR(7 downto 0);
 				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Registers;
 
 	-- register containing the memory address
-	signal regaddr_offset : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal regaddr_offset : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 	
 	-- memory address
 	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
@@ -92,7 +92,7 @@ begin
 			data_word <= mem_word;
 		elsif mode = shft_mode_regaddr then
 			-- data is the register address that contains the memory address offset where the immediate data is located
-			regaddr_offset <= address(3 downto 0);
+			regaddr_offset <= address;
 			memaddr_offset <= memaddr_reg_word;
 			data_word <= mem_word;
 		end if if_mode;

@@ -38,7 +38,6 @@ entity Decode is
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : out STD_LOGIC_VECTOR(7 downto 0);
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-			ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
@@ -71,10 +70,8 @@ architecture Behavioral of Decode is
 	
 	component DecodeALU is  
 		Port( 			
-				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 				Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 				Rn2 : out STD_LOGIC_VECTOR(31 downto 0)
 			);
@@ -116,10 +113,8 @@ begin
 	
 	Decode_ALU : DecodeALU port map
 	(
-		Rd_addr => ALU_Rd_addr, 
 		Rn1_addr => ALU_Rn1_addr, 
 		Rn2_addr => ALU_Rn2_addr, 
-		Rd => ALU_Rd,
 		Rn1 => ALU_Rn1,
 		Rn2 => ALU_Rn2
 	);

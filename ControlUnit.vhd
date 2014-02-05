@@ -73,7 +73,6 @@ architecture Behavioral of ControlUnit is
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-				ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 				ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
@@ -87,10 +86,9 @@ architecture Behavioral of ControlUnit is
 				op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : in STD_LOGIC_VECTOR(7 downto 0);
-				Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
-				operand1 : in STD_LOGIC_VECTOR(31 downto 0); 
-				operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
-				operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
+				ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
+				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
+				ALU_out : out STD_LOGIC_VECTOR(31 downto 0);  
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC
 			);
@@ -137,9 +135,9 @@ architecture Behavioral of ControlUnit is
 	
 	
 	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
-	signal ALU_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
+	signal ALU_out : STD_LOGIC_VECTOR(31 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal DataMove_Address : STD_LOGIC_VECTOR(31 downto 0);
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
@@ -172,7 +170,6 @@ begin
 		exec_branch,
 		exec_system,
 		Rd_addr => Rd_addr,
-		ALU_Rd => ALU_Rd,
 		ALU_Rn1 => ALU_Rn1,
 		ALU_Rn2 => ALU_Rn2,
 		DataMove_Rd => DataMove_Rd,
@@ -185,15 +182,11 @@ begin
 		exec_mem,
 		exec_branch,
 		exec_system,	
-		
-		Rd_addr,
-		ALU_Rd,
 		ALU_Rn1,
 		ALU_Rn2,
-		
+		ALU_out,
 		exec_getpc,
 		endexecution
-
 	);
 	
 	GetPC : GetNextPC port map(clock, exec_getpc, R1);	

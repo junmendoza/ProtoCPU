@@ -43,21 +43,15 @@ ARCHITECTURE behavior OF Testbench_Decode IS
     COMPONENT Decode
     PORT(
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
-			mem_regs : in t_MemRegister_15_32;
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : out STD_LOGIC_VECTOR(7 downto 0);
 			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-			ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
+			ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
+			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			shifter_immd : out STD_LOGIC_VECTOR(7 downto 0);
-			shifter_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			shifter_reg_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_immd : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_immd_addr : out STD_LOGIC_VECTOR(7 downto 0);
-			addrmode_reg_addr : out STD_LOGIC_VECTOR(7 downto 0)
+			DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
         );
     END COMPONENT;
     
@@ -90,36 +84,25 @@ ARCHITECTURE behavior OF Testbench_Decode IS
    signal op_datamove : std_logic_vector(7 downto 0);
    signal op_system : std_logic_vector(7 downto 0);
    signal Rd_addr : std_logic_vector(3 downto 0);
-   signal ALU_Rd : std_logic_vector(31 downto 0);
-   signal ALU_Rn : std_logic_vector(31 downto 0);
+   signal ALU_Rn1 : std_logic_vector(31 downto 0);
+   signal ALU_Rn2 : std_logic_vector(31 downto 0);
    signal DataMove_Rd : std_logic_vector(31 downto 0);
-	signal shifter_immd : STD_LOGIC_VECTOR(7 downto 0);
-	signal shifter_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
-	signal shifter_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
-	signal addrmode_immd : STD_LOGIC_VECTOR(7 downto 0);
-	signal addrmode_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
-	signal addrmode_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
+   signal DataMove_Address : std_logic_vector(31 downto 0);
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: Decode PORT MAP (
           instruction => instruction,
-          mem_regs => memregion_register,
           op_alu => op_alu,
           op_branch => op_branch,
           op_datamove => op_datamove,
           op_system => op_system,
           Rd_addr => Rd_addr,
-          ALU_Rd => ALU_Rd,
-          ALU_Rn => ALU_Rn,
+          ALU_Rn1 => ALU_Rn1,
+          ALU_Rn2 => ALU_Rn2,
           DataMove_Rd => DataMove_Rd,
-          shifter_immd => shifter_immd,
-          shifter_immd_addr => shifter_immd_addr,
-          shifter_reg_addr => shifter_reg_addr,
-          addrmode_immd => addrmode_immd,
-          addrmode_immd_addr => addrmode_immd_addr,
-          addrmode_reg_addr => addrmode_reg_addr
+          DataMove_Address => DataMove_Address
         );
 
    -- Stimulus process

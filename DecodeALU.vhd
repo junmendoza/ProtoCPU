@@ -32,10 +32,8 @@ use work.cpu_types.ALL;
 
 entity DecodeALU is
 	Port( 
-			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
 			Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
 			Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
-			Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 			Rn2 : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
@@ -61,17 +59,11 @@ begin
 		reg_word => reg_word
 	);
 	
-	ProcDecodeALU : process(Rd_addr, Rn1_addr, Rn2_addr)
+	ProcDecodeALU : process(Rn1_addr, Rn2_addr)
 	
 	variable index : integer; 
 	
 	begin
-	
-		reg_addr <= Rd_addr;
-		Rd <= reg_word;
-		
-		-- Is this wait necessary?
-		--wait for 2 ns;
 		
 		reg_addr <= Rn1_addr;
 		Rn1 <= reg_word;

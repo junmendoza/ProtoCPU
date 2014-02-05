@@ -37,10 +37,9 @@ entity Execute is
 			op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : in STD_LOGIC_VECTOR(7 downto 0);
-			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
-			operand1 : in STD_LOGIC_VECTOR(31 downto 0); 
-			operand2 : in STD_LOGIC_VECTOR(31 downto 0); 
-			operand3 : in STD_LOGIC_VECTOR(31 downto 0); 
+			ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
+			ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
+			ALU_out : out STD_LOGIC_VECTOR(31 downto 0);  
 			nextpc : out STD_LOGIC;
 			endprogram : out STD_LOGIC
 		);
@@ -66,12 +65,16 @@ architecture Behavioral of Execute is
 			 );
 	end component;
 	
-	signal op_result : STD_LOGIC_VECTOR(31 downto 0); 
-	
 begin
 	
 	-- ALU component mapping
-	ALU_Exec : ALU port map(op_alu, operand1, operand2, op_result);
+	ALU_Exec : ALU port map
+	(
+		alu_sel => op_alu, 
+		op1 => ALU_op1, 
+		op2 => ALU_op2, 
+		dest => ALU_out
+	);
 	
 	-- Branch component mapping
 	-- Memory component mapping

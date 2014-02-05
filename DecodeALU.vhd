@@ -32,10 +32,12 @@ use work.cpu_types.ALL;
 
 entity DecodeALU is
 	Port( 
-			Rd_addr : in STD_LOGIC_VECTOR(7 downto 0); 
-			Rn_addr : in STD_LOGIC_VECTOR(7 downto 0);
+			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0); 
+			Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			Rn : out STD_LOGIC_VECTOR(31 downto 0)
+			Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
+			Rn2 : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end DecodeALU;
 
@@ -43,12 +45,12 @@ architecture Behavioral of DecodeALU is
 
 	component MemRegion_Registers is
 		Port( 
-				reg_addr : in STD_LOGIC_VECTOR(7 downto 0);
+				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Registers;
 	
-	signal reg_addr : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+	signal reg_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 	signal reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
@@ -59,25 +61,26 @@ begin
 		reg_word => reg_word
 	);
 	
-	ProcDecodeALU : process(Rd_addr, Rn_addr)
+	ProcDecodeALU : process(Rd_addr, Rn1_addr, Rn2_addr)
 	
 	variable index : integer; 
 	
 	begin
 	
 		reg_addr <= Rd_addr;
-		-- Wait for ns so we get the word from the register component
-		-- Is this wait necessary?
-		--wait for 2 ns;
 		Rd <= reg_word;
 		
-		
-		
-		reg_addr <= Rn_addr;
-		-- Wait for ns so we get the word from the register component
 		-- Is this wait necessary?
 		--wait for 2 ns;
-		Rn <= reg_word;
+		
+		reg_addr <= Rn1_addr;
+		Rn1 <= reg_word;
+		
+		-- Is this wait necessary?
+		--wait for 2 ns;
+		
+		reg_addr <= Rn2_addr;
+		Rn2 <= reg_word;
 	
 		
 	end process ProcDecodeALU;

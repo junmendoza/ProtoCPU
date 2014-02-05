@@ -41,14 +41,14 @@ ARCHITECTURE behavior OF Testbench_MemRegion_Registers IS
  
     COMPONENT MemRegion_Registers
     PORT(
-         reg_addr : IN  std_logic_vector(7 downto 0);
+         reg_addr : IN  std_logic_vector(3 downto 0);
          reg_word : OUT  std_logic_vector(31 downto 0)
         );
     END COMPONENT;
     
 
    --Inputs
-   signal reg_addr : std_logic_vector(7 downto 0) := (others => '0');
+   signal reg_addr : std_logic_vector(3 downto 0) := (others => '0');
 
  	--Outputs
    signal reg_word : std_logic_vector(31 downto 0);

@@ -74,8 +74,8 @@ architecture Behavioral of ControlUnit is
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
 				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				ALU_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				ALU_Rn : out STD_LOGIC_VECTOR(31 downto 0);
-				ALU_Op3 : out STD_LOGIC_VECTOR(31 downto 0);
+				ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
+				ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 				DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -138,8 +138,8 @@ architecture Behavioral of ControlUnit is
 	
 	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal ALU_Rd : STD_LOGIC_VECTOR(31 downto 0);
-	signal ALU_Rn : STD_LOGIC_VECTOR(31 downto 0);
-	signal ALU_Op3 : STD_LOGIC_VECTOR(31 downto 0);
+	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
+	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal DataMove_Address : STD_LOGIC_VECTOR(31 downto 0);
 	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
@@ -154,30 +154,6 @@ architecture Behavioral of ControlUnit is
 	signal addrmode_immd : STD_LOGIC_VECTOR(7 downto 0);
 	signal addrmode_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
 	signal addrmode_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
-	
-	------------------------------------
-	-- Initialize program region (Instruction Stream)
-	-- 32 * 16-bit
-	------------------------------------
---	signal memregion_program : t_MemProgramData_32_32 := 
---	(
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000"	
---	);
---	
---	signal memregion_register : t_MemRegister_15_32 := 
---	(
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000", X"00000000",
---		X"00000000", X"00000000", X"00000000"
---	);
 	 
 begin
 	
@@ -197,8 +173,8 @@ begin
 		exec_system,
 		Rd_addr => Rd_addr,
 		ALU_Rd => ALU_Rd,
-		ALU_Rn => ALU_Rn,
-		ALU_Op3 => ALU_Op3,
+		ALU_Rn1 => ALU_Rn1,
+		ALU_Rn2 => ALU_Rn2,
 		DataMove_Rd => DataMove_Rd,
 		DataMove_Address => DataMove_Address
 	);
@@ -212,26 +188,12 @@ begin
 		
 		Rd_addr,
 		ALU_Rd,
-		ALU_Rn,
-		ALU_Op3,
+		ALU_Rn1,
+		ALU_Rn2,
 		
 		exec_getpc,
 		endexecution
---		mem_regs(R1_addr) => R1, 
---		mem_regs(R2_addr) => R2, 
---		mem_regs(R3_addr) => R3, 
---		mem_regs(R4_addr) => R4, 
---		mem_regs(R5_addr) => R5, 
---		mem_regs(R6_addr) => R6, 
---		mem_regs(R7_addr) => R7, 
---		mem_regs(R8_addr) => R8, 
---		mem_regs(R9_addr) => R9, 
---		mem_regs(R10_addr) => R10, 
---		mem_regs(R11_addr) => R11, 
---		mem_regs(R12_addr) => R12, 
---		mem_regs(R13_addr) => R13, 
---		mem_regs(R14_addr) => R14, 
---		mem_regs(R15_addr) => R15
+
 	);
 	
 	GetPC : GetNextPC port map(clock, exec_getpc, R1);	

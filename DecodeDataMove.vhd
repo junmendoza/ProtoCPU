@@ -32,7 +32,7 @@ use work.cpu_types.ALL;
 
 entity DecodeDataMove is
 	Port( 
-			Rd_addr : in STD_LOGIC_VECTOR(7 downto 0);
+			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
 			Rd : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end DecodeDataMove;
@@ -41,12 +41,12 @@ architecture Behavioral of DecodeDataMove is
 
 	component MemRegion_Registers is
 		Port( 
-				reg_addr : in STD_LOGIC_VECTOR(7 downto 0);
+				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Registers;
 	
-	signal reg_addr : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+	signal reg_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 	signal reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin

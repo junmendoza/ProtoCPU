@@ -65,49 +65,52 @@ BEGIN
    stim_proc: process
    begin		
 
-		reg_addr <= X"00";
+		reg_addr <= "0000";
 		wait for 10 ns;
 		
-		reg_addr <= X"01";
+		reg_addr <= "0001";
 		wait for 10 ns;
 		
-		reg_addr <= X"02";
+		reg_addr <= "0010";
 		wait for 10 ns;
 		
-		reg_addr <= X"03";
+		reg_addr <= "0011";
 		wait for 10 ns;
 		
-		reg_addr <= X"04";
+		reg_addr <= "0100";
 		wait for 10 ns;
 		
-		reg_addr <= X"05";
+		reg_addr <= "0101";
 		wait for 10 ns;
 		
-		reg_addr <= X"06";
+		reg_addr <= "0110";
 		wait for 10 ns;
 		
-		reg_addr <= X"07";
+		reg_addr <= "0111";
 		wait for 10 ns;
 		
-		reg_addr <= X"08";
+		reg_addr <= "1000";
 		wait for 10 ns;
 		
-		reg_addr <= X"09";
+		reg_addr <= "1001";
 		wait for 10 ns;
 		
-		reg_addr <= X"0A";
+		reg_addr <= "1010";
 		wait for 10 ns;
 		
-		reg_addr <= X"0B";
+		reg_addr <= "1011";
 		wait for 10 ns;
 		
-		reg_addr <= X"0C";
+		reg_addr <= "1100";
 		wait for 10 ns;
 		
-		reg_addr <= X"0D";
+		reg_addr <= "1101";
 		wait for 10 ns;
 		
-		reg_addr <= X"0E";
+		reg_addr <= "1110";
+		wait for 10 ns;
+		
+		reg_addr <= "1111";
 		wait for 10 ns;
 
       wait;

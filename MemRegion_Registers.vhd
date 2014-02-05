@@ -58,7 +58,7 @@ begin
 	variable offset_addr : integer;
 	
 	begin
-			offset_addr := to_integer(signed(reg_addr));
+			offset_addr := to_integer(unsigned(reg_addr));
 			reg_word <= MemoryRegion(offset_addr);
 			
 	end process ProcMemAccess;

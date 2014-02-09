@@ -100,6 +100,7 @@ architecture Behavioral of ControlUnit is
 	
 	component MemoryAccess is
 		Port( 
+				opcode : in STD_LOGIC_VECTOR(7 downto 0);	
 				Rd : in STD_LOGIC_VECTOR(31 downto 0);							-- Word input from Decode (str)
 				effective_addr : in STD_LOGIC_VECTOR(31 downto 0);			-- ldr word memory addr location/str dest memory addr
 				mem_word : out STD_LOGIC_VECTOR(31 downto 0)					-- word retrieved from mem to load (ldr)
@@ -202,6 +203,7 @@ begin
 	
 	MemAccess : MemoryAccess port map
 	(
+		opcode => exec_mem,
 		Rd => DataMove_Rd,
 		effective_addr => effective_address,
 		mem_word => load_mem_word

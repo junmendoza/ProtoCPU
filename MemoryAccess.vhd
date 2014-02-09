@@ -28,9 +28,9 @@ use work.cpu_types.all;
 
 entity MemoryAccess is
 	Port( 
-			Rd : in STD_LOGIC_VECTOR(31 downto 0);
-			effective_addr : in STD_LOGIC_VECTOR(31 downto 0);
-			mem_word : out STD_LOGIC_VECTOR(31 downto 0)
+			Rd : in STD_LOGIC_VECTOR(31 downto 0);							-- Word input from Decode (str)
+			effective_addr : in STD_LOGIC_VECTOR(31 downto 0);			-- ldr word memory addr location/str dest memory addr
+			mem_word : out STD_LOGIC_VECTOR(31 downto 0)					-- word retrieved from mem to load (ldr)
 		 );
 end MemoryAccess;
 

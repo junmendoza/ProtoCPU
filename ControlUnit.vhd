@@ -72,11 +72,13 @@ architecture Behavioral of ControlUnit is
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_system : out STD_LOGIC_VECTOR(7 downto 0);
-				Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
+				ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 				ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
+				DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-				DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
+				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
+				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
@@ -88,11 +90,21 @@ architecture Behavioral of ControlUnit is
 				op_system : in STD_LOGIC_VECTOR(7 downto 0);
 				ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
-				ALU_out : out STD_LOGIC_VECTOR(31 downto 0);  
+				memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
+				ALU_out : out STD_LOGIC_VECTOR(31 downto 0);   
+				effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC
 			);
 	end component Execute;
+	
+	component MemoryAccess is
+		Port( 
+				Rd : in STD_LOGIC_VECTOR(31 downto 0);							-- Word input from Decode (str)
+				effective_addr : in STD_LOGIC_VECTOR(31 downto 0);			-- ldr word memory addr location/str dest memory addr
+				mem_word : out STD_LOGIC_VECTOR(31 downto 0)					-- word retrieved from mem to load (ldr)
+			 );
+	end component MemoryAccess;
 	
 	component GetNextPC is 
 		Port( 
@@ -138,20 +150,14 @@ architecture Behavioral of ControlUnit is
 	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_out : STD_LOGIC_VECTOR(31 downto 0);
+	
+	signal DataMove_Rd_Addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
-	signal DataMove_Address : STD_LOGIC_VECTOR(31 downto 0);
-	signal Shift : STD_LOGIC_VECTOR(11 downto 0);
-	signal AddrMode : STD_LOGIC_VECTOR(31 downto 0);
+	signal immd_word : STD_LOGIC_VECTOR(31 downto 0);
+	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0);
+	signal effective_address : STD_LOGIC_VECTOR(31 downto 0);
 	
-	-- Shifter signals
-	signal shifter_immd : STD_LOGIC_VECTOR(7 downto 0);
-	signal shifter_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
-	signal shifter_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
-	
-	-- AddressMode signals
-	signal addrmode_immd : STD_LOGIC_VECTOR(7 downto 0);
-	signal addrmode_immd_addr : STD_LOGIC_VECTOR(7 downto 0);
-	signal addrmode_reg_addr : STD_LOGIC_VECTOR(7 downto 0);
+	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	 
 begin
 	
@@ -164,29 +170,41 @@ begin
 
 	DecodeInstruction : Decode port map 
 	(
-		R2,
-		exec_alu,  	
-		exec_mem,
-		exec_branch,
-		exec_system,
-		Rd_addr => Rd_addr,
+		instruction => R2,
+		op_alu => exec_alu,  
+		op_branch => exec_branch,	
+		op_datamove => exec_mem,
+		op_system => exec_system,
+		ALU_Rd_addr => Rd_addr,
 		ALU_Rn1 => ALU_Rn1,
 		ALU_Rn2 => ALU_Rn2,
+		DataMove_Rd_Addr => DataMove_Rd_Addr,
 		DataMove_Rd => DataMove_Rd,
-		DataMove_Address => DataMove_Address
+		immd_word => immd_word,
+		memaddr_offset => memaddr_offset
 	);
 	
-	ExecuteCommand: Execute port map
+	
+	ExecuteCommand : Execute port map
 	(
-		exec_alu,  	
-		exec_mem,
-		exec_branch,
-		exec_system,	
-		ALU_Rn1,
-		ALU_Rn2,
-		ALU_out,
-		exec_getpc,
-		endexecution
+		op_alu => exec_alu,  	
+		op_branch => exec_branch,
+		op_datamove => exec_mem,
+		op_system => exec_system,	
+		ALU_op1 => ALU_Rn1,
+		ALU_op2 => ALU_Rn2,
+		memaddr_offset => memaddr_offset,
+		ALU_out => ALU_out,
+		effective_addr => effective_address,
+		nextpc => exec_getpc,
+		endprogram => endexecution
+	);
+	
+	MemAccess : MemoryAccess port map
+	(
+		Rd => DataMove_Rd,
+		effective_addr => effective_address,
+		mem_word => load_mem_word
 	);
 	
 	GetPC : GetNextPC port map(clock, exec_getpc, R1);	

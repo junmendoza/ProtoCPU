@@ -37,21 +37,22 @@ entity Decode is
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_system : out STD_LOGIC_VECTOR(7 downto 0);
-			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
+			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
+			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
+			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
+			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
 architecture Behavioral of Decode is
 
-	signal ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal ALU_Rn1_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal ALU_Rn2_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
-	signal DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
+	signal DM_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
 	
@@ -93,7 +94,8 @@ architecture Behavioral of Decode is
 	component DecodeAddrMode is
 		Port( 
 				AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
-				data_word: out STD_LOGIC_VECTOR(31 downto 0)
+				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
+				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeAddrMode;
 		
@@ -106,7 +108,7 @@ begin
 		ALU_Rn1_addr => ALU_Rn1_addr, 
 		ALU_Rn2_addr => ALU_Rn2_addr,
 		Branch_Target => Branch_Target, 
-		DataMove_Rd_addr => DataMove_Rd_addr, 
+		DataMove_Rd_addr => DM_Rd_addr, 
 		DataMove_AddrMode => DataMove_AddrMode, 
 		System_Data => System_Data
 	);
@@ -121,14 +123,15 @@ begin
 	
 	Decode_DataMove : DecodeDataMove port map
 	(
-		Rd_addr => DataMove_Rd_addr, 
+		Rd_addr => DM_Rd_addr, 
 		Rd => DataMove_Rd
 	);
 	
 	Decode_AddrMode : DecodeAddrMode port map
 	(
 		AddrMode => DataMove_AddrMode, 
-		data_word => DataMove_Address
+		immd_word => immd_word,
+		memaddr_offset => memaddr_offset
 	);
 	
 	Decode_Branch : DecodeBranch port map

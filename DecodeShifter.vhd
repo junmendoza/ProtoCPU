@@ -34,8 +34,10 @@ architecture Behavioral of DecodeShifter is
 	-- Memory region components
 	component MemRegion_Main is
 		Port( 
+				rw_sel : in STD_LOGIC;
 				offset : in STD_LOGIC_VECTOR(31 downto 0);
-				mem_word : out STD_LOGIC_VECTOR(31 downto 0)
+				store_word : in STD_LOGIC_VECTOR(31 downto 0);
+				load_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Main;
 	

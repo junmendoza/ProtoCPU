@@ -25,14 +25,16 @@ use work.cpu_types.all;
 
 entity MemRegion_Main is
 	Port( 
+			rw_sel : in STD_LOGIC;
 			offset : in STD_LOGIC_VECTOR(31 downto 0);
-			mem_word : out STD_LOGIC_VECTOR(31 downto 0)
+			store_word : in STD_LOGIC_VECTOR(31 downto 0);
+			load_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
 end MemRegion_Main;
 
 architecture Behavioral of MemRegion_Main is
 
-	signal MemoryRegion : t_MemRegion_Main_size :=
+	signal MemoryRegion : t_MemRegion_Main :=
 	(
 		X"00000001", 
 		X"00000002", 
@@ -111,7 +113,12 @@ begin
 	
 	begin
 			offset_addr := to_integer(unsigned(offset));
-			mem_word  <= MemoryRegion(offset_addr);
+			
+			mem_rw_mode : if rw_sel = mem_read then
+				load_word <= MemoryRegion(offset_addr);
+			elsif rw_sel = mem_write then 
+				MemoryRegion(offset_addr) <= store_word;
+			end if mem_rw_mode;
 			
 	end process ProcMemAccess;
 

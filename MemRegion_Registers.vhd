@@ -32,7 +32,7 @@ end MemRegion_Registers;
 
 architecture Behavioral of MemRegion_Registers is
 
-	signal MemoryRegion : t_MemRegion_Regs_size :=
+	signal MemoryRegion : t_MemRegion_Regs :=
 	(
 		X"00000001", 
 		X"00000002", 

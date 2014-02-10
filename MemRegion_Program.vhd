@@ -32,7 +32,7 @@ end MemRegion_Program;
 
 architecture Behavioral of MemRegion_Program is
 
-	signal MemoryRegion : t_MemRegion_Program_size :=
+	signal MemoryRegion : t_MemRegion_Program :=
 	(
 		X"00000001", 
 		X"00000002", 

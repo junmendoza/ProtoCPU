@@ -40,19 +40,32 @@ architecture Behavioral of MemoryAccess is
 	component Load is
 		Port( 
 				effective_address : in STD_LOGIC_VECTOR(31 downto 0);
-				word : out STD_LOGIC_VECTOR(31 downto 0)
+				load_word : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Load;
+	
+	component Store is
+		Port( 
+				effective_address : in STD_LOGIC_VECTOR(31 downto 0);
+				store_word : in STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component Store;
 	
 	signal ldr_effective_addr : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	signal str_effective_addr : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
 
-	load_memaccess : Load port map
+	ldr : Load port map
 	(
 		effective_address => ldr_effective_addr,
-		word => mem_word
+		load_word => mem_word
+	);
+	
+	str : Store port map
+	(
+		effective_address => str_effective_addr,
+		store_word => Rd
 	);
 
 	ProcMemAccess : process(effective_addr)

@@ -27,8 +27,8 @@ entity MemRegion_Registers is
 	Port( 
 			rw_sel : in STD_LOGIC;
 			offset : in STD_LOGIC_VECTOR(3 downto 0);
-			store_word : in STD_LOGIC_VECTOR(31 downto 0);
-			load_word : out STD_LOGIC_VECTOR(31 downto 0)
+			write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
+			read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
 		  );
 end MemRegion_Registers;
 
@@ -61,9 +61,9 @@ begin
 	
 	begin
 			reg_rw_mode : if rw_sel = reg_read then
-				load_word <= MemoryRegion(offset_addr);
+				read_word <= MemoryRegion(offset_addr);
 			elsif rw_sel = reg_write then 
-				MemoryRegion(offset_addr) <= store_word;
+				MemoryRegion(offset_addr) <= write_word;
 			end if reg_rw_mode;
 			
 	end process ProcMemAccess;

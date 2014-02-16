@@ -68,6 +68,7 @@ architecture Behavioral of ControlUnit is
 	component Decode is  
 		Port( 
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+				op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
@@ -77,6 +78,7 @@ architecture Behavioral of ControlUnit is
 				ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 				DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
+				addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -106,6 +108,25 @@ architecture Behavioral of ControlUnit is
 				mem_word : out STD_LOGIC_VECTOR(31 downto 0)					-- word retrieved from mem to load (ldr)
 			 );
 	end component MemoryAccess;
+	
+	component Mux_LoadWord is
+		Port( 
+				sel_src : in STD_LOGIC_VECTOR(3 downto 0);
+				load_word_ID : in STD_LOGIC_VECTOR(31 downto 0);		-- Load word - immediate word from decode
+				load_word_MEM : in STD_LOGIC_VECTOR(31 downto 0);		-- Load word - loaded from memory access
+				load_word : out STD_LOGIC_VECTOR(31 downto 0)			
+			 );
+	end component Mux_LoadWord;
+	
+	component WriteBack is
+		Port( 
+				op_type : in STD_LOGIC_VECTOR(3 downto 0);  			-- select optype
+				ALU_op_addr : in STD_LOGIC_VECTOR(3 downto 0);		-- ALU write destination register
+				ALU_op : in STD_LOGIC_VECTOR(31 downto 0);   		-- ALU operation result
+				LDR_addr : in STD_LOGIC_VECTOR(3 downto 0);			-- Load word destination register
+				LDR_word : in STD_LOGIC_VECTOR(31 downto 0)			-- Data to laod to register
+			 );
+	end component WriteBack;
 	
 	component GetNextPC is 
 		Port( 
@@ -141,6 +162,7 @@ architecture Behavioral of ControlUnit is
 	signal R15 : STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- Command signals
+	signal op_type  	 : STD_LOGIC_VECTOR(3 downto 0); 
 	signal exec_alu  	 : STD_LOGIC_VECTOR(7 downto 0);
 	signal exec_mem  	 : STD_LOGIC_VECTOR(7 downto 0);
 	signal exec_branch : STD_LOGIC_VECTOR(7 downto 0);
@@ -154,59 +176,80 @@ architecture Behavioral of ControlUnit is
 	
 	signal DataMove_Rd_Addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
+	signal addrmode : STD_LOGIC_VECTOR(3 downto 0);
 	signal immd_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0);
 	signal effective_address : STD_LOGIC_VECTOR(31 downto 0);
 	
+	signal load_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	 
 begin
 	
 	FetchInstruction : Fetch port map
 	(
-		clock, 
-		R1, 
-		R2
+		clock => clock, 
+		pc => R1, 			-- in current pc
+		instr => R2			-- out next instruction -> ID
 	);
 
 	DecodeInstruction : Decode port map 
 	(
-		instruction => R2,
+		instruction => R2,					-- in instruction to decode 				<- IF
+		op_type => op_type,					-- out instr/operation type				-> WB	
 		op_alu => exec_alu,  
 		op_branch => exec_branch,	
-		op_datamove => exec_mem,
+		op_datamove => exec_mem,			-- out datamove operation					-> MEM
 		op_system => exec_system,
-		ALU_Rd_addr => Rd_addr,
-		ALU_Rn1 => ALU_Rn1,
-		ALU_Rn2 => ALU_Rn2,
-		DataMove_Rd_Addr => DataMove_Rd_Addr,
-		DataMove_Rd => DataMove_Rd,
-		immd_word => immd_word,
-		memaddr_offset => memaddr_offset
+		ALU_Rd_addr => Rd_addr,				-- out Dest reg addr for ALU op 			-> WB
+		ALU_Rn1 => ALU_Rn1,					-- out ALU operand 1
+		ALU_Rn2 => ALU_Rn2,					-- out ALU operand 2
+		DataMove_Rd_Addr => DataMove_Rd_Addr,	-- out Dest reg addr for ALU op 	-> WB
+		DataMove_Rd => DataMove_Rd,		-- out str register data 					-> MEM
+		addrmode => addrmode,				-- out ldr word source						-> WB
+		immd_word => immd_word,				-- out ldr word 								-> WB
+		memaddr_offset => memaddr_offset	-- out ldr/str memory addr					-> EX
 	);
 	
 	
 	ExecuteCommand : Execute port map
 	(
-		op_alu => exec_alu,  	
+		op_alu => exec_alu,  				
 		op_branch => exec_branch,
 		op_datamove => exec_mem,
 		op_system => exec_system,	
-		ALU_op1 => ALU_Rn1,
-		ALU_op2 => ALU_Rn2,
-		memaddr_offset => memaddr_offset,
-		ALU_out => ALU_out,
-		effective_addr => effective_address,
+		ALU_op1 => ALU_Rn1,						-- in ALU operand 1								<- ID
+		ALU_op2 => ALU_Rn2,						-- in ALU operand 2								<- ID
+		memaddr_offset => memaddr_offset,	-- in ldr/str memory addr 						<- ID
+		ALU_out => ALU_out,						-- out ALU result 								-> WB
+		effective_addr => effective_address,-- out effective address of ldr/str ops 	-> MEM 
 		nextpc => exec_getpc,
 		endprogram => endexecution
 	);
 	
 	MemAccess : MemoryAccess port map
 	(
-		opcode => exec_mem,
-		Rd => DataMove_Rd,
-		effective_addr => effective_address,
-		mem_word => load_mem_word
+		opcode => exec_mem,							-- in datamove operation 					<- ID
+		Rd => DataMove_Rd,							-- in str register data						<- ID
+		effective_addr => effective_address,	-- in effective address of ldr/str ops <- EX
+		mem_word => load_mem_word					-- out word retrieved from mem to load -> WB
+	);
+	
+	MuxLDR : Mux_LoadWord port map
+	(
+		sel_src => addrmode, 				-- in ldr data source 						<- ID
+		load_word_ID => immd_word,			-- in immediate data 						<- ID
+		load_word_MEM => load_mem_word,	-- in data loaded from memory 			<- MEM
+		load_word => load_word				-- Muxed data to load in a register 	-> WB
+	);
+	
+	Register_WriteBack : WriteBack port map
+	(
+		op_type => op_type,					-- in instr/operation type				<- ID				
+		ALU_op_addr => Rd_addr,				-- in Dest addr for ALU operation 	<- ID
+		ALU_op => ALU_out,					-- in ALU operation result 			<- EX
+		LDR_addr => DataMove_Rd_Addr,		-- in Dest register addr for LDR 	<- ID 
+		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
 	);
 	
 	GetPC : GetNextPC port map(clock, exec_getpc, R1);	

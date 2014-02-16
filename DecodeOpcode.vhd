@@ -32,7 +32,8 @@ use work.cpu_types.ALL;
 
 entity DecodeOpcode is
 	Port( 
-			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			instruction : in STD_LOGIC_VECTOR(31 downto 0);
+			op_type : out STD_LOGIC_VECTOR(3 downto 0);
 			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			ALU_Rn1_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0);
@@ -68,7 +69,8 @@ begin
 					or opcode = alu_not 
 					or opcode = alu_shl
 					or opcode = alu_shr then
-		
+					
+				op_type <= optype_alu;
 				ALU_Rd_addr <= instruction(19 downto 16);
 				ALU_Rn1_addr <= instruction(15 downto 12);
 				ALU_Rn2_addr <= instruction(3 downto 0);
@@ -78,13 +80,18 @@ begin
 					or opcode = mem_str
 					or opcode = mem_push
 					or opcode = mem_pop then
-		
+					
+				op_type <= optype_datamove;
 				DataMove_Rd_addr <= instruction(19 downto 16);
 				DataMove_AddrMode <= instruction(11 downto 0);
 				
 			elsif opcode = br_jmp then
-		
+			
+				op_type <= optype_branch;
+				
 			elsif opcode = sys_int then
+			
+				op_type <= optype_system;
 				
 		end if if_opcode;
 		

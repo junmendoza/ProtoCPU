@@ -33,6 +33,7 @@ use work.cpu_types.ALL;
 entity Decode is
 	Port( 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
@@ -42,6 +43,7 @@ entity Decode is
 			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
 			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
+			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
@@ -59,6 +61,7 @@ architecture Behavioral of Decode is
 	component DecodeOpcode is  
 		Port(
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+				op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 				ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Rn1_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0); 
@@ -94,6 +97,7 @@ architecture Behavioral of Decode is
 	component DecodeAddrMode is
 		Port( 
 				AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
+				addrmode_mode : out STD_LOGIC_VECTOR(3 downto 0);
 				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -104,6 +108,7 @@ begin
 	Decode : DecodeOpcode port map
 	(
 		instruction, 
+		op_type => op_type,
 		ALU_Rd_addr => ALU_Rd_addr, 
 		ALU_Rn1_addr => ALU_Rn1_addr, 
 		ALU_Rn2_addr => ALU_Rn2_addr,
@@ -130,6 +135,7 @@ begin
 	Decode_AddrMode : DecodeAddrMode port map
 	(
 		AddrMode => DataMove_AddrMode, 
+		addrmode_mode => addrmode,
 		immd_word => immd_word,
 		memaddr_offset => memaddr_offset
 	);

@@ -45,8 +45,8 @@ architecture Behavioral of DecodeALU is
 		Port( 
 				rw_sel : in STD_LOGIC;
 				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				store_word : in STD_LOGIC_VECTOR(31 downto 0);
-				load_word : out STD_LOGIC_VECTOR(31 downto 0)
+				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
+				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
 			  );
 	end component MemRegion_Registers;
 	
@@ -60,8 +60,8 @@ begin
 	(
 		rw_sel => reg_read,
 		offset => reg_offset,
-		store_word => store_word,
-		load_word => load_word
+		write_word => store_word,
+		read_word => load_word
 	);
 	
 	ProcDecodeALU : process(Rn1_addr, Rn2_addr)

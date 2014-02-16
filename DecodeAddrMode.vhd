@@ -25,6 +25,7 @@ use work.cpu_types.all;
 entity DecodeAddrMode is
 	Port( 
 			AddrMode : in STD_LOGIC_VECTOR(11 downto 0); 
+			addrmode_mode : out STD_LOGIC_VECTOR(3 downto 0);
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
@@ -36,8 +37,8 @@ architecture Behavioral of DecodeAddrMode is
 		Port( 
 				rw_sel : in STD_LOGIC;
 				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				store_word : in STD_LOGIC_VECTOR(31 downto 0);
-				load_word : out STD_LOGIC_VECTOR(31 downto 0)
+				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
+				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
 			  );
 	end component MemRegion_Registers;
 
@@ -55,8 +56,8 @@ begin
 	(
 		rw_sel => reg_read,
 		offset => regaddr_offset,
-		store_word => store_word,
-		load_word => memaddr_reg_word
+		write_word => store_word,
+		read_word => memaddr_reg_word
 	);
 	
 	ProcAddrMode : process(AddrMode)
@@ -67,15 +68,16 @@ begin
 	begin
 		
 		mode := AddrMode(11 downto 8); 
+		addrmode_mode <= mode;
 		address := AddrMode(7 downto 0);
 	
-		if_mode : if mode = shft_mode_immd then
+		if_mode : if mode = addrmode_mode_immd then
 			-- address is the immediate data 
 			immd_word(7 downto 0) <= address;
-		elsif mode = shft_mode_memaddr then
+		elsif mode = addrmode_mode_memaddr then
 			-- address is the memory address offset where the immediate data is located
 			memaddr_offset(7 downto 0) <= address;
-		elsif mode = shft_mode_regaddr then
+		elsif mode = addrmode_mode_regaddr then
 			-- address is the register address that contains the memory address offset where the immediate data is located
 			regaddr_offset <= address(3 downto 0);
 			memaddr_offset <= memaddr_reg_word;

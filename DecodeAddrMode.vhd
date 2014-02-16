@@ -34,8 +34,10 @@ architecture Behavioral of DecodeAddrMode is
 
 	component MemRegion_Registers is
 		Port( 
-				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
+				rw_sel : in STD_LOGIC;
+				offset : in STD_LOGIC_VECTOR(3 downto 0);
+				store_word : in STD_LOGIC_VECTOR(31 downto 0);
+				load_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Registers;
 
@@ -45,12 +47,16 @@ architecture Behavioral of DecodeAddrMode is
 	-- Word output from register memory region
 	signal memaddr_reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
+	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- resolve this unused wire
+	
 begin
 	
 	memreg_registers : MemRegion_Registers port map
 	(
-		reg_addr => regaddr_offset,
-		reg_word => memaddr_reg_word
+		rw_sel => reg_read,
+		offset => regaddr_offset,
+		store_word => store_word,
+		load_word => memaddr_reg_word
 	);
 	
 	ProcAddrMode : process(AddrMode)

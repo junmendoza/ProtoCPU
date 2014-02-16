@@ -25,8 +25,10 @@ use work.cpu_types.all;
 
 entity MemRegion_Registers is
 	Port( 
-			reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
-			reg_word : out STD_LOGIC_VECTOR(31 downto 0)
+			rw_sel : in STD_LOGIC;
+			offset : in STD_LOGIC_VECTOR(3 downto 0);
+			store_word : in STD_LOGIC_VECTOR(31 downto 0);
+			load_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
 end MemRegion_Registers;
 
@@ -53,13 +55,16 @@ architecture Behavioral of MemRegion_Registers is
 	
 begin
 
-	ProcMemAccess : process(reg_addr)
+	ProcMemAccess : process(offset)
 	
 	variable offset_addr : integer;
 	
 	begin
-			offset_addr := to_integer(unsigned(reg_addr));
-			reg_word <= MemoryRegion(offset_addr);
+			reg_rw_mode : if rw_sel = reg_read then
+				load_word <= MemoryRegion(offset_addr);
+			elsif rw_sel = reg_write then 
+				MemoryRegion(offset_addr) <= store_word;
+			end if reg_rw_mode;
 			
 	end process ProcMemAccess;
 

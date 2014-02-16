@@ -41,20 +41,25 @@ architecture Behavioral of DecodeDataMove is
 
 	component MemRegion_Registers is
 		Port( 
-				reg_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				reg_word : out STD_LOGIC_VECTOR(31 downto 0)
+				rw_sel : in STD_LOGIC;
+				offset : in STD_LOGIC_VECTOR(3 downto 0);
+				store_word : in STD_LOGIC_VECTOR(31 downto 0);
+				load_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
 	end component MemRegion_Registers;
 	
-	signal reg_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal offset_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal load_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- This is an unnecessary wire, resolve this
 	
 begin
 
 	memreg_registers : MemRegion_Registers port map
 	(
-		reg_addr => reg_addr,
-		reg_word => reg_word
+		rw_sel => reg_read,
+		offset => offset_addr,
+		load_word => load_word,
+		store_word => store_word
 	);
 	
 	ProcDecodeDataMove : process(Rd_addr)
@@ -63,11 +68,11 @@ begin
 	
 	begin
 
-		reg_addr <= Rd_addr;
+		offset_addr <= Rd_addr;
 		-- Wait for ns so we get the word from the register component
 		-- Is this wait necessary?
 		--wait for 2 ns;
-		Rd <= reg_word;
+		Rd <= load_word;
 		
 	end process ProcDecodeDataMove;
 	

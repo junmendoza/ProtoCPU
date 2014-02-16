@@ -90,6 +90,9 @@ package cpu_types is
 	-- Memory access
 	constant mem_read : STD_LOGIC := '0';
 	constant mem_write : STD_LOGIC := '1'; 
+	
+	constant reg_read : STD_LOGIC := '0';
+	constant reg_write : STD_LOGIC := '1'; 
 
 end cpu_types;
 

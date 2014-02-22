@@ -94,6 +94,7 @@ architecture Behavioral of ControlUnit is
 				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 				memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
 				ALU_out : out STD_LOGIC_VECTOR(31 downto 0);   
+				PSR_out : out STD_LOGIC_VECTOR(31 downto 0);    
 				effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC
@@ -173,6 +174,7 @@ architecture Behavioral of ControlUnit is
 	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_out : STD_LOGIC_VECTOR(31 downto 0);
+	signal PSR_out : STD_LOGIC_VECTOR(31 downto 0);
 	
 	signal DataMove_Rd_Addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
@@ -222,6 +224,7 @@ begin
 		ALU_op2 => ALU_Rn2,						-- in ALU operand 2								<- ID
 		memaddr_offset => memaddr_offset,	-- in ldr/str memory addr 						<- ID
 		ALU_out => ALU_out,						-- out ALU result 								-> WB
+		PSR_out => PSR_out, 						-- out CMP result									-> WB
 		effective_addr => effective_address,-- out effective address of ldr/str ops 	-> MEM 
 		nextpc => exec_getpc,
 		endprogram => endexecution
@@ -252,7 +255,7 @@ begin
 		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
 	);
 	
-	GetPC : GetNextPC port map(clock, exec_getpc, R1);	
+	--GetPC : GetNextPC port map(clock, exec_getpc, R1);	
 	
 end architecture Behavioral;
 

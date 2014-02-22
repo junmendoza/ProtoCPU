@@ -35,13 +35,16 @@ entity ALU is
           alu_sel : in STD_LOGIC_VECTOR(7 downto 0);
           op1 : in STD_LOGIC_VECTOR(31 downto 0);
           op2 : in STD_LOGIC_VECTOR(31 downto 0);
-          dest : out STD_LOGIC_VECTOR(31 downto 0));
+          ALU_out : out STD_LOGIC_VECTOR(31 downto 0);
+          CMP_out : out STD_LOGIC_VECTOR(31 downto 0)
+			);
 end ALU;
 
 architecture Behavioral of ALU is
-		
-begin
 	
+begin
+		
+			 
 	select_op : process (alu_sel)
 	
 	variable tempDest : integer;
@@ -57,35 +60,39 @@ begin
 					
 			when alu_add =>  
 				tempDest := iOp1 + iOp2;
-				dest <= std_logic_vector(to_signed(tempDest, 32));
+				ALU_out <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_sub =>  
 				tempDest := iOp1 - iOp2;
-				dest <= std_logic_vector(to_signed(tempDest, 32));
+				ALU_out <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_mul => 
 			when alu_div => 
 				 
 			when alu_and => 
-				dest <= op1 and op2;
+				ALU_out <= op1 and op2;
 				
 			when alu_nand =>
-				dest <= op1 nand op2;
+				ALU_out <= op1 nand op2;
 				
 			when alu_or  => 
-				dest <= op1 or op2; 
+				ALU_out <= op1 or op2; 
 				
 			when alu_nor => 
-				dest <= op1 nor op2; 
+				ALU_out <= op1 nor op2; 
 				
 			when alu_xor =>  
-				dest <= op1 xor op2;
+				ALU_out <= op1 xor op2;
 				
 			when alu_xnor => 
-				dest <= op1 xnor op2;
+				ALU_out <= op1 xnor op2;
 				
 			when alu_not =>  
-				dest <= not op1;
+				ALU_out <= not op1;
+			
+			when alu_cmp =>  
+				tempDest := iOp1 - iOp2;
+				CMP_out <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_shl =>  
 			when alu_shr =>  

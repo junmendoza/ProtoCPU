@@ -41,6 +41,7 @@ entity Execute is
 			ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 			memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
 			ALU_out : out STD_LOGIC_VECTOR(31 downto 0);   
+			PSR_out : out STD_LOGIC_VECTOR(31 downto 0);    
 			effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
 			nextpc : out STD_LOGIC;
 			endprogram : out STD_LOGIC
@@ -60,22 +61,40 @@ architecture Behavioral of Execute is
 	
 	component ALU is
 		Port( 
-				alu_sel : in STD_LOGIC_VECTOR(7 downto 0);
-				op1 : in STD_LOGIC_VECTOR(31 downto 0);
-				op2 : in STD_LOGIC_VECTOR(31 downto 0);
-				dest : out STD_LOGIC_VECTOR(31 downto 0)
+				 alu_sel : in STD_LOGIC_VECTOR(7 downto 0);
+				 op1 : in STD_LOGIC_VECTOR(31 downto 0);
+				 op2 : in STD_LOGIC_VECTOR(31 downto 0);
+				 ALU_out : out STD_LOGIC_VECTOR(31 downto 0);
+				 CMP_out : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component;
 	
+	component Compare is
+		Port( 
+				ALU_out : in STD_LOGIC_VECTOR(31 downto 0);
+				PSR : out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component Compare;
+	
+	signal CMP_out : STD_LOGIC_VECTOR(31 downto 0);
+	
 begin
 	
-	-- ALU component mapping
+	-- ALU component map
 	ALU_Exec : ALU port map
 	(
 		alu_sel => op_alu, 
 		op1 => ALU_op1, 
 		op2 => ALU_op2, 
-		dest => ALU_out
+		ALU_out => ALU_out,
+		CMP_out => CMP_out
+	);
+	
+	-- Comparison component map
+	CMP : Compare port map
+	(
+		ALU_out => CMP_out,
+		PSR => PSR_out
 	);
 	
 	-- Branch component mapping

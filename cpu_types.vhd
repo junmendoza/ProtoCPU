@@ -54,8 +54,9 @@ package cpu_types is
 	constant alu_xor  : cmd_id_size := X"08";
 	constant alu_xnor : cmd_id_size := X"09";
 	constant alu_not  : cmd_id_size := X"0A";
-	constant alu_shl  : cmd_id_size := X"0B";
-	constant alu_shr  : cmd_id_size := X"0C";
+	constant alu_cmp  : cmd_id_size := X"0B";
+	constant alu_shl  : cmd_id_size := X"0C";
+	constant alu_shr  : cmd_id_size := X"0D";
 	
 	constant mem_mov  : cmd_id_size := X"0D";
 	constant mem_ldr  : cmd_id_size := X"0E";

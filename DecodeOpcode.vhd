@@ -38,6 +38,7 @@ entity DecodeOpcode is
 			ALU_Rn1_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			JumpCondition : out STD_LOGIC_VECTOR(3 downto 0); 
+			NextPC : out STD_LOGIC_VECTOR(31 downto 0);
 			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 			DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 			System_Data : out STD_LOGIC_VECTOR(23 downto 0)
@@ -94,11 +95,12 @@ begin
 				
 			elsif opcode = br_jmp then
 			
-				-- 31-24		23-20		19-12			11-0
-				-- opcode	cond		Reserved		address mode
+				-- 31-24		23-20		19-0
+				-- opcode	cond		target immd address
 			
 				op_type <= optype_branch;
 				JumpCondition <= instruction(23 downto 20);
+				NextPC(19 downto 0) <= instruction(19 downto 0);
 				
 			elsif opcode = sys_int then
 			

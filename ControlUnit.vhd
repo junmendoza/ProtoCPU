@@ -81,7 +81,7 @@ architecture Behavioral of ControlUnit is
 				addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-				NextPC : out STD_LOGIC_VECTOR(31 downto 0)
+				ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Decode;
 	
@@ -185,7 +185,7 @@ architecture Behavioral of ControlUnit is
 	signal load_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	
-	signal nextPC : STD_LOGIC_VECTOR(31 downto 0);
+	signal ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
 	 
 begin
 	
@@ -212,7 +212,7 @@ begin
 		addrmode => addrmode,					-- out ldr word source						-> WB
 		immd_word => immd_word,					-- out ldr word 								-> WB
 		memaddr_offset => memaddr_offset,	-- out ldr/str memory addr					-> EX
-		NextPC => NextPC
+		ExecNextPC => ExecNextPC
 	);
 	
 	
@@ -255,8 +255,6 @@ begin
 		LDR_addr => DataMove_Rd_Addr,		-- in Dest register addr for LDR 	<- ID 
 		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
 	);
-	
-	--GetPC : GetNextPC port map(clock, exec_getpc, R1);	
 	
 end architecture Behavioral;
 

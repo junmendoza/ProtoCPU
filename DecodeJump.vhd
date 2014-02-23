@@ -20,6 +20,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -32,7 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity DecodeJump is
 	Port( 
 			cond : in STD_LOGIC_VECTOR(3 downto 0);
-			NextPC : out STD_LOGIC_VECTOR(31 downto 0)
+			NextPC : in STD_LOGIC_VECTOR(31 downto 0);
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
 end DecodeJump;
 
@@ -44,8 +46,32 @@ architecture Behavioral of DecodeJump is
 				cond_true : out STD_LOGIC
 			 );
 	end component DecodeCondition;
+	
+	signal jmp_condition : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal cond_true : STD_LOGIC := '0';
 
 begin
+
+	GetCondition : DecodeCondition port map
+	(
+		cond => jmp_condition,
+		cond_true => cond_true
+	);
+
+	ProcDecodeJump : process(cond)
+	begin 
+	
+		jmp_condition <= cond;
+		
+		-- Send the signal to DecodeCondition to evaluate the condition
+		-- Is this wait necessary?
+		--wait for 10 ns;
+		
+		if_jmpcondition_met : if cond_true = '1' then
+			ExecNextPC <= NextPC;
+		end if if_jmpcondition_met;
+		
+	end process ProcDecodeJump;
 
 
 end Behavioral;

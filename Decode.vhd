@@ -46,7 +46,7 @@ entity Decode is
 			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-			NextPC : out STD_LOGIC_VECTOR(31 downto 0)
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
@@ -57,7 +57,8 @@ architecture Behavioral of Decode is
 	signal DM_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
-	signal JumpCondition : STD_LOGIC_VECTOR(3 downto 0);		
+	signal JumpCondition : STD_LOGIC_VECTOR(3 downto 0);	
+	signal NextPC : STD_LOGIC_VECTOR(31 downto 0);		
 	
 	component DecodeOpcode is  
 		Port(
@@ -67,6 +68,7 @@ architecture Behavioral of Decode is
 				ALU_Rn1_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				JumpCondition : out STD_LOGIC_VECTOR(3 downto 0); 
+				NextPC : out STD_LOGIC_VECTOR(31 downto 0); 
 				DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 				System_Data : out STD_LOGIC_VECTOR(23 downto 0)
@@ -101,7 +103,8 @@ architecture Behavioral of Decode is
 	component DecodeJump is
 		Port( 
 				cond : in STD_LOGIC_VECTOR(3 downto 0);
-				NextPC : out STD_LOGIC_VECTOR(31 downto 0)
+				NextPC : in STD_LOGIC_VECTOR(31 downto 0);
+				ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeJump;
 		
@@ -115,6 +118,7 @@ begin
 		ALU_Rn1_addr => ALU_Rn1_addr, 
 		ALU_Rn2_addr => ALU_Rn2_addr,
 		JumpCondition => JumpCondition, 
+		NextPC => NextPC,
 		DataMove_Rd_addr => DM_Rd_addr, 
 		DataMove_AddrMode => DataMove_AddrMode, 
 		System_Data => System_Data
@@ -145,7 +149,8 @@ begin
 	Decode_Jump : DecodeJump port map
 	(
 		cond => JumpCondition,
-		NextPC => NextPC
+		NextPC => NextPC,
+		ExecNextPC => ExecNextPC
 	);
 	
 end Behavioral;

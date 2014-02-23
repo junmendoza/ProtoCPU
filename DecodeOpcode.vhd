@@ -67,13 +67,20 @@ begin
 					or opcode = alu_xor
 					or opcode = alu_xnor
 					or opcode = alu_not 
+					or opcode = alu_cmp 
 					or opcode = alu_shl
 					or opcode = alu_shr then
 					
 				op_type <= optype_alu;
-				ALU_Rd_addr <= instruction(19 downto 16);
 				ALU_Rn1_addr <= instruction(15 downto 12);
 				ALU_Rn2_addr <= instruction(3 downto 0);
+				
+				-- Destination address of compare is the PSR register
+				if_cmp : if opcode = alu_cmp then
+					ALU_Rd_addr <= R4_addr;
+				else
+					ALU_Rd_addr <= instruction(19 downto 16);
+				end if if_cmp;
 				
 			elsif opcode = mem_mov
 					or opcode = mem_ldr

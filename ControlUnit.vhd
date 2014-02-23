@@ -93,8 +93,7 @@ architecture Behavioral of ControlUnit is
 				ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 				memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
-				ALU_out : out STD_LOGIC_VECTOR(31 downto 0);   
-				PSR_out : out STD_LOGIC_VECTOR(31 downto 0);    
+				Exec_out : out STD_LOGIC_VECTOR(31 downto 0);     
 				effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
 				nextpc : out STD_LOGIC;
 				endprogram : out STD_LOGIC
@@ -122,8 +121,8 @@ architecture Behavioral of ControlUnit is
 	component WriteBack is
 		Port( 
 				op_type : in STD_LOGIC_VECTOR(3 downto 0);  			-- select optype
-				ALU_op_addr : in STD_LOGIC_VECTOR(3 downto 0);		-- ALU write destination register
-				ALU_op : in STD_LOGIC_VECTOR(31 downto 0);   		-- ALU operation result
+				ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);		-- ALU destination register
+				Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   		-- Execute operation result
 				LDR_addr : in STD_LOGIC_VECTOR(3 downto 0);			-- Load word destination register
 				LDR_word : in STD_LOGIC_VECTOR(31 downto 0)			-- Data to laod to register
 			 );
@@ -173,8 +172,7 @@ architecture Behavioral of ControlUnit is
 	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
 	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
-	signal ALU_out : STD_LOGIC_VECTOR(31 downto 0);
-	signal PSR_out : STD_LOGIC_VECTOR(31 downto 0);
+	signal Exec_Out : STD_LOGIC_VECTOR(31 downto 0);
 	
 	signal DataMove_Rd_Addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
@@ -220,12 +218,11 @@ begin
 		op_branch => exec_branch,
 		op_datamove => exec_mem,
 		op_system => exec_system,	
-		ALU_op1 => ALU_Rn1,						-- in ALU operand 1								<- ID
-		ALU_op2 => ALU_Rn2,						-- in ALU operand 2								<- ID
-		memaddr_offset => memaddr_offset,	-- in ldr/str memory addr 						<- ID
-		ALU_out => ALU_out,						-- out ALU result 								-> WB
-		PSR_out => PSR_out, 						-- out CMP result									-> WB
-		effective_addr => effective_address,-- out effective address of ldr/str ops 	-> MEM 
+		ALU_op1 => ALU_Rn1,							-- in ALU operand 1								<- ID
+		ALU_op2 => ALU_Rn2,							-- in ALU operand 2								<- ID
+		memaddr_offset => memaddr_offset,		-- in ldr/str memory addr 						<- ID
+		Exec_out => Exec_Out,						-- out Execute result 							-> WB
+		effective_addr => effective_address,	-- out effective address of ldr/str ops 	-> MEM 
 		nextpc => exec_getpc,
 		endprogram => endexecution
 	);
@@ -249,8 +246,8 @@ begin
 	Register_WriteBack : WriteBack port map
 	(
 		op_type => op_type,					-- in instr/operation type				<- ID				
-		ALU_op_addr => Rd_addr,				-- in Dest addr for ALU operation 	<- ID
-		ALU_op => ALU_out,					-- in ALU operation result 			<- EX
+		ALU_Rd_addr => Rd_addr,				-- in Dest addr for ALU operation 	<- ID
+		Exec_out => Exec_out,				-- in Execute operation result 		<- EX
 		LDR_addr => DataMove_Rd_Addr,		-- in Dest register addr for LDR 	<- ID 
 		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
 	);

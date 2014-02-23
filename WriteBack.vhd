@@ -29,8 +29,8 @@ use work.cpu_types.all;
 entity WriteBack is
 	Port( 
 			op_type : in STD_LOGIC_VECTOR(3 downto 0);  			-- select optype
-			ALU_op_addr : in STD_LOGIC_VECTOR(3 downto 0);		-- ALU write destination register
-			ALU_op : in STD_LOGIC_VECTOR(31 downto 0);   		-- ALU operation result
+			ALU_Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);		-- ALU destination register
+			Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   		-- Execute operation result
 			LDR_addr : in STD_LOGIC_VECTOR(3 downto 0);			-- Load word destination register
 			LDR_word : in STD_LOGIC_VECTOR(31 downto 0)			-- Data to laod to register
 		 );
@@ -67,8 +67,8 @@ begin
 	
 		ifOptype : if op_type = optype_alu then
 			-- Write back the alu result
-			reg_offset <= ALU_op_addr;
-			write_word <= ALU_op;
+			reg_offset <= ALU_Rd_addr;
+			write_word <= Exec_out;
 		
 		elsif op_type = optype_datamove then
 			-- Write back the word from ldr

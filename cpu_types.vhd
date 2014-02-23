@@ -24,21 +24,21 @@ package cpu_types is
 	type t_MemRegion_Program is array (0 to 63) of STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- CPU Registers address
-	constant R1_addr  : integer := 0; 	-- PC
-	constant R2_addr  : integer := 1; 	-- IR
-	constant R3_addr  : integer := 2; 	-- SP
-	constant R4_addr  : integer := 3; 	-- PSR
-	constant R5_addr  : integer := 4; 	-- GPR
-	constant R6_addr  : integer := 5; 	-- GPR
-	constant R7_addr  : integer := 6; 	-- GPR
-	constant R8_addr  : integer := 7; 	-- GPR
-	constant R9_addr  : integer := 8; 	-- GPR
-	constant R10_addr : integer := 9; 	-- GPR
-	constant R11_addr : integer := 10;  -- GPR
-	constant R12_addr : integer := 11;  -- GPR
-	constant R13_addr : integer := 12;  -- GPR
-	constant R14_addr : integer := 13;  -- GPR
-	constant R15_addr : integer := 14;  -- GPR
+	constant R1_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"0";	-- PC
+	constant R2_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"1";	-- IR
+	constant R3_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"2";	-- SP
+	constant R4_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"3";	-- PSR
+	constant R5_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"4";	-- GPR
+	constant R6_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"5";	-- GPR
+	constant R7_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"6";	-- GPR
+	constant R8_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"7";	-- GPR
+	constant R9_addr  : STD_LOGIC_VECTOR(3 downto 0) := X"8";	-- GPR
+	constant R10_addr : STD_LOGIC_VECTOR(3 downto 0) := X"9";	-- GPR
+	constant R11_addr : STD_LOGIC_VECTOR(3 downto 0) := X"A";  -- GPR
+	constant R12_addr : STD_LOGIC_VECTOR(3 downto 0) := X"B";  -- GPR
+	constant R13_addr : STD_LOGIC_VECTOR(3 downto 0) := X"C";  -- GPR
+	constant R14_addr : STD_LOGIC_VECTOR(3 downto 0) := X"D";  -- GPR
+	constant R15_addr : STD_LOGIC_VECTOR(3 downto 0) := X"E";  -- GPR
 	
 	
 	-- command id
@@ -58,17 +58,17 @@ package cpu_types is
 	constant alu_shl  : cmd_id_size := X"0C";
 	constant alu_shr  : cmd_id_size := X"0D";
 	
-	constant mem_mov  : cmd_id_size := X"0D";
-	constant mem_ldr  : cmd_id_size := X"0E";
-	constant mem_str  : cmd_id_size := X"0F";
-	constant mem_push : cmd_id_size := X"10";
-	constant mem_pop  : cmd_id_size := X"11";
+	constant mem_mov  : cmd_id_size := X"0E";
+	constant mem_ldr  : cmd_id_size := X"0F";
+	constant mem_str  : cmd_id_size := X"10";
+	constant mem_push : cmd_id_size := X"11";
+	constant mem_pop  : cmd_id_size := X"12";
 	
-	constant br_jmp   : cmd_id_size := X"12";
+	constant br_jmp   : cmd_id_size := X"13";
 	
-	constant sys_int  : cmd_id_size := X"13";
+	constant sys_int  : cmd_id_size := X"14";
 	
-	constant cmd_none : cmd_id_size := X"14";
+	constant cmd_none : cmd_id_size := X"15";
 	
 	
 	-- Instruction operation type

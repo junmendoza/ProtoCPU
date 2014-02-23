@@ -71,6 +71,26 @@ package cpu_types is
 	constant cmd_none : cmd_id_size := X"15";
 	
 	
+	-- comparison
+	constant cond_true  : STD_LOGIC_VECTOR(3 downto 0) := X"0";
+	constant cond_eq  : STD_LOGIC_VECTOR(3 downto 0) := X"1";
+	constant cond_nq  : STD_LOGIC_VECTOR(3 downto 0) := X"2";
+	constant cond_gt  : STD_LOGIC_VECTOR(3 downto 0) := X"3";
+	constant cond_ge  : STD_LOGIC_VECTOR(3 downto 0) := X"4";
+	constant cond_lt  : STD_LOGIC_VECTOR(3 downto 0) := X"5";
+	constant cond_le  : STD_LOGIC_VECTOR(3 downto 0) := X"6";
+	
+	-- PSR flags
+	--	31 30 29 28			27-24					23-0
+	--	Flags					Flags					Reserved
+	--	Z	N	C	V 			Unused				Unused	
+	
+	constant Z_Flag_BitPos : integer := 31;
+	constant N_Flag_BitPos : integer := 30;
+	constant C_Flag_BitPos : integer := 29;
+	constant V_Flag_BitPos : integer := 28;
+	
+	
 	-- Instruction operation type
 	constant optype_alu  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
 	constant optype_datamove  : STD_LOGIC_VECTOR(3 downto 0) := "0001";

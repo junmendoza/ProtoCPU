@@ -43,22 +43,23 @@ architecture Behavioral of DecodeJump is
 	component DecodeCondition is
 		Port( 
 				cond : in STD_LOGIC_VECTOR(3 downto 0);
-				cond_true : out STD_LOGIC
+				cond_eval : out STD_LOGIC
 			 );
 	end component DecodeCondition;
 	
 	signal jmp_condition : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal cond_true : STD_LOGIC := '0';
+	signal cond_eval : STD_LOGIC := '0';
 
 begin
 
 	GetCondition : DecodeCondition port map
 	(
 		cond => jmp_condition,
-		cond_true => cond_true
+		cond_eval => cond_eval
 	);
 
 	ProcDecodeJump : process(cond)
+	
 	begin 
 	
 		jmp_condition <= cond;
@@ -67,7 +68,7 @@ begin
 		-- Is this wait necessary?
 		--wait for 10 ns;
 		
-		if_jmpcondition_met : if cond_true = '1' then
+		if_jmpcondition_met : if cond_eval = '1' then
 			ExecNextPC <= NextPC;
 		end if if_jmpcondition_met;
 		

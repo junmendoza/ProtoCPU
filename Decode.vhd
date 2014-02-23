@@ -45,7 +45,8 @@ entity Decode is
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
-			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
+			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
+			NextPC : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 
@@ -53,10 +54,10 @@ architecture Behavioral of Decode is
 
 	signal ALU_Rn1_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal ALU_Rn2_addr : STD_LOGIC_VECTOR(3 downto 0); 
-	signal Branch_Target : STD_LOGIC_VECTOR(19 downto 0); 
 	signal DM_Rd_addr : STD_LOGIC_VECTOR(3 downto 0); 
 	signal DataMove_AddrMode : STD_LOGIC_VECTOR(11 downto 0); 
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
+	signal JumpCondition : STD_LOGIC_VECTOR(3 downto 0);		
 	
 	component DecodeOpcode is  
 		Port(
@@ -65,7 +66,7 @@ architecture Behavioral of Decode is
 				ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Rn1_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0); 
-				Branch_Target : out STD_LOGIC_VECTOR(19 downto 0); 
+				JumpCondition : out STD_LOGIC_VECTOR(3 downto 0); 
 				DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 				System_Data : out STD_LOGIC_VECTOR(23 downto 0)
@@ -80,12 +81,6 @@ architecture Behavioral of Decode is
 				Rn2 : out STD_LOGIC_VECTOR(31 downto 0)
 			);
 	end component DecodeALU;
-	
-	component DecodeBranch is
-		Port( 
-				Branch_Target : in STD_LOGIC_VECTOR(19 downto 0)
-			 );
-		end component DecodeBranch;
 	
 	component DecodeDataMove is
 		Port( 
@@ -102,6 +97,13 @@ architecture Behavioral of Decode is
 				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeAddrMode;
+	
+	component DecodeJump is
+		Port( 
+				cond : in STD_LOGIC_VECTOR(3 downto 0);
+				NextPC : out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component DecodeJump;
 		
 begin
 
@@ -112,7 +114,7 @@ begin
 		ALU_Rd_addr => ALU_Rd_addr, 
 		ALU_Rn1_addr => ALU_Rn1_addr, 
 		ALU_Rn2_addr => ALU_Rn2_addr,
-		Branch_Target => Branch_Target, 
+		JumpCondition => JumpCondition, 
 		DataMove_Rd_addr => DM_Rd_addr, 
 		DataMove_AddrMode => DataMove_AddrMode, 
 		System_Data => System_Data
@@ -140,9 +142,10 @@ begin
 		memaddr_offset => memaddr_offset
 	);
 	
-	Decode_Branch : DecodeBranch port map
+	Decode_Jump : DecodeJump port map
 	(
-		Branch_Target => Branch_Target
+		cond => JumpCondition,
+		NextPC => NextPC
 	);
 	
 end Behavioral;

@@ -198,19 +198,19 @@ begin
 
 	DecodeInstruction : Decode port map 
 	(
-		instruction => R2,					-- in instruction to decode 				<- IF
-		op_type => op_type,					-- out instr/operation type				-> WB	
+		instruction => R2,						-- in instruction to decode 				<- IF
+		op_type => op_type,						-- out instr/operation type				-> WB	
 		op_alu => exec_alu,  
 		op_branch => exec_branch,	
-		op_datamove => exec_mem,			-- out datamove operation					-> MEM
+		op_datamove => exec_mem,				-- out datamove operation					-> MEM
 		op_system => exec_system,
-		ALU_Rd_addr => Rd_addr,				-- out Dest reg addr for ALU op 			-> WB
-		ALU_Rn1 => ALU_Rn1,					-- out ALU operand 1
-		ALU_Rn2 => ALU_Rn2,					-- out ALU operand 2
-		DataMove_Rd_Addr => DataMove_Rd_Addr,	-- out Dest reg addr for ALU op 	-> WB
+		ALU_Rd_addr => Rd_addr,					-- out Dest reg addr for ALU op 			-> WB
+		ALU_Rn1 => ALU_Rn1,						-- out ALU operand 1							-> ALU
+		ALU_Rn2 => ALU_Rn2,						-- out ALU operand 2							-> ALU
+		DataMove_Rd_Addr => DataMove_Rd_Addr,	-- out Dest reg addr for ALU op 		-> WB
 		DataMove_Rd => DataMove_Rd,			-- out str register data 					-> MEM
-		addrmode => addrmode,					-- out ldr word source						-> WB
-		immd_word => immd_word,					-- out ldr word 								-> WB
+		addrmode => addrmode,					-- out ldr word source						-> MUX Load word
+		immd_word => immd_word,					-- out ldr word 								-> MUX Load word
 		memaddr_offset => memaddr_offset,	-- out ldr/str memory addr					-> EX
 		ExecNextPC => ExecNextPC
 	);

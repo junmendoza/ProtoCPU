@@ -46,7 +46,8 @@ entity Decode is
 			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
+			getnextpc : out STD_LOGIC
 		 );
 end Decode;
 
@@ -69,6 +70,7 @@ architecture Behavioral of Decode is
 				ALU_Rn2_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				JumpCondition : out STD_LOGIC_VECTOR(3 downto 0); 
 				NextPC : out STD_LOGIC_VECTOR(31 downto 0); 
+				getnextpc : out STD_LOGIC;
 				DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0); 
 				DataMove_AddrMode : out STD_LOGIC_VECTOR(11 downto 0); 
 				System_Data : out STD_LOGIC_VECTOR(23 downto 0)
@@ -119,6 +121,7 @@ begin
 		ALU_Rn2_addr => ALU_Rn2_addr,
 		JumpCondition => JumpCondition, 
 		NextPC => NextPC,
+		getnextpc => getnextpc,
 		DataMove_Rd_addr => DM_Rd_addr, 
 		DataMove_AddrMode => DataMove_AddrMode, 
 		System_Data => System_Data

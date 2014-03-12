@@ -60,6 +60,7 @@ architecture Behavioral of ControlUnit is
 	component Fetch is 
 		Port( 
 				clock : in STD_LOGIC; 
+				getnextpc : in STD_LOGIC;
 				pc : in STD_LOGIC_VECTOR(31 downto 0);
 				instr : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -81,7 +82,8 @@ architecture Behavioral of ControlUnit is
 				addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 				immd_word : out STD_LOGIC_VECTOR(31 downto 0);
 				memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-				ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
+				ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
+				getnextpc : out STD_LOGIC
 			 );
 	end component Decode;
 	
@@ -128,14 +130,6 @@ architecture Behavioral of ControlUnit is
 				LDR_word : in STD_LOGIC_VECTOR(31 downto 0)			-- Data to laod to register
 			 );
 	end component WriteBack;
-	
-	component GetNextPC is 
-		Port( 
-				clock : in STD_LOGIC;
-				nextpc : in STD_LOGIC;	
-			   pc : out STD_LOGIC_VECTOR(31 downto 0)
-			 );
-	end component GetNextPC;
 	
 	
 	------------------------------------
@@ -185,13 +179,14 @@ architecture Behavioral of ControlUnit is
 	signal load_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	
-	signal ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
+	signal getnextpc : STD_LOGIC;
 	 
 begin
 	
 	FetchInstruction : Fetch port map
 	(
 		clock => clock, 
+		getnextpc => getnextpc,
 		pc => R1, 			-- in current pc
 		instr => R2			-- out next instruction -> ID
 	);
@@ -212,7 +207,7 @@ begin
 		addrmode => addrmode,					-- out ldr word source						-> MUX Load word
 		immd_word => immd_word,					-- out ldr word 								-> MUX Load word
 		memaddr_offset => memaddr_offset,	-- out ldr/str memory addr					-> EX
-		ExecNextPC => ExecNextPC
+		ExecNextPC => R1				
 	);
 	
 	

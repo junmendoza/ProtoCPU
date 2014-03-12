@@ -34,6 +34,7 @@ use work.cpu_types.ALL;
 entity Fetch is
 	Port( 
 			clock : in STD_LOGIC; 
+			getnextpc : in STD_LOGIC;
 			pc : in STD_LOGIC_VECTOR(31 downto 0);
 			instr : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
@@ -49,6 +50,7 @@ architecture Behavioral of Fetch is
 	end component MemRegion_Program;
 	
 	signal memaddr_pc : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal pcaddr : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
 
@@ -63,9 +65,19 @@ begin
 	variable pc_instr_address : integer;
 	
 	begin
+	
 		ClockSync : if rising_edge(clock) then
 		
-			memaddr_pc <= pc;
+			pcaddr <= pc;
+			
+			ifComputeNextPC : if getnextpc = '1' then
+				-- compute the next pc by offsetting the current pc
+				pc_instr_address := to_integer(unsigned(pcaddr));
+				pc_instr_address := pc_instr_address + 1;
+				pcaddr <= std_logic_vector(to_signed(pc_instr_address, 32));
+			end if ifComputeNextPC;
+			
+			memaddr_pc <= pcaddr;
 			
 		end if ClockSync;
 	end process FetchInstr;

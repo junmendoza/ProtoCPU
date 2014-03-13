@@ -71,9 +71,7 @@ architecture Behavioral of ControlUnit is
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 				op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 				op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
-				op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
-				op_system : out STD_LOGIC_VECTOR(7 downto 0);
 				ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 				ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
@@ -90,16 +88,12 @@ architecture Behavioral of ControlUnit is
 	component Execute is  
 		Port( 
 				op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
-				op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 				op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
-				op_system : in STD_LOGIC_VECTOR(7 downto 0);
 				ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 				memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
 				Exec_out : out STD_LOGIC_VECTOR(31 downto 0);     
-				effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
-				nextpc : out STD_LOGIC;
-				endprogram : out STD_LOGIC
+				effective_addr : out STD_LOGIC_VECTOR(31 downto 0)
 			);
 	end component Execute;
 	
@@ -136,9 +130,6 @@ architecture Behavioral of ControlUnit is
 	-- ControlUnit signals
 	------------------------------------
 	
-	signal endexecution : STD_LOGIC;
-	signal exec_getpc : STD_LOGIC;
-	
 	-- Registers
 	signal R1  : STD_LOGIC_VECTOR(31 downto 0);
 	signal R2  : STD_LOGIC_VECTOR(31 downto 0);
@@ -160,8 +151,6 @@ architecture Behavioral of ControlUnit is
 	signal op_type  	 : STD_LOGIC_VECTOR(3 downto 0); 
 	signal exec_alu  	 : STD_LOGIC_VECTOR(7 downto 0);
 	signal exec_mem  	 : STD_LOGIC_VECTOR(7 downto 0);
-	signal exec_branch : STD_LOGIC_VECTOR(7 downto 0);
-	signal exec_system : STD_LOGIC_VECTOR(7 downto 0);
 	
 	
 	signal Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
@@ -195,10 +184,8 @@ begin
 	(
 		instruction => R2,						-- in instruction to decode 				<- IF
 		op_type => op_type,						-- out instr/operation type				-> WB	
-		op_alu => exec_alu,  
-		op_branch => exec_branch,	
+		op_alu => exec_alu,  	
 		op_datamove => exec_mem,				-- out datamove operation					-> MEM
-		op_system => exec_system,
 		ALU_Rd_addr => Rd_addr,					-- out Dest reg addr for ALU op 			-> WB
 		ALU_Rn1 => ALU_Rn1,						-- out ALU operand 1							-> ALU
 		ALU_Rn2 => ALU_Rn2,						-- out ALU operand 2							-> ALU
@@ -213,17 +200,13 @@ begin
 	
 	ExecuteCommand : Execute port map
 	(
-		op_alu => exec_alu,  				
-		op_branch => exec_branch,
+		op_alu => exec_alu,  	
 		op_datamove => exec_mem,
-		op_system => exec_system,	
 		ALU_op1 => ALU_Rn1,							-- in ALU operand 1								<- ID
 		ALU_op2 => ALU_Rn2,							-- in ALU operand 2								<- ID
 		memaddr_offset => memaddr_offset,		-- in ldr/str memory addr 						<- ID
 		Exec_out => Exec_Out,						-- out Execute result 							-> WB
-		effective_addr => effective_address,	-- out effective address of ldr/str ops 	-> MEM 
-		nextpc => exec_getpc,
-		endprogram => endexecution
+		effective_addr => effective_address		-- out effective address of ldr/str ops 	-> MEM 
 	);
 	
 	MemAccess : MemoryAccess port map

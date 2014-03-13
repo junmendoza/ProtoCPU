@@ -35,9 +35,7 @@ entity Decode is
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
-			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
-			op_system : out STD_LOGIC_VECTOR(7 downto 0);
 			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);

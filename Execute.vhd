@@ -34,16 +34,12 @@ use work.cpu_types.ALL;
 entity Execute is
 	Port( 
 			op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
-			op_branch : in STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
-			op_system : in STD_LOGIC_VECTOR(7 downto 0);
 			ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 			ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 			memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
 			Exec_out : out STD_LOGIC_VECTOR(31 downto 0);     
-			effective_addr : out STD_LOGIC_VECTOR(31 downto 0);  
-			nextpc : out STD_LOGIC;
-			endprogram : out STD_LOGIC
+			effective_addr : out STD_LOGIC_VECTOR(31 downto 0)
 		);
 end Execute;
 

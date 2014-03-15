@@ -34,7 +34,6 @@ use work.cpu_types.ALL;
 entity Execute is
 	Port( 
 			op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
-			op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 			ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 			ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 			memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 

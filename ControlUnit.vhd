@@ -88,7 +88,6 @@ architecture Behavioral of ControlUnit is
 	component Execute is  
 		Port( 
 				op_alu : in STD_LOGIC_VECTOR(7 downto 0);  
-				op_datamove : in STD_LOGIC_VECTOR(7 downto 0); 
 				ALU_op1 : in STD_LOGIC_VECTOR(31 downto 0); 
 				ALU_op2 : in STD_LOGIC_VECTOR(31 downto 0);  
 				memaddr_offset : in STD_LOGIC_VECTOR(31 downto 0); 
@@ -184,7 +183,7 @@ begin
 	(
 		instruction => R2,						-- in instruction to decode 				<- IF
 		op_type => op_type,						-- out instr/operation type				-> WB	
-		op_alu => exec_alu,  	
+		op_alu => exec_alu,  					-- out  ALU operation						-> ALU
 		op_datamove => exec_mem,				-- out datamove operation					-> MEM
 		ALU_Rd_addr => Rd_addr,					-- out Dest reg addr for ALU op 			-> WB
 		ALU_Rn1 => ALU_Rn1,						-- out ALU operand 1							-> ALU
@@ -194,14 +193,13 @@ begin
 		addrmode => addrmode,					-- out ldr word source						-> MUX Load word
 		immd_word => immd_word,					-- out ldr word 								-> MUX Load word
 		memaddr_offset => memaddr_offset,	-- out ldr/str memory addr					-> EX
-		ExecNextPC => R1				
+		ExecNextPC => R1							-- out next pc to execute					-> Fetch
 	);
 	
 	
 	ExecuteCommand : Execute port map
 	(
-		op_alu => exec_alu,  	
-		op_datamove => exec_mem,
+		op_alu => exec_alu,  						-- IN ALU operation								<- ID
 		ALU_op1 => ALU_Rn1,							-- in ALU operand 1								<- ID
 		ALU_op2 => ALU_Rn2,							-- in ALU operand 2								<- ID
 		memaddr_offset => memaddr_offset,		-- in ldr/str memory addr 						<- ID

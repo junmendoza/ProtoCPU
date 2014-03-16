@@ -125,6 +125,19 @@ architecture Behavioral of ControlUnit is
 	end component WriteBack;
 	
 	
+	
+	
+	------------------------------------
+	-- Pipeline Controls
+	------------------------------------
+	component PipelineControl_IF_ID is
+	Port( clock : in STD_LOGIC;
+			in_REG_IF_ID_instr : in STD_LOGIC_VECTOR (31 downto 0);
+			out_REG_IF_ID_instr : out STD_LOGIC_VECTOR (31 downto 0)
+		 );
+	end component PipelineControl_IF_ID;
+	
+	
 	------------------------------------
 	-- ControlUnit signals
 	------------------------------------
@@ -168,6 +181,39 @@ architecture Behavioral of ControlUnit is
 	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	
 	signal getnextpc : STD_LOGIC;
+	
+	
+	
+	--------------------------------
+	-- Pipline registers
+	--------------------------------
+	
+	-- Fetch_Decode (IF_ID)
+	signal REG_IF_ID_instr : STD_LOGIC_VECTOR(31 downto 0);
+	
+	-- Decode Execute (ID_EX)
+	signal REG_ID_EX_op_type : STD_LOGIC_VECTOR(3 downto 0);  
+	signal REG_ID_EX_op_alu : STD_LOGIC_VECTOR(7 downto 0);  
+	signal REG_ID_EX_op_datamove : STD_LOGIC_VECTOR(7 downto 0); 
+	signal REG_ID_EX_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
+	signal REG_ID_EX_ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
+	signal REG_ID_EX_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_addrmode : STD_LOGIC_VECTOR(3 downto 0); 
+	signal REG_ID_EX_immd_word : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_memaddr_offset : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_getnextpc : STD_LOGIC;
+	
+	-- Execute MemAccess(EX_MEM)
+	signal REG_EX_MEM_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
+	signal REG_EX_MEM_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
+	
+	-- MemAccess Writeback (MEM_WB)
+	signal REG_MEM_WB_mem_word : STD_LOGIC_VECTOR(31 downto 0);					
+	signal REG_MEM_WB_load_word : STD_LOGIC_VECTOR(31 downto 0);		
+	
 	 
 begin
 	
@@ -175,8 +221,15 @@ begin
 	(
 		clock => clock, 
 		getnextpc => getnextpc,
-		pc => R1, 			-- in current pc
-		instr => R2			-- out next instruction -> ID
+		pc => R1, 						-- in current pc
+		instr => REG_IF_ID_instr	-- out next instruction -> ID
+	);
+	
+	Pipeline_1 : PipelineControl_IF_ID port map
+	(
+		clock => clock, 
+		in_REG_IF_ID_instr => REG_IF_ID_instr,
+		out_REG_IF_ID_instr =>R2
 	);
 
 	DecodeInstruction : Decode port map 

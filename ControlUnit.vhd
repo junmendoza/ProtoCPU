@@ -131,11 +131,13 @@ architecture Behavioral of ControlUnit is
 	-- Pipeline Controls
 	------------------------------------
 	component PipelineControl_IF_ID is
-	Port( clock : in STD_LOGIC;
+	Port( 
+			clock : in STD_LOGIC;
 			in_REG_IF_ID_instr : in STD_LOGIC_VECTOR (31 downto 0);
 			out_REG_IF_ID_instr : out STD_LOGIC_VECTOR (31 downto 0)
 		 );
 	end component PipelineControl_IF_ID;
+	
 	
 	component PipelineControl_ID_EX is
 		Port( 
@@ -169,8 +171,40 @@ architecture Behavioral of ControlUnit is
 				
 			 );
 	end component PipelineControl_ID_EX;
-	
-	
+
+
+	component Pipelinecontrol_EX_MEM is
+		Port(
+				clock : in  STD_LOGIC;			
+				
+				-- From Execute
+				in_REG_EX_MEM_Exec_out 				: in STD_LOGIC_VECTOR(31 downto 0);     
+				in_REG_EX_MEM_effective_addr 		: in STD_LOGIC_VECTOR(31 downto 0);
+				
+				-- From Decode
+				in_REG_ID_EX_op_type 				: in STD_LOGIC_VECTOR(3 downto 0);  
+				in_REG_ID_EX_op_datamove 			: in STD_LOGIC_VECTOR(7 downto 0); 
+				in_REG_ID_EX_ALU_Rd_addr 			: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_DataMove_Rd_addr 	: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_DataMove_Rd 			: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
+				in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
+				
+				-- From Execute
+				out_REG_EX_MEM_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);     
+				out_REG_EX_MEM_effective_addr 	: out STD_LOGIC_VECTOR(31 downto 0);
+				
+				-- From Decode
+				out_in_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
+				out_in_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 
+				out_in_REG_ID_EX_ALU_Rd_addr 			: out STD_LOGIC_VECTOR(3 downto 0);
+				out_in_REG_ID_EX_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
+				out_in_REG_ID_EX_DataMove_Rd 			: out STD_LOGIC_VECTOR(31 downto 0);
+				out_in_REG_ID_EX_addrmode 				: out STD_LOGIC_VECTOR(3 downto 0); 
+				out_in_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component Pipelinecontrol_EX_MEM;
+		
 	------------------------------------
 	-- ControlUnit signals
 	------------------------------------
@@ -261,13 +295,13 @@ begin
 	Pipeline_IF_ID : PipelineControl_IF_ID port map
 	(
 		clock => clock, 
-		in_REG_IF_ID_instr => R2,
-		out_REG_IF_ID_instr => R2
+		in_REG_IF_ID_instr => REG_IF_ID_instr,
+		out_REG_IF_ID_instr =>REG_IF_ID_instr
 	);
 
 	DecodeInstruction : Decode port map 
 	(
-		instruction 		=> R2,								-- in instruction to decode 			<- IF
+		instruction 		=> REG_IF_ID_instr,				-- in instruction to decode 			<- IF
 		op_type 				=> REG_ID_EX_op_type,			-- out instr/operation type			-> WB	
 		op_alu 				=> REG_ID_EX_op_alu,  			-- out  ALU operation					-> ALU
 		op_datamove 		=> REG_ID_EX_op_datamove,		-- out datamove operation				-> MEM
@@ -317,13 +351,42 @@ begin
 	
 	ExecuteCommand : Execute port map
 	(
-		op_alu => exec_alu,  						-- IN ALU operation								<- ID
-		ALU_op1 => ALU_Rn1,							-- in ALU operand 1								<- ID
-		ALU_op2 => ALU_Rn2,							-- in ALU operand 2								<- ID
-		memaddr_offset => memaddr_offset,		-- in ldr/str memory addr 						<- ID
-		Exec_out => Exec_Out,						-- out Execute result 							-> WB
-		effective_addr => effective_address		-- out effective address of ldr/str ops 	-> MEM 
+		op_alu => REG_ID_EX_op_alu,  							-- IN ALU operation								<- ID
+		ALU_op1 => REG_ID_EX_ALU_Rn1,							-- in ALU operand 1								<- ID
+		ALU_op2 => REG_ID_EX_ALU_Rn2,							-- in ALU operand 2								<- ID
+		memaddr_offset => REG_ID_EX_memaddr_offset,		-- in ldr/str memory addr 						<- ID
+		Exec_out => REG_EX_MEM_Exec_out,						-- out Execute result 							-> WB
+		effective_addr => REG_EX_MEM_effective_addr		-- out effective address of ldr/str ops 	-> MEM 
 	);
+
+	
+	Pipeline_EX_MEM : PipelineControl_EX_MEM port map
+	(
+		clock => clock, 
+		
+		in_REG_EX_MEM_Exec_out 					=> REG_EX_MEM_Exec_out,				
+		in_REG_EX_MEM_effective_addr 			=> REG_EX_MEM_effective_addr,
+
+		in_REG_ID_EX_op_type 					=> REG_ID_EX_op_type,
+		in_REG_ID_EX_op_datamove 				=> REG_ID_EX_op_datamove,
+		in_REG_ID_EX_ALU_Rd_addr 				=> REG_ID_EX_ALU_Rd_addr,
+		in_REG_ID_EX_DataMove_Rd_addr 		=> REG_ID_EX_DataMove_Rd_addr,
+		in_REG_ID_EX_DataMove_Rd 				=> REG_ID_EX_DataMove_Rd,
+		in_REG_ID_EX_addrmode 					=> REG_ID_EX_addrmode,
+		in_REG_ID_EX_immd_word 					=> REG_ID_EX_immd_word,
+
+		out_REG_EX_MEM_Exec_out 				=> REG_EX_MEM_Exec_out,				
+		out_REG_EX_MEM_effective_addr 		=> REG_EX_MEM_effective_addr,
+
+		out_in_REG_ID_EX_op_type 				=> REG_ID_EX_op_type, 
+		out_in_REG_ID_EX_op_datamove 			=> REG_ID_EX_op_datamove, 
+		out_in_REG_ID_EX_ALU_Rd_addr 			=> REG_ID_EX_ALU_Rd_addr, 
+		out_in_REG_ID_EX_DataMove_Rd_addr	=> REG_ID_EX_DataMove_Rd_addr, 
+		out_in_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_DataMove_Rd, 
+		out_in_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode, 
+		out_in_REG_ID_EX_immd_word 			=> REG_ID_EX_immd_word
+	);
+	
 	
 	MemAccess : MemoryAccess port map
 	(

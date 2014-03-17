@@ -30,7 +30,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity PipelineControl_IF_ID is
-	Port( clock : in STD_LOGIC;
+	Port( 
+			clock : in STD_LOGIC;
 			in_REG_IF_ID_instr : in STD_LOGIC_VECTOR (31 downto 0);
 			out_REG_IF_ID_instr : out STD_LOGIC_VECTOR (31 downto 0)
 		 );
@@ -43,7 +44,11 @@ begin
 
 	PipelineProcess : process(clock, in_REG_IF_ID_instr)
 	begin
-		out_REG_IF_ID_instr <= in_REG_IF_ID_instr;
+	
+		ClockSync : if rising_edge(clock) then
+			out_REG_IF_ID_instr <= in_REG_IF_ID_instr;
+		end if ClockSync;
+		
 	end process PipelineProcess;
 
 end Behavioral;

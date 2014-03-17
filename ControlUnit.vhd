@@ -137,6 +137,39 @@ architecture Behavioral of ControlUnit is
 		 );
 	end component PipelineControl_IF_ID;
 	
+	component PipelineControl_ID_EX is
+		Port( 
+				clock : in STD_LOGIC;
+				in_REG_ID_EX_op_type 				: in STD_LOGIC_VECTOR(3 downto 0);  
+				in_REG_ID_EX_op_alu 					: in STD_LOGIC_VECTOR(7 downto 0);  
+				in_REG_ID_EX_op_datamove 			: in STD_LOGIC_VECTOR(7 downto 0); 
+				in_REG_ID_EX_ALU_Rd_addr 			: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_ALU_Rn1 				: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_ALU_Rn2 				: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_DataMove_Rd_addr 	: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_DataMove_Rd 			: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
+				in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_memaddr_offset 		: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+				out_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
+				out_REG_ID_EX_op_alu 				: out STD_LOGIC_VECTOR(7 downto 0);  
+				out_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 
+				out_REG_ID_EX_ALU_Rd_addr 			: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_ID_EX_ALU_Rn1 				: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_ALU_Rn2 				: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_ID_EX_DataMove_Rd 			: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_addrmode 				: out STD_LOGIC_VECTOR(3 downto 0); 
+				out_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_memaddr_offset 		: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_getnextpc 			: out STD_LOGIC
+				
+			 );
+	end component PipelineControl_ID_EX;
+	
 	
 	------------------------------------
 	-- ControlUnit signals
@@ -225,28 +258,60 @@ begin
 		instr => REG_IF_ID_instr	-- out next instruction -> ID
 	);
 	
-	Pipeline_1 : PipelineControl_IF_ID port map
+	Pipeline_IF_ID : PipelineControl_IF_ID port map
 	(
 		clock => clock, 
-		in_REG_IF_ID_instr => REG_IF_ID_instr,
-		out_REG_IF_ID_instr =>R2
+		in_REG_IF_ID_instr => R2,
+		out_REG_IF_ID_instr => R2
 	);
 
 	DecodeInstruction : Decode port map 
 	(
-		instruction => R2,						-- in instruction to decode 				<- IF
-		op_type => op_type,						-- out instr/operation type				-> WB	
-		op_alu => exec_alu,  					-- out  ALU operation						-> ALU
-		op_datamove => exec_mem,				-- out datamove operation					-> MEM
-		ALU_Rd_addr => Rd_addr,					-- out Dest reg addr for ALU op 			-> WB
-		ALU_Rn1 => ALU_Rn1,						-- out ALU operand 1							-> ALU
-		ALU_Rn2 => ALU_Rn2,						-- out ALU operand 2							-> ALU
-		DataMove_Rd_Addr => DataMove_Rd_Addr,	-- out Dest reg addr for ALU op 		-> WB
-		DataMove_Rd => DataMove_Rd,			-- out str register data 					-> MEM
-		addrmode => addrmode,					-- out ldr word source						-> MUX Load word
-		immd_word => immd_word,					-- out ldr word 								-> MUX Load word
-		memaddr_offset => memaddr_offset,	-- out ldr/str memory addr					-> EX
-		ExecNextPC => R1							-- out next pc to execute					-> Fetch
+		instruction 		=> R2,								-- in instruction to decode 			<- IF
+		op_type 				=> REG_ID_EX_op_type,			-- out instr/operation type			-> WB	
+		op_alu 				=> REG_ID_EX_op_alu,  			-- out  ALU operation					-> ALU
+		op_datamove 		=> REG_ID_EX_op_datamove,		-- out datamove operation				-> MEM
+		ALU_Rd_addr 		=> REG_ID_EX_ALU_Rd_addr,		-- out Dest reg addr for ALU op 		-> WB
+		ALU_Rn1 				=> REG_ID_EX_ALU_Rn1,			-- out ALU operand 1						-> ALU
+		ALU_Rn2 				=> REG_ID_EX_ALU_Rn2,			-- out ALU operand 2						-> ALU
+		DataMove_Rd_Addr 	=> REG_ID_EX_DataMove_Rd_addr,-- out Dest reg addr for ALU op 		-> WB
+		DataMove_Rd 		=> REG_ID_EX_DataMove_Rd,		-- out str register data 				-> MEM
+		addrmode 			=> REG_ID_EX_addrmode,			-- out ldr word source					-> MUX Load word
+		immd_word 			=> REG_ID_EX_immd_word,			-- out ldr word 							-> MUX Load word
+		memaddr_offset 	=> REG_ID_EX_memaddr_offset,	-- out ldr/str memory addr				-> EX
+		ExecNextPC 			=> R1,								-- out next pc to execute				-> Fetch
+		getnextpc 			=> REG_ID_EX_getnextpc			-- out flag immediate jump				-> Fetch
+	);
+	
+	Pipeline_ID_EX : PipelineControl_ID_EX port map
+	(
+		clock 									=> clock, 
+		in_REG_ID_EX_op_type 		 		=> REG_ID_EX_op_type,						
+		in_REG_ID_EX_op_alu 					=> REG_ID_EX_op_alu,  			
+		in_REG_ID_EX_op_datamove 			=> REG_ID_EX_op_datamove,		
+		in_REG_ID_EX_ALU_Rd_addr 			=> REG_ID_EX_ALU_Rd_addr,		
+		in_REG_ID_EX_ALU_Rn1 				=> REG_ID_EX_ALU_Rn1,			
+		in_REG_ID_EX_ALU_Rn2 				=> REG_ID_EX_ALU_Rn2,			
+		in_REG_ID_EX_DataMove_Rd_addr 	=> REG_ID_EX_DataMove_Rd_addr,
+		in_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_DataMove_Rd,		
+		in_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode,			
+		in_REG_ID_EX_immd_word 				=> REG_ID_EX_immd_word,			
+		in_REG_ID_EX_memaddr_offset 		=> REG_ID_EX_memaddr_offset,	
+		in_REG_ID_EX_ExecNextPC 			=> R1,									
+		in_REG_ID_EX_getnextpc 				=> REG_ID_EX_getnextpc,
+		out_REG_ID_EX_op_type 				=> REG_ID_EX_op_type,					
+		out_REG_ID_EX_op_alu 				=> REG_ID_EX_op_alu,  			
+		out_REG_ID_EX_op_datamove 			=> REG_ID_EX_op_datamove,		
+		out_REG_ID_EX_ALU_Rd_addr 			=> REG_ID_EX_ALU_Rd_addr,		
+		out_REG_ID_EX_ALU_Rn1 				=> REG_ID_EX_ALU_Rn1,			
+		out_REG_ID_EX_ALU_Rn2 				=> REG_ID_EX_ALU_Rn2,			
+		out_REG_ID_EX_DataMove_Rd_addr 	=> REG_ID_EX_DataMove_Rd_addr,
+		out_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_DataMove_Rd,		
+		out_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode,			
+		out_REG_ID_EX_immd_word 			=> REG_ID_EX_immd_word,			
+		out_REG_ID_EX_memaddr_offset 		=> REG_ID_EX_memaddr_offset,	
+		out_REG_ID_EX_ExecNextPC 			=> R1,									
+		out_REG_ID_EX_getnextpc 			=> REG_ID_EX_getnextpc
 	);
 	
 	

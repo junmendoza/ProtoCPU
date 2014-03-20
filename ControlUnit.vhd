@@ -230,7 +230,6 @@ architecture Behavioral of ControlUnit is
 	
 	
 	signal load_word : STD_LOGIC_VECTOR(31 downto 0);
-	signal load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	
 	
 	
@@ -264,10 +263,16 @@ architecture Behavioral of ControlUnit is
 	
 	
 	--------------------------------------------
-	-- Decode out signals
+	-- Execute out signals
 	--------------------------------------------
 	signal EX_Exec_Out : STD_LOGIC_VECTOR(31 downto 0);
 	signal EX_effective_address : STD_LOGIC_VECTOR(31 downto 0);
+	
+	
+	--------------------------------------------
+	-- Mem access out signals
+	--------------------------------------------
+	signal MEM_load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
 	
 	--------------------------------------------
 	-- ID->EX Registers
@@ -462,13 +467,14 @@ begin
 	);
 	
 	
---	MemAccess : MemoryAccess port map
---	(
---		opcode => exec_mem,							-- in datamove operation 					<- ID
---		Rd => DataMove_Rd,							-- in str register data						<- ID
---		effective_addr => effective_address,	-- in effective address of ldr/str ops <- EX
---		mem_word => load_mem_word					-- out word retrieved from mem to load -> WB
---	);
+	MemAccess : MemoryAccess port map
+	(
+		opcode 			=> REG_ID_EX_MEM_op_datamove,		-- in datamove operation 					<- ID
+		Rd 				=> REG_ID_EX_MEM_DataMove_Rd,		-- in str register data						<- ID
+		effective_addr => REG_EX_MEM_effective_addr,		-- in effective address of ldr/str ops <- EX
+		mem_word 		=> MEM_load_mem_word					-- out word retrieved from mem to load -> WB
+	);
+	
 --	
 --	MuxLDR : Mux_LoadWord port map
 --	(

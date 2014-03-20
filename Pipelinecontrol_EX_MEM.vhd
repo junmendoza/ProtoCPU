@@ -44,13 +44,13 @@ entity Pipelinecontrol_EX_MEM is
 			out_REG_EX_MEM_effective_addr 	: out STD_LOGIC_VECTOR(31 downto 0);
 			
 			-- From Decode
-			out_in_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
-			out_in_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 
-			out_in_REG_ID_EX_ALU_Rd_addr 			: out STD_LOGIC_VECTOR(3 downto 0);
-			out_in_REG_ID_EX_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
-			out_in_REG_ID_EX_DataMove_Rd 			: out STD_LOGIC_VECTOR(31 downto 0);
-			out_in_REG_ID_EX_addrmode 				: out STD_LOGIC_VECTOR(3 downto 0); 
-			out_in_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+			out_REG_EX_MEM_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
+			out_REG_EX_MEM_op_datamove 		: out STD_LOGIC_VECTOR(7 downto 0); 
+			out_REG_EX_MEM_ALU_Rd_addr 		: out STD_LOGIC_VECTOR(3 downto 0);
+			out_REG_EX_MEM_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
+			out_REG_EX_MEM_DataMove_Rd 		: out STD_LOGIC_VECTOR(31 downto 0);
+			out_REG_EX_MEM_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
+			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 		 
 end Pipelinecontrol_EX_MEM;
@@ -82,13 +82,13 @@ begin
 			out_REG_EX_MEM_effective_addr 		<= in_REG_EX_MEM_effective_addr;
 			
 			-- From Decode
-			out_in_REG_ID_EX_op_type 				<= in_REG_ID_EX_op_type; 					
-			out_in_REG_ID_EX_op_datamove 		   <= in_REG_ID_EX_op_datamove; 		
-			out_in_REG_ID_EX_ALU_Rd_addr 		   <= in_REG_ID_EX_ALU_Rd_addr; 		
-			out_in_REG_ID_EX_DataMove_Rd_addr   <= in_REG_ID_EX_DataMove_Rd_addr; 
-			out_in_REG_ID_EX_DataMove_Rd 		   <= in_REG_ID_EX_DataMove_Rd; 		
-			out_in_REG_ID_EX_addrmode 			   <= in_REG_ID_EX_addrmode; 			
-			out_in_REG_ID_EX_immd_word 		   <= in_REG_ID_EX_immd_word; 	
+			out_REG_EX_MEM_op_type 				<= in_REG_ID_EX_op_type; 					
+			out_REG_EX_MEM_op_datamove 		   <= in_REG_ID_EX_op_datamove; 		
+			out_REG_EX_MEM_ALU_Rd_addr 		   <= in_REG_ID_EX_ALU_Rd_addr; 		
+			out_REG_EX_MEM_DataMove_Rd_addr   <= in_REG_ID_EX_DataMove_Rd_addr; 
+			out_REG_EX_MEM_DataMove_Rd 		   <= in_REG_ID_EX_DataMove_Rd; 		
+			out_REG_EX_MEM_addrmode 			   <= in_REG_ID_EX_addrmode; 			
+			out_REG_EX_MEM_immd_word 		   <= in_REG_ID_EX_immd_word; 	
 			
 		end if ClockSync;
 		

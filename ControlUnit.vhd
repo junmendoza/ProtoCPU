@@ -195,13 +195,13 @@ architecture Behavioral of ControlUnit is
 				out_REG_EX_MEM_effective_addr 	: out STD_LOGIC_VECTOR(31 downto 0);
 				
 				-- From Decode
-				out_in_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
-				out_in_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 
-				out_in_REG_ID_EX_ALU_Rd_addr 			: out STD_LOGIC_VECTOR(3 downto 0);
-				out_in_REG_ID_EX_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
-				out_in_REG_ID_EX_DataMove_Rd 			: out STD_LOGIC_VECTOR(31 downto 0);
-				out_in_REG_ID_EX_addrmode 				: out STD_LOGIC_VECTOR(3 downto 0); 
-				out_in_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+				out_REG_EX_MEM_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
+				out_REG_EX_MEM_op_datamove 		: out STD_LOGIC_VECTOR(7 downto 0); 
+				out_REG_EX_MEM_ALU_Rd_addr 		: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_EX_MEM_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_EX_MEM_DataMove_Rd 		: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_EX_MEM_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
+				out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component Pipelinecontrol_EX_MEM;
 		
@@ -319,11 +319,13 @@ architecture Behavioral of ControlUnit is
 --	signal REG_ID_EX_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 --	signal REG_ID_EX_MEM_op_datamove : STD_LOGIC_VECTOR(7 downto 0); 
 --	signal REG_ID_EX_MEM_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_MEM_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
+	signal REG_ID_EX_MEM_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_getnextpc : STD_LOGIC;
 
 
---	
+	
 --	-- ID->EX, EX->MEM, MEM->WB
 --	signal REG_ID_EX_MEM_WB_op_type : STD_LOGIC_VECTOR(3 downto 0);  
 --	signal REG_ID_EX_MEM_WB_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
@@ -343,8 +345,6 @@ architecture Behavioral of ControlUnit is
 	-- Execute MemAccess(EX_MEM)
 	--------------------------------------------
 	-- EX->MEM
-	signal REG_EX_MEM_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
-	signal REG_EX_MEM_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- EX->MEM, MEM->WB
 	signal REG_EX_MEM_WB_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
@@ -443,39 +443,39 @@ begin
 	(
 		clock => clock, 
 		
-		in_REG_EX_MEM_Exec_out 					=> EX_Exec_out,				
-		in_REG_EX_MEM_effective_addr 			=> EX_effective_address,
+		in_REG_EX_MEM_Exec_out 				=> EX_Exec_out,				
+		in_REG_EX_MEM_effective_addr 		=> EX_effective_address,
 
-		in_REG_ID_EX_op_type 					=> REG_ID_EX_op_type,
-		in_REG_ID_EX_op_datamove 				=> REG_ID_EX_op_datamove,
-		in_REG_ID_EX_ALU_Rd_addr 				=> REG_ID_EX_ALU_Rd_addr,
-		in_REG_ID_EX_DataMove_Rd_addr 		=> REG_ID_EX_DataMove_Rd_addr,
-		in_REG_ID_EX_DataMove_Rd 				=> REG_ID_EX_DataMove_Rd,
-		in_REG_ID_EX_addrmode 					=> REG_ID_EX_addrmode,
-		in_REG_ID_EX_immd_word 					=> REG_ID_EX_immd_word,
+		in_REG_ID_EX_op_type 				=> REG_ID_EX_op_type,
+		in_REG_ID_EX_op_datamove 			=> REG_ID_EX_op_datamove,
+		in_REG_ID_EX_ALU_Rd_addr 			=> REG_ID_EX_ALU_Rd_addr,
+		in_REG_ID_EX_DataMove_Rd_addr 	=> REG_ID_EX_DataMove_Rd_addr,
+		in_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_DataMove_Rd,
+		in_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode,
+		in_REG_ID_EX_immd_word 				=> REG_ID_EX_immd_word,
 
-		out_REG_EX_MEM_Exec_out 				=> REG_EX_MEM_Exec_out,				
-		out_REG_EX_MEM_effective_addr 		=> REG_EX_MEM_effective_addr,
+		out_REG_EX_MEM_Exec_out 			=> REG_ID_EX_MEM_Exec_out,				
+		out_REG_EX_MEM_effective_addr 	=> REG_ID_EX_MEM_effective_addr,
 
-		out_in_REG_ID_EX_op_type 				=> REG_ID_EX_MEM_op_type, 
-		out_in_REG_ID_EX_op_datamove 			=> REG_ID_EX_MEM_op_datamove,  
-		out_in_REG_ID_EX_ALU_Rd_addr 			=> REG_ID_EX_MEM_ALU_Rd_addr, 
-		out_in_REG_ID_EX_DataMove_Rd_addr	=> REG_ID_EX_MEM_DataMove_Rd_addr, 
-		out_in_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_MEM_DataMove_Rd, 
-		out_in_REG_ID_EX_addrmode 				=> REG_ID_EX_MEM_addrmode, 
-		out_in_REG_ID_EX_immd_word 			=> REG_ID_EX_MEM_immd_word
-	);
+		out_REG_EX_MEM_op_type 				=> REG_ID_EX_MEM_op_type, 
+		out_REG_EX_MEM_op_datamove 		=> REG_ID_EX_MEM_op_datamove,  
+		out_REG_EX_MEM_ALU_Rd_addr 		=> REG_ID_EX_MEM_ALU_Rd_addr, 
+		out_REG_EX_MEM_DataMove_Rd_addr	=> REG_ID_EX_MEM_DataMove_Rd_addr, 
+		out_REG_EX_MEM_DataMove_Rd 		=> REG_ID_EX_MEM_DataMove_Rd, 
+		out_REG_EX_MEM_addrmode 			=> REG_ID_EX_MEM_addrmode, 
+		out_REG_EX_MEM_immd_word 			=> REG_ID_EX_MEM_immd_word
+	);            
 	
 	
-	MemAccess : MemoryAccess port map
-	(
-		opcode 			=> REG_ID_EX_MEM_op_datamove,		-- in datamove operation 					<- ID
-		Rd 				=> REG_ID_EX_MEM_DataMove_Rd,		-- in str register data						<- ID
-		effective_addr => REG_EX_MEM_effective_addr,		-- in effective address of ldr/str ops <- EX
-		mem_word 		=> MEM_load_mem_word					-- out word retrieved from mem to load -> WB
-	);
+--	MemAccess : MemoryAccess port map
+--	(
+--		opcode 			=> REG_ID_EX_MEM_op_datamove,		-- in datamove operation 					<- ID
+--		Rd 				=> REG_ID_EX_MEM_DataMove_Rd,		-- in str register data						<- ID
+--		effective_addr => REG_EX_MEM_effective_addr,		-- in effective address of ldr/str ops <- EX
+--		mem_word 		=> MEM_load_mem_word					-- out word retrieved from mem to load -> WB
+--	);
 	
---	
+	
 --	MuxLDR : Mux_LoadWord port map
 --	(
 --		sel_src => addrmode, 				-- in ldr data source 						<- ID
@@ -483,6 +483,8 @@ begin
 --		load_word_MEM => load_mem_word,	-- in data loaded from memory 			<- MEM
 --		load_word => load_word				-- Muxed data to load in a register 	-> WB
 --	);
+
+
 --	
 --	Register_WriteBack : WriteBack port map
 --	(

@@ -211,13 +211,13 @@ architecture Behavioral of ControlUnit is
 				clock : in STD_LOGIC;
 				
 				in_MEM_load_mem_word : in STD_LOGIC_VECTOR(31 downto 0);
-				in_REG_ID_EX_MEM_Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   
+				in_REG_EX_MEM_Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   
 				in_REG_ID_EX_MEM_op_type : in STD_LOGIC_VECTOR(3 downto 0);  
 				in_REG_ID_EX_MEM_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 				in_REG_ID_EX_MEM_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 				
 				out_MEM_WB_load_mem_word : out STD_LOGIC_VECTOR(31 downto 0);
-				out_REG_ID_EX_MEM_WB_Exec_out : out STD_LOGIC_VECTOR(31 downto 0);   
+				out_REG_EX_MEM_WB_Exec_out : out STD_LOGIC_VECTOR(31 downto 0);   
 				out_REG_ID_EX_MEM_WB_op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 				out_REG_ID_EX_MEM_WB_ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				out_REG_ID_EX_MEM_WB_DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0)
@@ -332,6 +332,9 @@ architecture Behavioral of ControlUnit is
 --	signal REG_ID_EX_ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0);
 --	signal REG_ID_EX_memaddr_offset : STD_LOGIC_VECTOR(31 downto 0);
 
+	-- EX->MEM 
+	signal REG_EX_MEM_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
+	signal REG_EX_MEM_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
 
 --	
 --	-- ID->EX, EX->MEM
@@ -339,8 +342,6 @@ architecture Behavioral of ControlUnit is
 --	signal REG_ID_EX_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 --	signal REG_ID_EX_MEM_op_datamove : STD_LOGIC_VECTOR(7 downto 0); 
 --	signal REG_ID_EX_MEM_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
-	signal REG_ID_EX_MEM_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
-	signal REG_ID_EX_MEM_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_getnextpc : STD_LOGIC;
 
@@ -350,8 +351,7 @@ architecture Behavioral of ControlUnit is
 	signal MEM_WB_load_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_WB_op_type : STD_LOGIC_VECTOR(3 downto 0);  
 	signal REG_ID_EX_MEM_WB_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
-	signal REG_ID_EX_MEM_WB_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
-	signal REG_ID_EX_MEM_WB_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
+	signal REG_ID_EX_MEM_WB_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);   
 	signal REG_ID_EX_MEM_WB_addrmode : STD_LOGIC_VECTOR(3 downto 0); 
 	signal REG_ID_EX_MEM_WB_immd_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_WB_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
@@ -362,10 +362,7 @@ architecture Behavioral of ControlUnit is
 	-- Execute MemAccess(EX_MEM)
 	--------------------------------------------
 	-- EX->MEM
-	
-	-- EX->MEM, MEM->WB
 	signal REG_EX_MEM_WB_Exec_out : STD_LOGIC_VECTOR(31 downto 0);     
-	signal REG_EX_MEM_WB_effective_addr : STD_LOGIC_VECTOR(31 downto 0);
 	
 	
 	--------------------------------------------
@@ -471,8 +468,8 @@ begin
 		in_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode,
 		in_REG_ID_EX_immd_word 				=> REG_ID_EX_immd_word,
 
-		out_REG_EX_MEM_Exec_out 			=> REG_ID_EX_MEM_Exec_out,				
-		out_REG_EX_MEM_effective_addr 	=> REG_ID_EX_MEM_effective_addr,
+		out_REG_EX_MEM_Exec_out 			=> REG_EX_MEM_Exec_out,				
+		out_REG_EX_MEM_effective_addr 	=> REG_EX_MEM_effective_addr,
 
 		out_REG_EX_MEM_op_type 				=> REG_ID_EX_MEM_op_type, 
 		out_REG_EX_MEM_op_datamove 		=> REG_ID_EX_MEM_op_datamove,  
@@ -488,7 +485,7 @@ begin
 	(
 		opcode 			=> REG_ID_EX_MEM_op_datamove,			-- in datamove operation 					<- ID
 		Rd 				=> REG_ID_EX_MEM_DataMove_Rd,			-- in str register data						<- ID
-		effective_addr => REG_ID_EX_MEM_effective_addr,		-- in effective address of ldr/str ops <- EX
+		effective_addr => REG_EX_MEM_effective_addr,			-- in effective address of ldr/str ops <- EX
 		mem_word 		=> MEM_load_mem_word						-- out word retrieved from mem to load -> WB
 	);
 	
@@ -507,29 +504,28 @@ begin
 		clock => clock,
 		
 		in_MEM_load_mem_word 						=> MUX_load_word, 						
-		in_REG_ID_EX_MEM_Exec_out 					=> REG_ID_EX_MEM_Exec_out, 				
+		in_REG_EX_MEM_Exec_out 						=> REG_EX_MEM_Exec_out, 				
 		in_REG_ID_EX_MEM_op_type  					=> REG_ID_EX_MEM_op_type,					
 		in_REG_ID_EX_MEM_ALU_Rd_addr 	 			=> REG_ID_EX_MEM_ALU_Rd_addr,			
 		in_REG_ID_EX_MEM_DataMove_Rd_addr  		=> REG_ID_EX_MEM_DataMove_Rd_addr,		
 		
 		out_MEM_WB_load_mem_word 		 			=> MEM_WB_load_word,			
-		out_REG_ID_EX_MEM_WB_Exec_out 	 		=> REG_ID_EX_MEM_WB_Exec_out,					
+		out_REG_EX_MEM_WB_Exec_out 	 			=> REG_EX_MEM_WB_Exec_out,					
 		out_REG_ID_EX_MEM_WB_op_type 		 		=> REG_ID_EX_MEM_WB_op_type, 		
 		out_REG_ID_EX_MEM_WB_ALU_Rd_addr  		=> REG_ID_EX_MEM_WB_ALU_Rd_addr,		
 		out_REG_ID_EX_MEM_WB_DataMove_Rd_addr	=> REG_ID_EX_MEM_WB_DataMove_Rd_addr
 		
 	);
 	
-
---	
---	Register_WriteBack : WriteBack port map
---	(
---		op_type => op_type,					-- in instr/operation type				<- ID				
---		ALU_Rd_addr => Rd_addr,				-- in Dest addr for ALU operation 	<- ID
---		Exec_out => Exec_out,				-- in Execute operation result 		<- EX
---		LDR_addr => DataMove_Rd_Addr,		-- in Dest register addr for LDR 	<- ID 
---		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
---	);
---	
+	
+	Register_WriteBack : WriteBack port map
+	(
+		op_type 		=> REG_ID_EX_MEM_WB_op_type,				-- in instr/operation type				<- ID				
+		ALU_Rd_addr => REG_ID_EX_MEM_WB_ALU_Rd_addr,			-- in Dest addr for ALU operation 	<- ID
+		Exec_out 	=> REG_EX_MEM_WB_Exec_out,					-- in Execute operation result 		<- EX
+		LDR_addr 	=> REG_ID_EX_MEM_WB_DataMove_Rd_addr,	-- in Dest register addr for LDR 	<- ID 
+		LDR_word 	=> MEM_WB_load_word							-- data to load to register 			<- Mux(ID/MEM)
+	);
+	
 end architecture Behavioral;
 

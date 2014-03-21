@@ -31,20 +31,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity PipelineControl_MEM_WB is
 	Port( 
-			clock 											: in STD_LOGIC;
-			
+			clock 												: in STD_LOGIC;
+				
 			in_MEM_load_mem_word 						: in STD_LOGIC_VECTOR(31 downto 0);
-			in_REG_ID_EX_MEM_Exec_out 					: in STD_LOGIC_VECTOR(31 downto 0);     
-			in_REG_ID_EX_MEM_addrmode 					: in STD_LOGIC_VECTOR(3 downto 0); 
-			in_REG_ID_EX_MEM_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
+			in_REG_ID_EX_MEM_Exec_out 					: in STD_LOGIC_VECTOR(31 downto 0);   
 			in_REG_ID_EX_MEM_op_type 					: in STD_LOGIC_VECTOR(3 downto 0);  
 			in_REG_ID_EX_MEM_ALU_Rd_addr 				: in STD_LOGIC_VECTOR(3 downto 0);
 			in_REG_ID_EX_MEM_DataMove_Rd_addr 		: in STD_LOGIC_VECTOR(3 downto 0);
-			
+				
 			out_MEM_WB_load_mem_word 					: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_MEM_WB_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);     
-			out_REG_ID_EX_MEM_WB_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
-			out_REG_ID_EX_MEM_WB_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
+			out_REG_ID_EX_MEM_WB_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);   
 			out_REG_ID_EX_MEM_WB_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
 			out_REG_ID_EX_MEM_WB_ALU_Rd_addr 		: out STD_LOGIC_VECTOR(3 downto 0);
 			out_REG_ID_EX_MEM_WB_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0)
@@ -62,9 +58,7 @@ begin
 		ClockSync : if rising_edge(clock) then
 		
 			out_MEM_WB_load_mem_word 					<=	in_MEM_load_mem_word; 							
-			out_REG_ID_EX_MEM_WB_Exec_out 			<= in_REG_ID_EX_MEM_Exec_out; 			
-			out_REG_ID_EX_MEM_WB_addrmode 			<= in_REG_ID_EX_MEM_addrmode; 			
-			out_REG_ID_EX_MEM_WB_immd_word 			<= in_REG_ID_EX_MEM_immd_word; 			
+			out_REG_ID_EX_MEM_WB_Exec_out 			<= in_REG_ID_EX_MEM_Exec_out; 				
 			out_REG_ID_EX_MEM_WB_op_type 				<= in_REG_ID_EX_MEM_op_type; 				
 			out_REG_ID_EX_MEM_WB_ALU_Rd_addr 		<= in_REG_ID_EX_MEM_ALU_Rd_addr; 		
 			out_REG_ID_EX_MEM_WB_DataMove_Rd_addr 	<= in_REG_ID_EX_MEM_DataMove_Rd_addr ;

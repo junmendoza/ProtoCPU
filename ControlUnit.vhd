@@ -211,17 +211,13 @@ architecture Behavioral of ControlUnit is
 				clock : in STD_LOGIC;
 				
 				in_MEM_load_mem_word : in STD_LOGIC_VECTOR(31 downto 0);
-				in_REG_ID_EX_MEM_Exec_out : in STD_LOGIC_VECTOR(31 downto 0);     
-				in_REG_ID_EX_MEM_addrmode : in STD_LOGIC_VECTOR(3 downto 0); 
-				in_REG_ID_EX_MEM_immd_word : in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_MEM_Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   
 				in_REG_ID_EX_MEM_op_type : in STD_LOGIC_VECTOR(3 downto 0);  
 				in_REG_ID_EX_MEM_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 				in_REG_ID_EX_MEM_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 				
 				out_MEM_WB_load_mem_word : out STD_LOGIC_VECTOR(31 downto 0);
-				out_REG_ID_EX_MEM_WB_Exec_out : out STD_LOGIC_VECTOR(31 downto 0);     
-				out_REG_ID_EX_MEM_WB_addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
-				out_REG_ID_EX_MEM_WB_immd_word : out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_MEM_WB_Exec_out : out STD_LOGIC_VECTOR(31 downto 0);   
 				out_REG_ID_EX_MEM_WB_op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 				out_REG_ID_EX_MEM_WB_ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 				out_REG_ID_EX_MEM_WB_DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0)
@@ -251,12 +247,6 @@ architecture Behavioral of ControlUnit is
 	signal R15 : STD_LOGIC_VECTOR(31 downto 0);
 	
 	signal exec_mem  	 : STD_LOGIC_VECTOR(7 downto 0);
-	
-	
-	signal load_word : STD_LOGIC_VECTOR(31 downto 0);
-	
-	
-	
 	
 	--------------------------------
 	-- Pipline registers
@@ -297,6 +287,12 @@ architecture Behavioral of ControlUnit is
 	-- Mem access out signals
 	--------------------------------------------
 	signal MEM_load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
+	
+	
+	--------------------------------------------
+	-- Mux LoadWord out signal
+	--------------------------------------------
+	signal MUX_load_word : STD_LOGIC_VECTOR(31 downto 0);
 	
 	--------------------------------------------
 	-- ID->EX Registers
@@ -351,7 +347,7 @@ architecture Behavioral of ControlUnit is
 
 	
 	-- ID->EX, EX->MEM, MEM->WB
-	signal MEM_WB_load_mem_word : STD_LOGIC_VECTOR(31 downto 0);
+	signal MEM_WB_load_word : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_WB_op_type : STD_LOGIC_VECTOR(3 downto 0);  
 	signal REG_ID_EX_MEM_WB_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
 	signal REG_ID_EX_MEM_WB_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
@@ -497,36 +493,33 @@ begin
 	);
 	
 	
+	MuxLDR : Mux_LoadWord port map
+	(
+		sel_src 			=> REG_ID_EX_MEM_addrmode, 		-- in ldr data source 						<- ID
+		load_word_ID 	=> REG_ID_EX_MEM_immd_word,		-- in immediate data 						<- ID
+		load_word_MEM 	=> MEM_WB_load_word,					-- in data loaded from memory 			<- MEM
+		load_word 		=> MUX_load_word						-- Muxed data to load in a register 	-> WB
+	);
+
+	
 	Pipeline_MEM_WB : PipelineControl_MEM_WB port map
 	(
 		clock => clock,
 		
-		in_MEM_load_mem_word 						=> MEM_load_mem_word, 						
-		in_REG_ID_EX_MEM_Exec_out 					=> REG_ID_EX_MEM_Exec_out, 					
-		in_REG_ID_EX_MEM_addrmode 					=> REG_ID_EX_MEM_addrmode, 					
-		in_REG_ID_EX_MEM_immd_word  				=> REG_ID_EX_MEM_immd_word,				
+		in_MEM_load_mem_word 						=> MUX_load_word, 						
+		in_REG_ID_EX_MEM_Exec_out 					=> REG_ID_EX_MEM_Exec_out, 				
 		in_REG_ID_EX_MEM_op_type  					=> REG_ID_EX_MEM_op_type,					
 		in_REG_ID_EX_MEM_ALU_Rd_addr 	 			=> REG_ID_EX_MEM_ALU_Rd_addr,			
 		in_REG_ID_EX_MEM_DataMove_Rd_addr  		=> REG_ID_EX_MEM_DataMove_Rd_addr,		
 		
-		out_MEM_WB_load_mem_word 		 			=> MEM_WB_load_mem_word,			
-		out_REG_ID_EX_MEM_WB_Exec_out 	 		=> REG_ID_EX_MEM_WB_Exec_out,		
-		out_REG_ID_EX_MEM_WB_addrmode 	 		=> REG_ID_EX_MEM_WB_addrmode,		
-		out_REG_ID_EX_MEM_WB_immd_word  			=> REG_ID_EX_MEM_WB_immd_word,			
+		out_MEM_WB_load_mem_word 		 			=> MEM_WB_load_word,			
+		out_REG_ID_EX_MEM_WB_Exec_out 	 		=> REG_ID_EX_MEM_WB_Exec_out,					
 		out_REG_ID_EX_MEM_WB_op_type 		 		=> REG_ID_EX_MEM_WB_op_type, 		
 		out_REG_ID_EX_MEM_WB_ALU_Rd_addr  		=> REG_ID_EX_MEM_WB_ALU_Rd_addr,		
 		out_REG_ID_EX_MEM_WB_DataMove_Rd_addr	=> REG_ID_EX_MEM_WB_DataMove_Rd_addr
 		
 	);
 	
---	MuxLDR : Mux_LoadWord port map
---	(
---		sel_src => addrmode, 				-- in ldr data source 						<- ID
---		load_word_ID => immd_word,			-- in immediate data 						<- ID
---		load_word_MEM => load_mem_word,	-- in data loaded from memory 			<- MEM
---		load_word => load_word				-- Muxed data to load in a register 	-> WB
---	);
-
 
 --	
 --	Register_WriteBack : WriteBack port map
@@ -537,6 +530,6 @@ begin
 --		LDR_addr => DataMove_Rd_Addr,		-- in Dest register addr for LDR 	<- ID 
 --		LDR_word => load_word				-- data to load to register 			<- Mux(ID/MEM)
 --	);
-	
+--	
 end architecture Behavioral;
 

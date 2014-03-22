@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <symbol version="7" name="Execute">
     <symboltype>BLOCK</symboltype>
-    <timestamp>2014-3-15T8:41:24</timestamp>
+    <timestamp>2014-3-22T5:30:32</timestamp>
     <pin polarity="Input" x="0" y="-416" name="op_alu(7:0)" />
     <pin polarity="Input" x="0" y="-336" name="ALU_op1(31:0)" />
     <pin polarity="Input" x="0" y="-272" name="ALU_op2(31:0)" />
     <pin polarity="Input" x="0" y="-208" name="memaddr_offset(31:0)" />
     <pin polarity="Output" x="576" y="-336" name="Exec_out(31:0)" />
-    <pin polarity="Output" x="576" y="-208" name="effective_addr(31:0)" />
+    <pin polarity="Output" x="576" y="-272" name="effective_addr(31:0)" />
     <graph>
         <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="288" y="-456" type="symbol" />
         <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-416" type="pin op_alu(7:0)" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-336" type="pin ALU_op1(31:0)" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-272" type="pin ALU_op2(31:0)" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-208" type="pin memaddr_offset(31:0)" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="504" y="-336" type="pin Exec_out(31:0)" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="504" y="-272" type="pin effective_addr(31:0)" />
         <rect width="64" x="0" y="-428" height="24" />
         <line x2="0" y1="-416" y2="-416" x1="64" />
         <rect width="64" x="0" y="-348" height="24" />
         <rect width="64" x="0" y="-284" height="24" />
         <rect width="64" x="0" y="-220" height="24" />
         <rect width="64" x="512" y="-348" height="24" />
-        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-336" type="pin ALU_op1(31:0)" />
         <line x2="0" y1="-336" y2="-336" x1="64" />
         <line x2="0" y1="-272" y2="-272" x1="64" />
-        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-272" type="pin ALU_op2(31:0)" />
         <line x2="0" y1="-208" y2="-208" x1="64" />
-        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-208" type="pin memaddr_offset(31:0)" />
         <line x2="576" y1="-336" y2="-336" x1="512" />
-        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="504" y="-336" type="pin Exec_out(31:0)" />
         <rect width="448" x="64" y="-448" height="296" />
         <rect width="64" x="512" y="-284" height="24" />
-        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="504" y="-272" type="pin effective_addr(31:0)" />
         <line x2="576" y1="-272" y2="-272" x1="512" />
     </graph>
 </symbol>

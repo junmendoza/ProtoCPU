@@ -15,7 +15,6 @@
         <signal name="XLXN_180(7:0)" />
         <signal name="XLXN_181(3:0)" />
         <signal name="XLXN_182(31:0)" />
-        <signal name="XLXN_186(31:0)" />
         <signal name="XLXN_192(31:0)" />
         <signal name="XLXN_193(3:0)" />
         <signal name="XLXN_194(31:0)" />
@@ -25,12 +24,8 @@
         <signal name="XLXN_200(7:0)" />
         <signal name="XLXN_203(31:0)" />
         <signal name="XLXN_206" />
-        <signal name="XLXN_213(31:0)" />
-        <signal name="XLXN_214(31:0)" />
-        <signal name="XLXN_215(31:0)" />
         <signal name="XLXN_217(31:0)" />
         <signal name="XLXN_211(31:0)" />
-        <signal name="XLXN_230(31:0)" />
         <blockdef name="Fetch">
             <timestamp>2014-3-15T6:13:29</timestamp>
             <line x2="0" y1="32" y2="32" x1="64" />
@@ -42,7 +37,7 @@
             <rect width="256" x="64" y="-128" height="192" />
         </blockdef>
         <blockdef name="Decode">
-            <timestamp>2014-3-15T6:15:47</timestamp>
+            <timestamp>2014-3-16T15:32:52</timestamp>
             <rect width="64" x="0" y="-876" height="24" />
             <line x2="0" y1="-864" y2="-864" x1="64" />
             <rect width="64" x="496" y="-876" height="24" />
@@ -202,9 +197,11 @@
             <wire x2="3136" y1="1920" y2="1920" x1="1360" />
         </branch>
         <branch name="XLXN_88(31:0)">
-            <wire x2="3088" y1="272" y2="272" x1="2208" />
+            <wire x2="2496" y1="272" y2="272" x1="2208" />
+            <wire x2="3088" y1="272" y2="272" x1="2496" />
             <wire x2="3088" y1="272" y2="2048" x1="3088" />
-            <wire x2="3136" y1="2048" y2="2048" x1="3088" />
+            <wire x2="3120" y1="2048" y2="2048" x1="3088" />
+            <wire x2="3136" y1="2048" y2="2048" x1="3120" />
         </branch>
         <instance x="2416" y="864" name="XLXI_4" orien="R0">
         </instance>
@@ -213,9 +210,10 @@
         <instance x="592" y="1056" name="XLXI_3" orien="R0">
         </instance>
         <branch name="XLXN_179(31:0)">
-            <wire x2="1520" y1="448" y2="448" x1="1152" />
-            <wire x2="1632" y1="272" y2="272" x1="1520" />
+            <wire x2="1168" y1="448" y2="448" x1="1152" />
+            <wire x2="1520" y1="448" y2="448" x1="1168" />
             <wire x2="1520" y1="272" y2="448" x1="1520" />
+            <wire x2="1632" y1="272" y2="272" x1="1520" />
         </branch>
         <branch name="XLXN_180(7:0)">
             <wire x2="1328" y1="320" y2="320" x1="1152" />
@@ -228,12 +226,14 @@
             <wire x2="3136" y1="1984" y2="1984" x1="1296" />
         </branch>
         <branch name="XLXN_182(31:0)">
-            <wire x2="1552" y1="512" y2="512" x1="1152" />
+            <wire x2="1168" y1="512" y2="512" x1="1152" />
+            <wire x2="1552" y1="512" y2="512" x1="1168" />
             <wire x2="1552" y1="336" y2="512" x1="1552" />
             <wire x2="1632" y1="336" y2="336" x1="1552" />
         </branch>
         <branch name="XLXN_192(31:0)">
-            <wire x2="2368" y1="336" y2="336" x1="2144" />
+            <wire x2="2208" y1="336" y2="336" x1="2144" />
+            <wire x2="2368" y1="336" y2="336" x1="2208" />
             <wire x2="2368" y1="336" y2="832" x1="2368" />
             <wire x2="2416" y1="832" y2="832" x1="2368" />
         </branch>
@@ -258,14 +258,10 @@
             <wire x2="2432" y1="1264" y2="1264" x1="1760" />
         </branch>
         <branch name="XLXN_197(31:0)">
-            <wire x2="1584" y1="832" y2="832" x1="1152" />
+            <wire x2="1168" y1="832" y2="832" x1="1152" />
+            <wire x2="1584" y1="832" y2="832" x1="1168" />
             <wire x2="1584" y1="400" y2="832" x1="1584" />
             <wire x2="1632" y1="400" y2="400" x1="1584" />
-        </branch>
-        <branch name="XLXN_200(7:0)">
-            <wire x2="1568" y1="256" y2="256" x1="1152" />
-            <wire x2="1632" y1="192" y2="192" x1="1568" />
-            <wire x2="1568" y1="192" y2="256" x1="1568" />
         </branch>
         <branch name="XLXN_203(31:0)">
             <wire x2="512" y1="352" y2="352" x1="400" />
@@ -295,6 +291,12 @@
             <wire x2="1168" y1="896" y2="896" x1="1152" />
             <wire x2="1232" y1="896" y2="896" x1="1168" />
             <wire x2="1232" y1="896" y2="1216" x1="1232" />
+        </branch>
+        <branch name="XLXN_200(7:0)">
+            <wire x2="1168" y1="256" y2="256" x1="1152" />
+            <wire x2="1568" y1="256" y2="256" x1="1168" />
+            <wire x2="1568" y1="192" y2="256" x1="1568" />
+            <wire x2="1632" y1="192" y2="192" x1="1568" />
         </branch>
         <instance x="1632" y="608" name="XLXI_11" orien="R0">
         </instance>

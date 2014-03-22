@@ -67,6 +67,9 @@ begin
 				ALU_out <= std_logic_vector(to_signed(tempDest, 32));
 				
 			when alu_mul => 
+				tempDest := iOp1 * iOp2;
+				ALU_out <= std_logic_vector(to_signed(tempDest, 32));
+				
 			when alu_div => 
 				 
 			when alu_and => 

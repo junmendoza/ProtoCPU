@@ -45,7 +45,7 @@ architecture Behavioral of ALU is
 begin
 		
 			 
-	select_op : process (alu_sel)
+	select_op : process (alu_sel, op1, op2)
 	
 	variable tempDest : integer;
 	variable iOp1 : integer;

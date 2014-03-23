@@ -43,10 +43,11 @@ ARCHITECTURE behavior OF Testbench_ALU_Add IS
  
     COMPONENT ALU
     PORT(
-         alu_sel : IN  std_logic_vector(7 downto 0);
-         op1 : IN  std_logic_vector(31 downto 0);
-         op2 : IN  std_logic_vector(31 downto 0);
-         dest : OUT  std_logic_vector(31 downto 0)
+          alu_sel : in STD_LOGIC_VECTOR(7 downto 0);
+          op1 : in STD_LOGIC_VECTOR(31 downto 0);
+          op2 : in STD_LOGIC_VECTOR(31 downto 0);
+          ALU_out : out STD_LOGIC_VECTOR(31 downto 0);
+          CMP_out : out STD_LOGIC_VECTOR(31 downto 0)
         );
     END COMPONENT;
     
@@ -57,9 +58,8 @@ ARCHITECTURE behavior OF Testbench_ALU_Add IS
    signal op2 : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
-   signal dest : std_logic_vector(31 downto 0);
-   -- No clocks detected in port list. Replace <clock> below with 
-   -- appropriate port name 
+   signal ALU_out : std_logic_vector(31 downto 0);
+   signal CMP_out : std_logic_vector(31 downto 0);
  
 BEGIN
  
@@ -68,17 +68,21 @@ BEGIN
           alu_sel => alu_sel,
           op1 => op1,
           op2 => op2,
-          dest => dest
+          ALU_out => ALU_out,
+          CMP_out => CMP_out
         );
 
    stim_proc: process
    begin		
+	
 		wait for 20 ns;
 		op1 <= X"0000000A";
 		wait for 30 ns;
 		op2 <= X"00000001";
 		wait for 40 ns;
 		alu_sel <= alu_add;
+		
+		
    end process;
 
 END;

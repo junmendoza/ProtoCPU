@@ -45,6 +45,7 @@ entity PipelineControl_ID_EX is
 			in_REG_ID_EX_memaddr_offset 		: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+
 			out_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
 			out_REG_ID_EX_op_alu 				: out STD_LOGIC_VECTOR(7 downto 0);  
 			out_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 

@@ -190,6 +190,10 @@ architecture Behavioral of ControlUnit is
 				in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
 				in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
 				
+				in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+				
+				
 				-- From Execute
 				out_REG_EX_MEM_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);     
 				out_REG_EX_MEM_effective_addr 	: out STD_LOGIC_VECTOR(31 downto 0);
@@ -201,26 +205,33 @@ architecture Behavioral of ControlUnit is
 				out_REG_EX_MEM_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
 				out_REG_EX_MEM_DataMove_Rd 		: out STD_LOGIC_VECTOR(31 downto 0);
 				out_REG_EX_MEM_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
-				out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+				out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
+				
+				out_REG_ID_EX_MEM_ExecNextPC 		: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC
 			 );
 	end component Pipelinecontrol_EX_MEM;
 	
 	
 	component PipelineControl_MEM_WB is
 		Port( 
-				clock : in STD_LOGIC;
-				
-				in_MEM_load_mem_word : in STD_LOGIC_VECTOR(31 downto 0);
-				in_REG_EX_MEM_Exec_out : in STD_LOGIC_VECTOR(31 downto 0);   
-				in_REG_ID_EX_MEM_op_type : in STD_LOGIC_VECTOR(3 downto 0);  
-				in_REG_ID_EX_MEM_ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
-				in_REG_ID_EX_MEM_DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0);
-				
-				out_MEM_WB_load_mem_word : out STD_LOGIC_VECTOR(31 downto 0);
-				out_REG_EX_MEM_WB_Exec_out : out STD_LOGIC_VECTOR(31 downto 0);   
-				out_REG_ID_EX_MEM_WB_op_type : out STD_LOGIC_VECTOR(3 downto 0);  
-				out_REG_ID_EX_MEM_WB_ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
-				out_REG_ID_EX_MEM_WB_DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0)
+				clock 											: in STD_LOGIC;
+					
+				in_MEM_load_mem_word 						: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_EX_MEM_Exec_out 						: in STD_LOGIC_VECTOR(31 downto 0);   
+				in_REG_ID_EX_MEM_op_type 					: in STD_LOGIC_VECTOR(3 downto 0);  
+				in_REG_ID_EX_MEM_ALU_Rd_addr 				: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_MEM_DataMove_Rd_addr 		: in STD_LOGIC_VECTOR(3 downto 0);
+				in_REG_ID_EX_MEM_ExecNextPC 				: in STD_LOGIC_VECTOR(31 downto 0);
+				in_REG_ID_EX_MEM_getnextpc 				: in STD_LOGIC;
+					
+				out_MEM_WB_load_mem_word 					: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_EX_MEM_WB_Exec_out 				: out STD_LOGIC_VECTOR(31 downto 0);   
+				out_REG_ID_EX_MEM_WB_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
+				out_REG_ID_EX_MEM_WB_ALU_Rd_addr 		: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_ID_EX_MEM_WB_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
+				out_REG_ID_EX_MEM_WB_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
+				out_REG_ID_EX_MEM_WB_getnextpc 			: out STD_LOGIC
 			 );
 			 
 	end component PipelineControl_MEM_WB;
@@ -322,6 +333,8 @@ architecture Behavioral of ControlUnit is
 	signal REG_ID_EX_MEM_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 	signal REG_ID_EX_MEM_addrmode : STD_LOGIC_VECTOR(3 downto 0); 
 	signal REG_ID_EX_MEM_immd_word : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_MEM_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
+	signal REG_ID_EX_MEM_getnextpc : STD_LOGIC;
 	
 --	--------------------------------------------
 --	-- Decode Execute (ID_EX)
@@ -342,8 +355,6 @@ architecture Behavioral of ControlUnit is
 --	signal REG_ID_EX_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
 --	signal REG_ID_EX_MEM_op_datamove : STD_LOGIC_VECTOR(7 downto 0); 
 --	signal REG_ID_EX_MEM_DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0);
-	signal REG_ID_EX_MEM_ExecNextPC : STD_LOGIC_VECTOR(31 downto 0);
-	signal REG_ID_EX_MEM_getnextpc : STD_LOGIC;
 
 
 	
@@ -467,6 +478,8 @@ begin
 		in_REG_ID_EX_DataMove_Rd 			=> REG_ID_EX_DataMove_Rd,
 		in_REG_ID_EX_addrmode 				=> REG_ID_EX_addrmode,
 		in_REG_ID_EX_immd_word 				=> REG_ID_EX_immd_word,
+		in_REG_ID_EX_ExecNextPC 			=> REG_ID_EX_ExecNextPC,									
+		in_REG_ID_EX_getnextpc 				=> REG_ID_EX_getnextpc,
 
 		out_REG_EX_MEM_Exec_out 			=> REG_EX_MEM_Exec_out,				
 		out_REG_EX_MEM_effective_addr 	=> REG_EX_MEM_effective_addr,
@@ -477,7 +490,9 @@ begin
 		out_REG_EX_MEM_DataMove_Rd_addr	=> REG_ID_EX_MEM_DataMove_Rd_addr, 
 		out_REG_EX_MEM_DataMove_Rd 		=> REG_ID_EX_MEM_DataMove_Rd, 
 		out_REG_EX_MEM_addrmode 			=> REG_ID_EX_MEM_addrmode, 
-		out_REG_EX_MEM_immd_word 			=> REG_ID_EX_MEM_immd_word
+		out_REG_EX_MEM_immd_word 			=> REG_ID_EX_MEM_immd_word,
+		out_REG_ID_EX_MEM_ExecNextPC 		=> REG_ID_EX_MEM_ExecNextPC,									
+		out_REG_ID_EX_MEM_getnextpc 		=> REG_ID_EX_MEM_getnextpc
 	);            
 	
 	
@@ -507,13 +522,17 @@ begin
 		in_REG_EX_MEM_Exec_out 						=> REG_EX_MEM_Exec_out, 				
 		in_REG_ID_EX_MEM_op_type  					=> REG_ID_EX_MEM_op_type,					
 		in_REG_ID_EX_MEM_ALU_Rd_addr 	 			=> REG_ID_EX_MEM_ALU_Rd_addr,			
-		in_REG_ID_EX_MEM_DataMove_Rd_addr  		=> REG_ID_EX_MEM_DataMove_Rd_addr,		
+		in_REG_ID_EX_MEM_DataMove_Rd_addr  		=> REG_ID_EX_MEM_DataMove_Rd_addr,	
+		in_REG_ID_EX_MEM_ExecNextPC 				=> REG_ID_EX_MEM_ExecNextPC,									
+		in_REG_ID_EX_MEM_getnextpc 				=> REG_ID_EX_MEM_getnextpc,	
 		
 		out_MEM_WB_load_mem_word 		 			=> MEM_WB_load_word,			
 		out_REG_EX_MEM_WB_Exec_out 	 			=> REG_EX_MEM_WB_Exec_out,					
 		out_REG_ID_EX_MEM_WB_op_type 		 		=> REG_ID_EX_MEM_WB_op_type, 		
 		out_REG_ID_EX_MEM_WB_ALU_Rd_addr  		=> REG_ID_EX_MEM_WB_ALU_Rd_addr,		
-		out_REG_ID_EX_MEM_WB_DataMove_Rd_addr	=> REG_ID_EX_MEM_WB_DataMove_Rd_addr
+		out_REG_ID_EX_MEM_WB_DataMove_Rd_addr	=> REG_ID_EX_MEM_WB_DataMove_Rd_addr,
+		out_REG_ID_EX_MEM_WB_ExecNextPC 			=> REG_ID_EX_MEM_WB_ExecNextPC,									
+		out_REG_ID_EX_MEM_WB_getnextpc 			=> REG_ID_EX_MEM_WB_getnextpc
 		
 	);
 	

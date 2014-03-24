@@ -38,6 +38,9 @@ entity Pipelinecontrol_EX_MEM is
 			in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
 			in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
 			
+			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
+			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+			
 			
 			-- From Execute
 			out_REG_EX_MEM_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);     
@@ -50,7 +53,10 @@ entity Pipelinecontrol_EX_MEM is
 			out_REG_EX_MEM_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
 			out_REG_EX_MEM_DataMove_Rd 		: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_EX_MEM_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
-			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
+			
+			out_REG_ID_EX_MEM_ExecNextPC 		: out STD_LOGIC_VECTOR(31 downto 0);
+			out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC
 		 );
 		 
 end Pipelinecontrol_EX_MEM;
@@ -70,7 +76,9 @@ begin
 		in_REG_ID_EX_DataMove_Rd_addr, 
 		in_REG_ID_EX_DataMove_Rd, 		
 		in_REG_ID_EX_addrmode, 			
-		in_REG_ID_EX_immd_word
+		in_REG_ID_EX_immd_word,
+		in_REG_ID_EX_ExecNextPC,
+		in_REG_ID_EX_getnextpc
 	)
 	
 	begin
@@ -82,13 +90,16 @@ begin
 			out_REG_EX_MEM_effective_addr 		<= in_REG_EX_MEM_effective_addr;
 			
 			-- From Decode
-			out_REG_EX_MEM_op_type 				<= in_REG_ID_EX_op_type; 					
+			out_REG_EX_MEM_op_type 					<= in_REG_ID_EX_op_type; 					
 			out_REG_EX_MEM_op_datamove 		   <= in_REG_ID_EX_op_datamove; 		
 			out_REG_EX_MEM_ALU_Rd_addr 		   <= in_REG_ID_EX_ALU_Rd_addr; 		
-			out_REG_EX_MEM_DataMove_Rd_addr   <= in_REG_ID_EX_DataMove_Rd_addr; 
+			out_REG_EX_MEM_DataMove_Rd_addr   	<= in_REG_ID_EX_DataMove_Rd_addr; 
 			out_REG_EX_MEM_DataMove_Rd 		   <= in_REG_ID_EX_DataMove_Rd; 		
 			out_REG_EX_MEM_addrmode 			   <= in_REG_ID_EX_addrmode; 			
-			out_REG_EX_MEM_immd_word 		   <= in_REG_ID_EX_immd_word; 	
+			out_REG_EX_MEM_immd_word 		   	<= in_REG_ID_EX_immd_word; 
+			
+			out_REG_ID_EX_MEM_ExecNextPC 			<= in_REG_ID_EX_ExecNextPC; 
+			out_REG_ID_EX_MEM_getnextpc 			<= in_REG_ID_EX_getnextpc;	
 			
 		end if ClockSync;
 		

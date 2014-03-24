@@ -60,7 +60,7 @@ begin
 		mem_word => instr
 	);
 
-	FetchInstr : process(clock, pc)
+	FetchInstr : process(clock, getnextpc, pc)
 	
 	variable pc_instr_address : integer;
 	

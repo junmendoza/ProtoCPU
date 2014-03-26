@@ -20,26 +20,46 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+
 entity GetNextPC is
-    Port( clock : in STD_LOGIC;
-			 nextpc : in STD_LOGIC;	
-			 pc : out STD_LOGIC_VECTOR(31 downto 0)
-			);
+	Port( 
+			clock : in STD_LOGIC; 
+			sel_getnextpc : in STD_LOGIC;
+			pc : in STD_LOGIC_VECTOR(31 downto 0);
+			nextpc : out STD_LOGIC_VECTOR(31 downto 0)
+		 );
 end GetNextPC;
 
 architecture Behavioral of GetNextPC is
-
+	
 begin
 
-	GetPC : process(nextpc) is 
+	ProcGetNextPC : process(clock, sel_getnextpc, pc)
+	
+	variable pc_instr_address : integer;
 	
 	begin
-		ClockSync : if rising_edge(clock) then
-			-- Get the PC from the PC register
-			-- Increment PC
-			-- Store the PC back to the PC register       
-		end if ClockSync;
-	end process GetPC;
 	
-end architecture Behavioral;
+		ClockSync : if rising_edge(clock) then
+			
+			ifComputeNextPC : if sel_getnextpc = '1' then
+			
+				-- compute the next pc by offsetting the current pc
+				pc_instr_address := to_integer(unsigned(pc));
+				pc_instr_address := pc_instr_address + 1;
+				nextpc <= std_logic_vector(to_signed(pc_instr_address, 32));
+				
+			else
+			
+				nextpc <= pc;
+				
+			end if ifComputeNextPC;
+			
+		end if ClockSync;
+		
+	end process ProcGetNextPC;
 
+end Behavioral;

@@ -60,7 +60,7 @@ architecture Behavioral of ControlUnit is
 	component Fetch is 
 		Port( 
 				clock : in STD_LOGIC; 
-				getnextpc : in STD_LOGIC;
+				sel_getnextpc : in STD_LOGIC;
 				pc : in STD_LOGIC_VECTOR(31 downto 0);
 				instr : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
@@ -388,7 +388,7 @@ begin
 	FetchInstruction : Fetch port map
 	(
 		clock => clock, 
-		getnextpc => REG_ID_EX_MEM_WB_getnextpc,		-- in fetch op
+		sel_getnextpc => REG_ID_EX_MEM_WB_getnextpc,		-- in fetch op
 		pc => REG_ID_EX_MEM_WB_ExecNextPC, 				-- in current pc
 		instr => R2												-- out next instruction -> ID
 	);

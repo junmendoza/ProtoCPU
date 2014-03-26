@@ -43,7 +43,7 @@ ARCHITECTURE behavior OF Testbench_Fetch IS
 	COMPONENT Fetch
 		PORT(
 				clock : in STD_LOGIC; 
-				getnextpc : in STD_LOGIC;					-- 0-> pc is the next pc, 1-> Get next pc (pc = pc + 1)
+				sel_getnextpc : in STD_LOGIC;					-- 0-> pc is the next pc, 1-> Get next pc (pc = pc + 1)
 				pc : in STD_LOGIC_VECTOR(31 downto 0);
 				instr : out STD_LOGIC_VECTOR(31 downto 0)
 		    );
@@ -52,8 +52,8 @@ ARCHITECTURE behavior OF Testbench_Fetch IS
 
    --Inputs
    signal clock : std_logic := '0';
-	signal getnextpc : STD_LOGIC := '0';
-   signal pc : std_logic_vector(31 downto 0) := X"00000000";
+	signal sel_getnextpc : STD_LOGIC := '0';
+   signal pc : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
    signal instr : std_logic_vector(31 downto 0);
@@ -64,10 +64,10 @@ BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: Fetch PORT MAP (
-          clock 		=> clock,
-			 getnextpc 	=> getnextpc,
-          pc 			=> pc,
-          instr 		=> instr
+          clock 				=> clock,
+			 sel_getnextpc 	=> sel_getnextpc,
+          pc 					=> pc,
+          instr 				=> instr
         );
 
 
@@ -80,7 +80,17 @@ BEGIN
 		---------------------------------------
 		
 		-- fetch cycle start
-		getnextpc <= '0';
+		pc <= X"00000000"; 
+		sel_getnextpc <= '0';
+		clock <= '1';
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		sel_getnextpc <= '0';
 		pc <= X"00000001"; 
 		clock <= '1';
 		wait for 10 ns;
@@ -90,7 +100,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '0';
+		sel_getnextpc <= '0';
 		pc <= X"00000002"; 
 		clock <= '1';
 		wait for 10 ns;
@@ -99,8 +109,9 @@ BEGIN
 		clock <= '0';
 		wait for 10 ns;
 		
+		
 		-- fetch cycle start
-		getnextpc <= '0';
+		sel_getnextpc <= '0';
 		pc <= X"00000003"; 
 		clock <= '1';
 		wait for 10 ns;
@@ -114,9 +125,9 @@ BEGIN
 		---------------------------------------
 		
 		-- fetch cycle start
-		clock <= '1';
-		getnextpc <= '1';
 		pc <= X"00000000"; 
+		sel_getnextpc <= '1';
+		clock <= '1';
 		wait for 10 ns;
 		
 		-- cycle clock 0
@@ -124,7 +135,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000001"; 
 		wait for 10 ns;
@@ -134,7 +145,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000002"; 
 		wait for 10 ns;
@@ -144,19 +155,9 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
-		clock <= '1';
 		pc <= X"00000003"; 
-		wait for 10 ns;
-		
-		-- cycle clock 0
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
-		pc <= X"00000004"; 
 		wait for 10 ns;
 		
 		-- cycle clock 0
@@ -164,7 +165,17 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		pc <= X"00000004"; 
+		sel_getnextpc <= '1';
+		clock <= '1';
+		wait for 10 ns;
+		
+		-- cycle clock 0
+		clock <= '0';
+		wait for 10 ns;
+		
+		-- fetch cycle start
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000005"; 
 		wait for 10 ns;
@@ -174,7 +185,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000006"; 
 		wait for 10 ns;
@@ -184,7 +195,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000007"; 
 		wait for 10 ns;
@@ -194,7 +205,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000008"; 
 		wait for 10 ns;
@@ -204,7 +215,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"00000009"; 
 		wait for 10 ns;
@@ -214,7 +225,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000A"; 
 		wait for 10 ns;
@@ -224,7 +235,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000B"; 
 		wait for 10 ns;
@@ -234,7 +245,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000C"; 
 		wait for 10 ns;
@@ -244,7 +255,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000D"; 
 		wait for 10 ns;
@@ -254,7 +265,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000E"; 
 		wait for 10 ns;
@@ -264,7 +275,7 @@ BEGIN
 		wait for 10 ns;
 		
 		-- fetch cycle start
-		getnextpc <= '1';
+		sel_getnextpc <= '1';
 		clock <= '1';
 		pc <= X"0000000F"; 
 

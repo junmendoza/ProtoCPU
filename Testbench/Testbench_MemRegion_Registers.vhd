@@ -136,11 +136,31 @@ BEGIN
 		reg_addr <= "1110";
 		wait for 10 ns;
 		
-		rw_sel <= reg_read;
-		reg_addr <= "1111";
+		-------------------------------------
+		-- Test writing to registers
+		-------------------------------------
+		rw_sel <= reg_write;
+		write_word <= X"0000000F";
+		reg_addr <= "0000";
 		wait for 10 ns;
 		
-
+		rw_sel <= reg_write;
+		write_word <= X"0000000E";
+		reg_addr <= "0001";
+		wait for 10 ns;
+		
+		
+		-------------------------------------
+		-- Read updated register 
+		-------------------------------------
+		rw_sel <= reg_read;
+		reg_addr <= "0000";
+		wait for 10 ns;
+		
+		rw_sel <= reg_read;
+		reg_addr <= "0001";
+		wait for 10 ns;
+		
       wait;
    end process;
 

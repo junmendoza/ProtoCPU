@@ -55,11 +55,13 @@ architecture Behavioral of MemRegion_Registers is
 	
 begin
 
-	ProcMemAccess : process(offset)
+	ProcMemAccess : process(rw_sel, offset)
 	
 	variable offset_addr : integer;
 	
 	begin
+			offset_addr := to_integer(unsigned(offset));
+			
 			reg_rw_mode : if rw_sel = reg_read then
 				read_word <= MemoryRegion(offset_addr);
 			elsif rw_sel = reg_write then 

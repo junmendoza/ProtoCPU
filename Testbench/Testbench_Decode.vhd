@@ -43,15 +43,19 @@ ARCHITECTURE behavior OF Testbench_Decode IS
     COMPONENT Decode
     PORT(
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
-			op_branch : out STD_LOGIC_VECTOR(7 downto 0); 
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
-			op_system : out STD_LOGIC_VECTOR(7 downto 0);
-			Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
+			ALU_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			ALU_Rn1 : out STD_LOGIC_VECTOR(31 downto 0);
 			ALU_Rn2 : out STD_LOGIC_VECTOR(31 downto 0);
+			DataMove_Rd_addr : out STD_LOGIC_VECTOR(3 downto 0);
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
-			DataMove_Address : out STD_LOGIC_VECTOR(31 downto 0)
+			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
+			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
+			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
+			getnextpc : out STD_LOGIC
         );
     END COMPONENT;
     
@@ -59,51 +63,42 @@ ARCHITECTURE behavior OF Testbench_Decode IS
    --Inputs
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
 	
-	signal memregion_register : t_MemRegister_15_32 := 
-	(
-		X"00000001", 
-		X"00000002", 
-		X"00000003", 
-		X"00000004",
-		X"00000005", 
-		X"00000006", 
-		X"00000007", 
-		X"00000008",
-		X"00000009", 
-		X"0000000A", 
-		X"0000000B", 
-		X"0000000C",
-		X"0000000D", 
-		X"0000000E", 
-		X"0000000F"
-	);
 
  	--Outputs
-   signal op_alu : std_logic_vector(7 downto 0);
-   signal op_branch : std_logic_vector(7 downto 0);
-   signal op_datamove : std_logic_vector(7 downto 0);
-   signal op_system : std_logic_vector(7 downto 0);
-   signal Rd_addr : std_logic_vector(3 downto 0);
-   signal ALU_Rn1 : std_logic_vector(31 downto 0);
-   signal ALU_Rn2 : std_logic_vector(31 downto 0);
-   signal DataMove_Rd : std_logic_vector(31 downto 0);
-   signal DataMove_Address : std_logic_vector(31 downto 0);
+	signal op_type : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');  
+	signal op_alu : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');  
+	signal op_datamove : STD_LOGIC_VECTOR(7 downto 0) := (others => '0'); 
+	signal ALU_Rd_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal ALU_Rn1 : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal ALU_Rn2 : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal DataMove_Rd_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal DataMove_Rd : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal addrmode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0'); 
+	signal immd_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal ExecNextPC : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+	signal getnextpc : STD_LOGIC;
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Decode PORT MAP (
-          instruction => instruction,
-          op_alu => op_alu,
-          op_branch => op_branch,
-          op_datamove => op_datamove,
-          op_system => op_system,
-          Rd_addr => Rd_addr,
-          ALU_Rn1 => ALU_Rn1,
-          ALU_Rn2 => ALU_Rn2,
-          DataMove_Rd => DataMove_Rd,
-          DataMove_Address => DataMove_Address
-        );
+	uut: Decode PORT MAP
+	(
+		instruction 		=> instruction, 		
+		op_type 				=> op_type, 				
+		op_alu 				=> op_alu, 				
+		op_datamove 		=> op_datamove, 		
+		ALU_Rd_addr 		=> ALU_Rd_addr, 		
+		ALU_Rn1 				=> ALU_Rn1, 				
+		ALU_Rn2 				=> ALU_Rn2, 				
+		DataMove_Rd_addr  => DataMove_Rd_addr, 
+		DataMove_Rd 		=> DataMove_Rd, 		
+		addrmode 			=> addrmode, 			
+		immd_word 			=> immd_word, 			
+		memaddr_offset 	=> memaddr_offset, 	
+		ExecNextPC 			=> ExecNextPC, 			
+		getnextpc 			=> getnextpc 			
+	);
 
    -- Stimulus process
    stim_proc: process
@@ -132,37 +127,37 @@ BEGIN
 		-- opcode	cond		Rd			Reserved 	address mode
 		instruction <= "00001111000001010000000100001011"; 
 		wait for 10 ns;
-		
-		
-		-- [2] ldr R5, 0x0000000B
-		-- ldr
-		-- 31-24		23-20		19-16		15-12			11-0
-		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001110000001010000000100001011"; 
-		wait for 10 ns;
-		
-		
-		-- [3] ldr R6, %2		
-		-- ldr
-		-- 31-24		23-20		19-16		15-12			11-0
-		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001110000001100000000000000010"; 
-		wait for 10 ns;
-		
-		-- [4] add R5, R5, R6
-		-- add
-		-- 31-24		23-20		19-16		15-12		11-0 		
-		-- opcode	cond		Rd			Rn			Shifter
-		instruction <= "00000000000001010101001000000110"; 
-		wait for 10 ns;
-		
-		
-		-- [5] str R5, 0x0000000F
-		-- str
-		-- 31-24		23-20		19-16		15-12			11-0
-		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001111000001010000000100001111"; 
-		wait for 10 ns;
+--		
+--		
+--		-- [2] ldr R5, 0x0000000B
+--		-- ldr
+--		-- 31-24		23-20		19-16		15-12			11-0
+--		-- opcode	cond		Rd			Reserved 	address mode
+--		instruction <= "00001110000001010000000100001011"; 
+--		wait for 10 ns;
+--		
+--		
+--		-- [3] ldr R6, %2		
+--		-- ldr
+--		-- 31-24		23-20		19-16		15-12			11-0
+--		-- opcode	cond		Rd			Reserved 	address mode
+--		instruction <= "00001110000001100000000000000010"; 
+--		wait for 10 ns;
+--		
+--		-- [4] add R5, R5, R6
+--		-- add
+--		-- 31-24		23-20		19-16		15-12		11-0 		
+--		-- opcode	cond		Rd			Rn			Shifter
+--		instruction <= "00000000000001010101001000000110"; 
+--		wait for 10 ns;
+--		
+--		
+--		-- [5] str R5, 0x0000000F
+--		-- str
+--		-- 31-24		23-20		19-16		15-12			11-0
+--		-- opcode	cond		Rd			Reserved 	address mode
+--		instruction <= "00001111000001010000000100001111"; 
+--		wait for 10 ns;
 		
       wait;
    end process;

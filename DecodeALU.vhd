@@ -41,46 +41,34 @@ end DecodeALU;
 
 architecture Behavioral of DecodeALU is
 
-	component MemRegion_Registers is
+	component DecodeRn1 is	
 		Port( 
-				rw_sel : in STD_LOGIC;
-				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
-				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
-			  );
-	end component MemRegion_Registers;
+				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Rn : out STD_LOGIC_VECTOR(31 downto 0)
+			 );	 
+	end component DecodeRn1;
 	
-	signal reg_offset : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal load_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- This is an unnecessary wire, resolve this
+	component DecodeRn2 is	
+		Port( 
+				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Rn : out STD_LOGIC_VECTOR(31 downto 0)
+			 );	 
+	end component DecodeRn2;
 	
 begin
 
-	memreg_registers : MemRegion_Registers port map
+	DecodeRn1Addr : DecodeRn1 port map
 	(
-		rw_sel => reg_read,
-		offset => reg_offset,
-		write_word => store_word,
-		read_word => load_word
+		Rn_addr => Rn1_addr,
+		Rn => Rn1
+	);
+		
+	DecodeRn2Addr : DecodeRn1 port map
+	(
+		Rn_addr => Rn2_addr,
+		Rn => Rn2
 	);
 	
-	ProcDecodeALU : process(Rn1_addr, Rn2_addr)
-	
-	variable index : integer; 
-	
-	begin
-		
-		reg_offset <= Rn1_addr;
-		Rn1 <= load_word;
-		
-		-- Is this wait necessary?
-		--wait for 2 ns;
-		
-		reg_offset <= Rn2_addr;
-		Rn2 <= load_word;
-	
-		
-	end process ProcDecodeALU;
 	
 end Behavioral;
 

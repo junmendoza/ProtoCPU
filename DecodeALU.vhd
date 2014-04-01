@@ -41,32 +41,31 @@ end DecodeALU;
 
 architecture Behavioral of DecodeALU is
 
-	component DecodeRn1 is	
+	component RegisterFile is
 		Port( 
-				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				Rn : out STD_LOGIC_VECTOR(31 downto 0)
-			 );	 
-	end component DecodeRn1;
+				rw_sel : in STD_LOGIC;
+				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				write_word : in STD_LOGIC_VECTOR(31 downto 0);		-- Write this word to Write_Rn_addr
+				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		-- Read this word from Read_Rn1_addr
+				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0)			-- Read this word from Read_Rn2_addr
+			  );
+	end component RegisterFile;
 	
-	component DecodeRn2 is	
-		Port( 
-				Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				Rn : out STD_LOGIC_VECTOR(31 downto 0)
-			 );	 
-	end component DecodeRn2;
+	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
 
-	DecodeRn1Addr : DecodeRn1 port map
+	ReadReg : RegisterFile port map
 	(
-		Rn_addr => Rn1_addr,
-		Rn => Rn1
-	);
-		
-	DecodeRn2Addr : DecodeRn1 port map
-	(
-		Rn_addr => Rn2_addr,
-		Rn => Rn2
+		rw_sel			=> reg_read,
+		Read_Rn1_addr 	=> Read_Rn1_addr,
+		Read_Rn2_addr 	=> Read_Rn2_addr,
+		Write_Rn_addr 	=> "0000",
+		write_word 		=> store_word,
+		Rn1_word 		=> Rn1_word,	
+		Rn2_word 		=> Rn2_word	
 	);
 	
 	

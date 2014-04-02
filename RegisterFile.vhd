@@ -35,6 +35,7 @@ entity RegisterFile is
 		  );
 end RegisterFile;
 
+
 architecture Behavioral of RegisterFile is
 
 	signal RegisterMemory : t_MemRegion_Regs :=
@@ -56,43 +57,34 @@ architecture Behavioral of RegisterFile is
 		X"0000000F"
 	);
 	
-	signal reset : STD_LOGIC := '0';
-	
 begin
 
-	ProcRegisterAccess : process(rw_sel)
+	ProcRegisterAccess : process(rw_sel, Read_Rn1_addr, Read_Rn2_addr, Write_Rn_addr)
 	
 	variable read_addr1 : integer;
 	variable read_addr2 : integer;
 	variable write_addr : integer;
 	
 	begin
+		reg_rw_mode : if rw_sel = reg_rw_read1 then
+		
+			read_addr1 := to_integer(unsigned(Read_Rn1_addr));
+			Rn1_word <= RegisterMemory(read_addr1);
 			
-			reset_op : if reset = '1' then
-				reset <= '0';
-			else
-				reset <= '1';
-				
-				reg_rw_mode : if rw_sel = reg_rw_read1 then
-				
-					read_addr1 := to_integer(unsigned(Read_Rn1_addr));
-					Rn1_word <= RegisterMemory(read_addr1);
-					
-				elsif rw_sel = reg_rw_read2 then
-				
-					read_addr1 := to_integer(unsigned(Read_Rn1_addr));
-					read_addr2 := to_integer(unsigned(Read_Rn2_addr));
-				
-					Rn1_word <= RegisterMemory(read_addr1);
-					Rn2_word <= RegisterMemory(read_addr2);
-					
-				elsif rw_sel = reg_rw_write then 
-				
-					write_addr := to_integer(unsigned(Write_Rn_addr));
-					RegisterMemory(write_addr) <= write_word;
-					
-				end if reg_rw_mode;
-			end if reset_op;
+		elsif rw_sel = reg_rw_read2 then
+		
+			read_addr1 := to_integer(unsigned(Read_Rn1_addr));
+			read_addr2 := to_integer(unsigned(Read_Rn2_addr));
+		
+			Rn1_word <= RegisterMemory(read_addr1);
+			Rn2_word <= RegisterMemory(read_addr2);
+			
+		elsif rw_sel = reg_rw_write then 
+		
+			write_addr := to_integer(unsigned(Write_Rn_addr));
+			RegisterMemory(write_addr) <= write_word;
+			
+		end if reg_rw_mode;
 			
 	end process ProcRegisterAccess;
 

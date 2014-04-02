@@ -56,7 +56,7 @@ begin
 	
 	ReadReg : RegisterFile port map
 	(
-		rw_sel			=> reg_write,
+		rw_sel			=> reg_rw_write,
 		Read_Rn1_addr 	=> open,
 		Read_Rn2_addr 	=> open,
 		Write_Rn_addr 	=> Rn_write_addr,

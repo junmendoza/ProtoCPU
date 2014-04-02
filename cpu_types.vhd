@@ -112,9 +112,10 @@ package cpu_types is
 	constant mem_read : STD_LOGIC := '0';
 	constant mem_write : STD_LOGIC := '1'; 
 	
-	constant reg_read1 : STD_LOGIC_VECTOR(1 downto 0) := "00";
-	constant reg_read2 : STD_LOGIC_VECTOR(1 downto 0) := "01";
-	constant reg_write : STD_LOGIC_VECTOR(1 downto 0) := "10"; 
+	constant reg_rw_reset : STD_LOGIC_VECTOR(1 downto 0) := "00";
+	constant reg_rw_read1 : STD_LOGIC_VECTOR(1 downto 0) := "01";
+	constant reg_rw_read2 : STD_LOGIC_VECTOR(1 downto 0) := "10"; 
+	constant reg_rw_write : STD_LOGIC_VECTOR(1 downto 0) := "11"; 
 
 end cpu_types;
 

@@ -26,9 +26,10 @@ use work.cpu_types.all;
 entity RegisterFile is
 	Port( 
 			rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
-			Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
-			Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
-			write_word : in STD_LOGIC_VECTOR(31 downto 0);		-- Write this word to Write_Rn_addr
+			Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);	
+			write_word : in STD_LOGIC_VECTOR(31 downto 0);		
 			Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		-- Read this word from Read_Rn1_addr
 			Rn2_word : out STD_LOGIC_VECTOR(31 downto 0)			-- Read this word from Read_Rn2_addr
 		  );
@@ -70,7 +71,7 @@ begin
 				read_addr1 := to_integer(unsigned(Read_Rn1_addr));
 				Rn1_word <= RegisterMemory(read_addr1);
 				
-			elsif rw_sel = reg_read2
+			elsif rw_sel = reg_read2 then
 			
 				read_addr1 := to_integer(unsigned(Read_Rn1_addr));
 				read_addr2 := to_integer(unsigned(Read_Rn2_addr));

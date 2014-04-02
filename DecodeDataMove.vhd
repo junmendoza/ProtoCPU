@@ -39,39 +39,40 @@ end DecodeDataMove;
 
 architecture Behavioral of DecodeDataMove is
 
-	component MemRegion_Registers is
+	component RegisterFile is
 		Port( 
-				rw_sel : in STD_LOGIC;
-				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
-				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
+				rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
+				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				write_word : in STD_LOGIC_VECTOR(31 downto 0) := (others => '0');		
+				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		
+				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')			
 			  );
-	end component MemRegion_Registers;
-	
-	signal offset_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal load_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- This is an unnecessary wire, resolve this
+	end component RegisterFile;
+
+	-- register containing the memory address
+	signal address : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal load_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); 
 	
 begin
 
-	memreg_registers : MemRegion_Registers port map
+	ReadReg : RegisterFile port map
 	(
-		rw_sel => reg_read,
-		offset => offset_addr,
-		write_word => load_word,
-		read_word => store_word
+		rw_sel			=> reg_read1,
+		Read_Rn1_addr 	=> address,
+		Read_Rn2_addr 	=> open,
+		Write_Rn_addr 	=> open,
+		write_word 		=> open,
+		Rn1_word 		=> load_word,	
+		Rn2_word 		=> open	
 	);
 	
 	ProcDecodeDataMove : process(Rd_addr)
-	
-	variable index : integer; 
-	
-	begin
 
-		offset_addr <= Rd_addr;
-		-- Wait for ns so we get the word from the register component
-		-- Is this wait necessary?
-		--wait for 2 ns;
+	begin
+	
+		address <= Rd_addr;
 		Rd <= load_word;
 		
 	end process ProcDecodeDataMove;

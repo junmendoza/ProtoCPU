@@ -43,29 +43,27 @@ architecture Behavioral of DecodeALU is
 
 	component RegisterFile is
 		Port( 
-				rw_sel : in STD_LOGIC;
+				rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
 				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
-				write_word : in STD_LOGIC_VECTOR(31 downto 0);		-- Write this word to Write_Rn_addr
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');	
+				write_word : in STD_LOGIC_VECTOR(31 downto 0) := (others => '0');		
 				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		-- Read this word from Read_Rn1_addr
 				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0)			-- Read this word from Read_Rn2_addr
 			  );
 	end component RegisterFile;
-	
-	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	
 begin
 
 	ReadReg : RegisterFile port map
 	(
 		rw_sel			=> reg_read2,
-		Read_Rn1_addr 	=> Read_Rn1_addr,
-		Read_Rn2_addr 	=> Read_Rn2_addr,
-		Write_Rn_addr 	=> "0000",
-		write_word 		=> store_word,
-		Rn1_word 		=> Rn1_word,	
-		Rn2_word 		=> Rn2_word	
+		Read_Rn1_addr 	=> Rn1_addr,
+		Read_Rn2_addr 	=> Rn2_addr,
+		Write_Rn_addr 	=> open,
+		write_word 		=> open,
+		Rn1_word 		=> Rn1,	
+		Rn2_word 		=> Rn2	
 	);
 	
 	

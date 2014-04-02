@@ -38,27 +38,31 @@ end WriteBack;
 
 architecture Behavioral of WriteBack is
 
-	component MemRegion_Registers is
+	component RegisterFile is
 		Port( 
-				rw_sel : in STD_LOGIC;
-				offset : in STD_LOGIC_VECTOR(3 downto 0);
+				rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
+				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0);
 				write_word : in STD_LOGIC_VECTOR(31 downto 0);
-				read_word : out STD_LOGIC_VECTOR(31 downto 0)
+				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0');		
+				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')			
 			  );
-	end component MemRegion_Registers;
+	end component RegisterFile;
 	
-	signal reg_offset : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal Rn_write_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 	signal write_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-	signal read_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- This is an unnecessary wire, resolve this
-
 begin
-
-	memreg_registers : MemRegion_Registers port map
+	
+	ReadReg : RegisterFile port map
 	(
-		rw_sel => reg_write,
-		offset => reg_offset,
-		write_word => write_word,
-		read_word => read_word
+		rw_sel			=> reg_write,
+		Read_Rn1_addr 	=> open,
+		Read_Rn2_addr 	=> open,
+		Write_Rn_addr 	=> Rn_write_addr,
+		write_word 		=> write_word,
+		Rn1_word 		=> open,	
+		Rn2_word 		=> open	
 	);
 	
 	ProcWriteRegister : process(op_type)
@@ -67,12 +71,12 @@ begin
 	
 		ifOptype : if op_type = optype_alu then
 			-- Write back the alu result
-			reg_offset <= ALU_Rd_addr;
+			Rn_write_addr <= ALU_Rd_addr;
 			write_word <= Exec_out;
 		
 		elsif op_type = optype_datamove then
 			-- Write back the word from ldr
-			reg_offset <= LDR_addr;
+			Rn_write_addr <= LDR_addr;
 			write_word <= LDR_word;
 		
 		end if ifOptype;

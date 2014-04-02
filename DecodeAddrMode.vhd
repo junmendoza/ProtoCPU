@@ -33,31 +33,34 @@ end DecodeAddrMode;
 
 architecture Behavioral of DecodeAddrMode is
 
-	component MemRegion_Registers is
+	component RegisterFile is
 		Port( 
-				rw_sel : in STD_LOGIC;
-				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
-				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
+				rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
+				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				write_word : in STD_LOGIC_VECTOR(31 downto 0) := (others => '0');		
+				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		
+				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')			
 			  );
-	end component MemRegion_Registers;
+	end component RegisterFile;
 
 	-- register containing the memory address
 	signal regaddr_offset : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 	
 	-- Word output from register memory region
 	signal memaddr_reg_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-	
-	signal store_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- resolve this unused wire
-	
 begin
 	
-	memreg_registers : MemRegion_Registers port map
+	ReadReg : RegisterFile port map
 	(
-		rw_sel => reg_read,
-		offset => regaddr_offset,
-		write_word => store_word,
-		read_word => memaddr_reg_word
+		rw_sel			=> reg_read1,
+		Read_Rn1_addr 	=> regaddr_offset,
+		Read_Rn2_addr 	=> open,
+		Write_Rn_addr 	=> open,
+		write_word 		=> open,
+		Rn1_word 		=> memaddr_reg_word,	
+		Rn2_word 		=> open	
 	);
 	
 	ProcAddrMode : process(AddrMode)

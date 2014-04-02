@@ -31,27 +31,33 @@ end DecodeCondition;
 
 architecture Behavioral of DecodeCondition is
 
-	component MemRegion_Registers is
+	component RegisterFile is
 		Port( 
-				rw_sel : in STD_LOGIC;
-				offset : in STD_LOGIC_VECTOR(3 downto 0);
-				write_word : in STD_LOGIC_VECTOR(31 downto 0);	-- Write this word to register offset
-				read_word : out STD_LOGIC_VECTOR(31 downto 0)	-- Read this word from register offset
+				rw_sel : in STD_LOGIC_VECTOR(1 downto 0);
+				Read_Rn1_addr : in STD_LOGIC_VECTOR(3 downto 0);
+				Read_Rn2_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				Write_Rn_addr : in STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+				write_word : in STD_LOGIC_VECTOR(31 downto 0) := (others => '0');		
+				Rn1_word : out STD_LOGIC_VECTOR(31 downto 0);		
+				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')			
 			  );
-	end component MemRegion_Registers;
+	end component RegisterFile;
 	
-	signal reg_offset : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal write_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+
+	signal Read_Rn1_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0'); 
 	signal psr_reg_data : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); 
 
 begin
 
-	memreg_registers : MemRegion_Registers port map
+	ReadReg : RegisterFile port map
 	(
-		rw_sel => reg_read,
-		offset => reg_offset,
-		write_word => write_word,
-		read_word => psr_reg_data
+		rw_sel			=> reg_read1,
+		Read_Rn1_addr 	=> Read_Rn1_addr,
+		Read_Rn2_addr 	=> open,
+		Write_Rn_addr 	=> open,
+		write_word 		=> open,
+		Rn1_word 		=> psr_reg_data,	
+		Rn2_word 		=> open	
 	);
 
 	ProcEvaluateCondition : process(cond)
@@ -59,7 +65,7 @@ begin
 	begin 
 	
 		-- Trigger signal to retrieve PSR from register file
-		reg_offset <= R4_addr;
+		Read_Rn1_addr <= R4_addr;
 		
 		--	31 30 29 28			27-24					23-0
 		--	Flags					Flags					Reserved

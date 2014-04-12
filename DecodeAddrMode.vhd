@@ -61,17 +61,17 @@ architecture Behavioral of DecodeAddrMode is
 	end component DecodeAddrModeMuxAddress;
 	
 	--signal addrmode_mode : STD_LOGIC_VECTOR(3 downto 0);
-	signal mode : STD_LOGIC_VECTOR(3 downto 0);
-	signal register_addr : STD_LOGIC_VECTOR(3 downto 0);	
-	signal memaddr : STD_LOGIC_VECTOR(31 downto 0);	
-	signal memaddr_fromreg : STD_LOGIC_VECTOR(31 downto 0);
+	signal decode_mode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	signal register_addr : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');	
+	signal memaddr : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');	
+	signal memaddr_fromreg : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 
 begin
 
 	MemAddress : DecodeAddrModeAddress port map
 	(
 		AddrMode			=>	AddrMode,
-		addrmode_mode	=>	mode,
+		addrmode_mode	=>	decode_mode,
 		immd_word		=>	immd_word,
 		memaddr_offset	=>	memaddr,
 		regaddr			=> register_addr
@@ -85,7 +85,7 @@ begin
 	
 	MuxAddr : DecodeAddrModeMuxAddress port map
 	(
-		mode							=>	mode,
+		mode							=>	decode_mode,
 		memaddr_offset				=> memaddr,
 		memaddr_fromreg_offset 	=> memaddr_fromreg,
 		mode_out						=>	addrmode_mode,

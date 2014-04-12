@@ -37,9 +37,6 @@ entity DecodeAddrModeAddress is
 end DecodeAddrModeAddress;
 
 architecture Behavioral of DecodeAddrModeAddress is
-
-	signal mode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal address : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 	
 begin
 	
@@ -54,27 +51,29 @@ begin
 		-----------------------------------------------------------
 			
 	ProcAddrMode : process(AddrMode)
+	
+	variable mode : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+	
 	begin
 	
-		mode <= AddrMode(11 downto 8); 
+		mode := AddrMode(11 downto 8); 
 		addrmode_mode <= mode;
-		address <= AddrMode(7 downto 0);
 	
 		if_mode : if mode = addrmode_mode_immd then
 			-- address is the immediate data 
 			-- Fix memory alignment - remove zero bit padding
 			immd_word(31 downto 8) <= "000000000000000000000000";
-			immd_word(7 downto 0) <= address;
+			immd_word(7 downto 0) <= AddrMode(7 downto 0);
 		elsif mode = addrmode_mode_memaddr then
 			-- address is the memory address offset where the immediate data is located
 			-- Fix memory alignment - remove zero bit padding
 			memaddr_offset(31 downto 8) <= "000000000000000000000000";
-			memaddr_offset(7 downto 0) <= address;
+			memaddr_offset(7 downto 0) <= AddrMode(7 downto 0);
 		elsif mode = addrmode_mode_regaddr then
 			-- address is the register address that contains the memory address offset where the immediate data is located
 			-- Fix memory alignment - remove zero bit padding
 			memaddr_offset(31 downto 8) <= "000000000000000000000000";
-			regaddr <= address(3 downto 0);
+			regaddr <= AddrMode(3 downto 0);
 		end if if_mode;
 		
 	end process ProcAddrMode;

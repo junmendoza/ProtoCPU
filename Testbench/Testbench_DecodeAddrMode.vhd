@@ -82,6 +82,7 @@ BEGIN
 		-- [2] ldr R5, 0x0000000B
 		-- [3] ldr R6, %2	
 		-- [5] str R5, 0x0000000F
+		-- [6] str R5, %R14
 		
 		
 		-- [0] ldr R5, %10		
@@ -126,6 +127,15 @@ BEGIN
 		-- opcode	cond		Rd			Reserved 	address mode
 		--instruction <= "00001111000001010000000100001111"; 
 		AddrMode <= "000100001111";
+		wait for 10 ns;
+		
+		
+		-- [6] str R5, %R14
+		-- str
+		-- 31-24		23-20		19-16		15-12			11-0
+		-- opcode	cond		Rd			Reserved 	address mode
+		--instruction <= "00001111000001010000001000001110"; 
+		AddrMode <= "001000001110";
 		wait for 10 ns;
 
       wait;

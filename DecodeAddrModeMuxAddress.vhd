@@ -40,7 +40,7 @@ architecture Behavioral of DecodeAddrModeMuxAddress is
 
 begin
 
-	ProcMuxAddr : process(mode)
+	ProcMuxAddr : process(memaddr_offset, memaddr_fromreg_offset)
 	begin
 	
 		IfMuxAddr : if mode = addrmode_mode_memaddr then

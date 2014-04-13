@@ -135,7 +135,7 @@ BEGIN
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
 		--instruction <= "00001111000001010000001000001110"; 
-		AddrMode <= "001000001110";
+		AddrMode <= "001000001000";
 		wait for 10 ns;
 
       wait;

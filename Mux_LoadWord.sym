@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <symbol version="7" name="Mux_LoadWord">
     <symboltype>BLOCK</symboltype>
-    <timestamp>2014-3-15T6:19:25</timestamp>
+    <timestamp>2014-4-18T16:23:54</timestamp>
     <pin polarity="Input" x="0" y="-160" name="sel_src(3:0)" />
     <pin polarity="Input" x="0" y="-96" name="load_word_ID(31:0)" />
     <pin polarity="Input" x="0" y="-32" name="load_word_MEM(31:0)" />

@@ -33,6 +33,8 @@ use work.cpu_types.ALL;
 entity Decode is
 	Port( 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			getnextpc : out STD_LOGIC;
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
 			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
@@ -43,9 +45,7 @@ entity Decode is
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
-			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
-			getnextpc : out STD_LOGIC
+			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
 		 );
 end Decode;
 

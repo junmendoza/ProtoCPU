@@ -32,6 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity PipelineControl_ID_EX is
 	Port( 
 			clock : in STD_LOGIC;
+			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_op_type 				: in STD_LOGIC_VECTOR(3 downto 0);  
 			in_REG_ID_EX_op_alu 					: in STD_LOGIC_VECTOR(7 downto 0);  
 			in_REG_ID_EX_op_datamove 			: in STD_LOGIC_VECTOR(7 downto 0); 
@@ -43,9 +45,9 @@ entity PipelineControl_ID_EX is
 			in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
 			in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_memaddr_offset 		: in STD_LOGIC_VECTOR(31 downto 0);
-			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
-			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
 
+			out_REG_ID_EX_getnextpc 			: out STD_LOGIC;
+			out_REG_ID_EX_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
 			out_REG_ID_EX_op_alu 				: out STD_LOGIC_VECTOR(7 downto 0);  
 			out_REG_ID_EX_op_datamove 			: out STD_LOGIC_VECTOR(7 downto 0); 
@@ -56,9 +58,7 @@ entity PipelineControl_ID_EX is
 			out_REG_ID_EX_DataMove_Rd 			: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_ID_EX_addrmode 				: out STD_LOGIC_VECTOR(3 downto 0); 
 			out_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_memaddr_offset 		: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_getnextpc 			: out STD_LOGIC
+			out_REG_ID_EX_memaddr_offset 		: out STD_LOGIC_VECTOR(31 downto 0)
 			
 		 );
 end PipelineControl_ID_EX;

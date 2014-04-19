@@ -33,21 +33,21 @@ entity PipelineControl_MEM_WB is
 	Port( 
 			clock 											: in STD_LOGIC;
 				
+			in_REG_ID_EX_MEM_getnextpc 				: in STD_LOGIC;
+			in_REG_ID_EX_MEM_ExecNextPC 				: in STD_LOGIC_VECTOR(31 downto 0);
 			in_MEM_load_mem_word 						: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_EX_MEM_Exec_out 						: in STD_LOGIC_VECTOR(31 downto 0);   
 			in_REG_ID_EX_MEM_op_type 					: in STD_LOGIC_VECTOR(3 downto 0);  
 			in_REG_ID_EX_MEM_ALU_Rd_addr 				: in STD_LOGIC_VECTOR(3 downto 0);
 			in_REG_ID_EX_MEM_DataMove_Rd_addr 		: in STD_LOGIC_VECTOR(3 downto 0);
-			in_REG_ID_EX_MEM_ExecNextPC 				: in STD_LOGIC_VECTOR(31 downto 0);
-			in_REG_ID_EX_MEM_getnextpc 				: in STD_LOGIC;
 				
+			out_REG_ID_EX_MEM_WB_getnextpc 			: out STD_LOGIC;
+			out_REG_ID_EX_MEM_WB_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
 			out_MEM_WB_load_mem_word 					: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_EX_MEM_WB_Exec_out 				: out STD_LOGIC_VECTOR(31 downto 0);   
 			out_REG_ID_EX_MEM_WB_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
 			out_REG_ID_EX_MEM_WB_ALU_Rd_addr 		: out STD_LOGIC_VECTOR(3 downto 0);
-			out_REG_ID_EX_MEM_WB_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
-			out_REG_ID_EX_MEM_WB_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_MEM_WB_getnextpc 			: out STD_LOGIC
+			out_REG_ID_EX_MEM_WB_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0)
 		 );
 		 
 end PipelineControl_MEM_WB;

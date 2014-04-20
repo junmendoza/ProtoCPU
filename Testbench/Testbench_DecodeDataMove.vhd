@@ -39,42 +39,21 @@ ARCHITECTURE behavior OF Testbench_DecodeDataMove IS
  
     COMPONENT DecodeDataMove
     PORT(
-         mem_regs : IN t_MemRegister_15_32;
-         Rd_addr : IN std_logic_vector(3 downto 0);
-         Rd : OUT std_logic_vector(31 downto 0)
+			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
+			Rd : out STD_LOGIC_VECTOR(31 downto 0)
         );
     END COMPONENT;
-    
 
    --Inputs
    signal DataMove_Rd_addr : std_logic_vector(3 downto 0) := (others => '0');
-	
-	signal memregion_register : t_MemRegister_15_32 := 
-	(
-		X"00000001", 
-		X"00000002", 
-		X"00000003",
-		X"00000004", 
-		X"00000005", 
-		X"00000006", 
-		X"00000007",
-		X"00000008", 
-		X"00000009", 
-		X"0000000A", 
-		X"0000000B",
-		X"0000000C", 
-		X"0000000D", 
-		X"0000000E",
-		X"0000000F"
-	);
 
  	--Outputs
    signal Rd : std_logic_vector(31 downto 0);
+	
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: DecodeDataMove PORT MAP (
-          mem_regs => memregion_register,
           Rd_addr => DataMove_Rd_addr,
           Rd => Rd
         );

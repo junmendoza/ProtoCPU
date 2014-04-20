@@ -30,6 +30,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 use work.cpu_types.ALL;
 
+-- Decodes the contents of the register from the Data Movement instruction (mov, ldr, str)
 entity DecodeDataMove is
 	Port( 
 			Rd_addr : in STD_LOGIC_VECTOR(3 downto 0);
@@ -50,32 +51,19 @@ architecture Behavioral of DecodeDataMove is
 				Rn2_word : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')			
 			  );
 	end component RegisterFile;
-
-	-- register containing the memory address
-	signal address : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-	signal load_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); 
 	
 begin
 
 	ReadReg : RegisterFile port map
 	(
 		rw_sel			=> reg_rw_read1,
-		Read_Rn1_addr 	=> address,
+		Read_Rn1_addr 	=> Rd_addr,
 		Read_Rn2_addr 	=> open,
 		Write_Rn_addr 	=> open,
 		write_word 		=> open,
-		Rn1_word 		=> load_word,	
+		Rn1_word 		=> Rd,	
 		Rn2_word 		=> open	
 	);
-	
-	ProcDecodeDataMove : process(Rd_addr)
-
-	begin
-	
-		address <= Rd_addr;
-		Rd <= load_word;
-		
-	end process ProcDecodeDataMove;
 	
 end Behavioral;
 

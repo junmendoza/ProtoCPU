@@ -114,7 +114,7 @@ BEGIN
 		-- str
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		--instruction <= "00010000000001010000000100001011"; 
+		instruction <= "00010000000001010000000100001011"; 
 		wait for 10 ns;
 		
 		
@@ -122,7 +122,7 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		--instruction <= "00001111000001010000000100001011"; 
+		instruction <= "00001111000001010000000100001011"; 
 		wait for 10 ns;
 		
 		
@@ -130,14 +130,14 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		--instruction <= "00001111000001100000000000000010"; 
+		instruction <= "00001111000001100000000000000010"; 
 		wait for 10 ns;
 		
 		-- [4] add R5, R5, R6
 		-- add
 		-- 31-24		23-20		19-16		15-12		11-0 		
 		-- opcode	cond		Rd			Rn			Shifter
-		--instruction <= "00000000000001010101001000000110"; 
+		instruction <= "00000000000001010101001000000110"; 
 		wait for 10 ns;
 		
 		
@@ -145,7 +145,7 @@ BEGIN
 		-- str
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		--instruction <= "00010000000001010000000100001111"; 
+		instruction <= "00010000000001010000000100001111"; 
 		wait for 10 ns;
 
       wait;

@@ -39,7 +39,7 @@ architecture Behavioral of Mux_ExecOut is
 
 begin
 
-	ProcMuxExecOut : process(alu_sel)
+	ProcMuxExecOut : process(ALU_out, PSR)
 	begin
 	
 		if_sel : if alu_sel = alu_cmp then

@@ -69,24 +69,24 @@ BEGIN
    stim_proc: process
    begin		
 	
-		ALU_out <= X"00000001";
-		PSR <= X"00000002";
 		alu_sel <= alu_add;
-		wait for 10 ns;
-		
 		ALU_out <= X"00000001";
 		PSR <= X"00000002";
-		alu_sel <= alu_cmp;
 		wait for 10 ns;
 		
+		alu_sel <= alu_cmp;
 		ALU_out <= X"00000003";
 		PSR <= X"00000004";
-		alu_sel <= alu_sub;
 		wait for 10 ns;
 		
+		alu_sel <= alu_sub;
 		ALU_out <= X"00000005";
 		PSR <= X"00000006";
+		wait for 10 ns;
+		
 		alu_sel <= alu_mul;
+		ALU_out <= X"00000007";
+		PSR <= X"00000008";
 		wait for 10 ns;
 		
       wait;

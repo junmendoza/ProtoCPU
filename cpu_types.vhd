@@ -43,42 +43,38 @@ package cpu_types is
 	
 	-- command id
 	subtype cmd_id_size is STD_LOGIC_VECTOR(7 downto 0);
-	constant alu_add  : cmd_id_size := "00000000"; -- X"00";  0
-	constant alu_sub  : cmd_id_size := "00000001"; -- X"01";  1
-	constant alu_mul  : cmd_id_size := "00000010"; -- X"02";  2
-	constant alu_div  : cmd_id_size := "00000011"; -- X"03";  3
-	constant alu_and  : cmd_id_size := "00000100"; -- X"04";  4
-	constant alu_nand : cmd_id_size := "00000101"; -- X"05";  5
-	constant alu_or   : cmd_id_size := "00000110"; -- X"06";  6
-	constant alu_nor  : cmd_id_size := "00000111"; -- X"07";  7
-	constant alu_xor  : cmd_id_size := "00001000"; -- X"08";  8
-	constant alu_xnor : cmd_id_size := "00001001"; -- X"09";  9
-	constant alu_not  : cmd_id_size := "00001010"; -- X"0A"; 10
-	constant alu_cmp  : cmd_id_size := "00001011"; -- X"0B"; 11
-	constant alu_shl  : cmd_id_size := "00001100"; -- X"0C"; 12
-	constant alu_shr  : cmd_id_size := "00001101"; -- X"0D"; 13
-	                                            
-	constant mem_mov  : cmd_id_size := "00001110"; -- X"0E"; 14
-	constant mem_ldr  : cmd_id_size := "00001111"; -- X"0F"; 15
-	constant mem_str  : cmd_id_size := "00010000"; -- X"10"; 16
-	constant mem_push : cmd_id_size := "00010001"; -- X"11"; 17
-	constant mem_pop  : cmd_id_size := "00010010"; -- X"12"; 18
-	                                            
-	constant br_jmp   : cmd_id_size := "00010011"; -- X"13"; 19
-	
-	constant sys_int  : cmd_id_size := "00010100"; -- X"14"; 20
-	
-	constant cmd_none : cmd_id_size := "00010101"; -- X"15"; 21
+	constant alu_add  : cmd_id_size := "00000001"; -- X"01";  1
+	constant alu_sub  : cmd_id_size := "00000010"; -- X"02";  2
+	constant alu_mul  : cmd_id_size := "00000011"; -- X"03";  3
+	constant alu_div  : cmd_id_size := "00000100"; -- X"04";  4
+	constant alu_and  : cmd_id_size := "00000101"; -- X"05";  5
+	constant alu_nand : cmd_id_size := "00000110"; -- X"06";  6
+	constant alu_or   : cmd_id_size := "00000111"; -- X"07";  7
+	constant alu_nor  : cmd_id_size := "00001000"; -- X"08";  8
+	constant alu_xor  : cmd_id_size := "00001001"; -- X"09";  9
+	constant alu_xnor : cmd_id_size := "00001010"; -- X"0A"; 10
+	constant alu_not  : cmd_id_size := "00001011"; -- X"0B"; 11
+	constant alu_cmp  : cmd_id_size := "00001100"; -- X"0C"; 12
+	constant alu_shl  : cmd_id_size := "00001101"; -- X"0D"; 13
+	constant alu_shr  : cmd_id_size := "00001110"; -- X"0E"; 14
+	constant mem_mov  : cmd_id_size := "00001111"; -- X"0F"; 15
+	constant mem_ldr  : cmd_id_size := "00010000"; -- X"10"; 16
+	constant mem_str  : cmd_id_size := "00010001"; -- X"11"; 17
+	constant mem_push : cmd_id_size := "00010010"; -- X"12"; 18
+	constant mem_pop  : cmd_id_size := "00010011"; -- X"13"; 19
+	constant br_jmp   : cmd_id_size := "00010100"; -- X"14"; 20
+	constant sys_int  : cmd_id_size := "00010101"; -- X"15"; 21
+	constant cmd_none : cmd_id_size := "00010111"; -- X"16"; 22
 	
 	
 	-- comparison
-	constant cond_true  : STD_LOGIC_VECTOR(3 downto 0) := X"0";
-	constant cond_eq  : STD_LOGIC_VECTOR(3 downto 0) := X"1";
-	constant cond_nq  : STD_LOGIC_VECTOR(3 downto 0) := X"2";
-	constant cond_gt  : STD_LOGIC_VECTOR(3 downto 0) := X"3";
-	constant cond_ge  : STD_LOGIC_VECTOR(3 downto 0) := X"4";
-	constant cond_lt  : STD_LOGIC_VECTOR(3 downto 0) := X"5";
-	constant cond_le  : STD_LOGIC_VECTOR(3 downto 0) := X"6";
+	constant cond_true  : STD_LOGIC_VECTOR(3 downto 0) := X"1";
+	constant cond_eq  : STD_LOGIC_VECTOR(3 downto 0) 	:= X"2";
+	constant cond_nq  : STD_LOGIC_VECTOR(3 downto 0)  	:= X"3";
+	constant cond_gt  : STD_LOGIC_VECTOR(3 downto 0)  	:= X"4";
+	constant cond_ge  : STD_LOGIC_VECTOR(3 downto 0)  	:= X"5";
+	constant cond_lt  : STD_LOGIC_VECTOR(3 downto 0)  	:= X"6";
+	constant cond_le  : STD_LOGIC_VECTOR(3 downto 0)  	:= X"7";
 	
 	-- PSR flags
 	--	31 30 29 28			27-24					23-0

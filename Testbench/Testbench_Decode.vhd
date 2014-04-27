@@ -104,7 +104,12 @@ BEGIN
    stim_proc: process
    begin		
 	
-	
+	   -- [0] ldr R5, #1	
+		-- [1] ldr R6, #10
+		-- [2] add R7, R5, R6
+		-- [3] str R7, [0x0000000B]
+		--	[4] ldr R8, [0x0000000B]
+		
 		-- [0] ldr R5, %10	
 		-- [1] str R5, 0x0000000B
 		-- [2] ldr R5, 0x0000000B
@@ -117,7 +122,7 @@ BEGIN
 		-- ldr
 		-- 31-24		23-20		19-16		15-12			11-0
 		-- opcode	cond		Rd			Reserved 	address mode
-		instruction <= "00001111000001010000000000001010"; 
+		--instruction <= "00001111000001010000000000001010"; 
 		wait for 10 ns;
 		
 

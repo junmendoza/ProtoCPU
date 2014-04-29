@@ -28,9 +28,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
  
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
+use work.cpu_types.all;
  
 ENTITY Testbench_MemRegion_Main IS
 END Testbench_MemRegion_Main;
@@ -41,8 +39,10 @@ ARCHITECTURE behavior OF Testbench_MemRegion_Main IS
  
     COMPONENT MemRegion_Main
     PORT(
-         offset : IN  std_logic_vector(31 downto 0);
-         mem_word : OUT  std_logic_vector(31 downto 0)
+			rw_sel : in STD_LOGIC;
+			offset : in STD_LOGIC_VECTOR(31 downto 0);
+			store_word : in STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+			load_word : out STD_LOGIC_VECTOR(31 downto 0)
         );
     END COMPONENT;
     
@@ -51,14 +51,16 @@ ARCHITECTURE behavior OF Testbench_MemRegion_Main IS
    signal offset : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
-   signal mem_word : std_logic_vector(31 downto 0);
+   signal load_word : std_logic_vector(31 downto 0);
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: MemRegion_Main PORT MAP (
-          offset => offset,
-          mem_word => mem_word
+			rw_sel => mem_read,
+         offset => offset,
+			store_word => open,
+         load_word => load_word
         );
 
    -- Stimulus process

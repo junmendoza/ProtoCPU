@@ -64,7 +64,8 @@ package cpu_types is
 	constant mem_pop  : cmd_id_size := "00010011"; -- X"13"; 19
 	constant br_jmp   : cmd_id_size := "00010100"; -- X"14"; 20
 	constant sys_int  : cmd_id_size := "00010101"; -- X"15"; 21
-	constant cmd_none : cmd_id_size := "00010111"; -- X"16"; 22
+	constant sys_end  : cmd_id_size := "00010110"; -- X"16"; 22
+	constant cmd_none : cmd_id_size := "00010111"; -- X"17"; 23
 	
 	
 	-- comparison

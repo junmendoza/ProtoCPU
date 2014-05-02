@@ -104,7 +104,8 @@ begin
 				NextPC(19 downto 0) <= instruction(19 downto 0);
 				getnextpc <= '1';
 				
-			elsif opcode = sys_int then
+			elsif opcode = sys_int
+					or opcode = sys_end then
 			
 				op_type <= optype_system;
 				

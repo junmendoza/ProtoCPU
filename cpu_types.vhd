@@ -113,6 +113,13 @@ package cpu_types is
 	constant reg_rw_read1 : STD_LOGIC_VECTOR(1 downto 0) := "01";
 	constant reg_rw_read2 : STD_LOGIC_VECTOR(1 downto 0) := "10"; 
 	constant reg_rw_write : STD_LOGIC_VECTOR(1 downto 0) := "11"; 
+	
+	
+	-- Interrupt command
+	-- int_none	= 0000
+	-- int_end 	= 0001
+	constant intcmd_none : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+	constant intcmd_endprogram : STD_LOGIC_VECTOR(3 downto 0) := "0001";
 
 end cpu_types;
 

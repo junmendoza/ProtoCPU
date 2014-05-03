@@ -59,6 +59,8 @@ architecture Behavioral of Decode is
 	signal JumpCondition : STD_LOGIC_VECTOR(3 downto 0);	
 	signal NextPC : STD_LOGIC_VECTOR(31 downto 0);		
 	
+	signal endprogram : STD_LOGIC;
+	
 	component DecodeOpcode is  
 		Port(
 				instruction : in STD_LOGIC_VECTOR(31 downto 0); 
@@ -107,6 +109,13 @@ architecture Behavioral of Decode is
 				ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component DecodeJump;
+	
+	component DecodeInterruptCmd is	
+		Port( 
+				InterruptData : in STD_LOGIC_VECTOR(23 downto 0); 
+				endprogram : out STD_LOGIC
+			 );
+	end component DecodeInterruptCmd;
 		
 begin
 
@@ -152,6 +161,12 @@ begin
 		cond => JumpCondition,
 		NextPC => NextPC,
 		ExecNextPC => ExecNextPC
+	);
+	
+	Decode_Interrupt : DecodeInterruptCmd port map
+	(
+		InterruptData => System_Data,
+		endprogram => endprogram
 	);
 	
 end Behavioral;

@@ -43,6 +43,9 @@ ARCHITECTURE behavior OF Testbench_Decode IS
     COMPONENT Decode
     PORT(
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
+			getnextpc : out STD_LOGIC;
+			endprogram : out STD_LOGIC;
+			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
 			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
 			op_datamove : out STD_LOGIC_VECTOR(7 downto 0); 
@@ -53,9 +56,7 @@ ARCHITECTURE behavior OF Testbench_Decode IS
 			DataMove_Rd : out STD_LOGIC_VECTOR(31 downto 0);
 			addrmode : out STD_LOGIC_VECTOR(3 downto 0); 
 			immd_word : out STD_LOGIC_VECTOR(31 downto 0);
-			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0);
-			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
-			getnextpc : out STD_LOGIC
+			memaddr_offset : out STD_LOGIC_VECTOR(31 downto 0)
         );
     END COMPONENT;
     
@@ -77,7 +78,8 @@ ARCHITECTURE behavior OF Testbench_Decode IS
 	signal immd_word : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	signal memaddr_offset : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 	signal ExecNextPC : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-	signal getnextpc : STD_LOGIC;
+	signal getnextpc : STD_LOGIC := '0';
+	signal endprogram : STD_LOGIC := '0';
  
 BEGIN
  
@@ -97,7 +99,8 @@ BEGIN
 		immd_word 			=> immd_word, 			
 		memaddr_offset 	=> memaddr_offset, 	
 		ExecNextPC 			=> ExecNextPC, 			
-		getnextpc 			=> getnextpc 			
+		getnextpc 			=> getnextpc, 				
+		endprogram 			=> endprogram 			
 	);
 
    -- Stimulus process

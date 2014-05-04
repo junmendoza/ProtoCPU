@@ -25,9 +25,6 @@ entity Pipelinecontrol_EX_MEM is
 	Port(
 			clock : in  STD_LOGIC;			
 			
-			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
-			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
-			
 			-- From Execute
 			in_REG_EX_MEM_Exec_out 				: in STD_LOGIC_VECTOR(31 downto 0);     
 			in_REG_EX_MEM_effective_addr 		: in STD_LOGIC_VECTOR(31 downto 0);
@@ -41,10 +38,10 @@ entity Pipelinecontrol_EX_MEM is
 			in_REG_ID_EX_addrmode 				: in STD_LOGIC_VECTOR(3 downto 0); 
 			in_REG_ID_EX_immd_word 				: in STD_LOGIC_VECTOR(31 downto 0);
 			
+			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
+			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
+			in_REG_ID_EX_endprogram 			: in STD_LOGIC;
 			
-			
-			out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC;
-			out_REG_ID_EX_MEM_ExecNextPC 		: out STD_LOGIC_VECTOR(31 downto 0);
 			
 			-- From Execute
 			out_REG_EX_MEM_Exec_out 			: out STD_LOGIC_VECTOR(31 downto 0);     
@@ -57,7 +54,11 @@ entity Pipelinecontrol_EX_MEM is
 			out_REG_EX_MEM_DataMove_Rd_addr 	: out STD_LOGIC_VECTOR(3 downto 0);
 			out_REG_EX_MEM_DataMove_Rd 		: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_EX_MEM_addrmode 			: out STD_LOGIC_VECTOR(3 downto 0); 
-			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0)
+			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
+			
+			out_REG_ID_EX_MEM_ExecNextPC 		: out STD_LOGIC_VECTOR(31 downto 0);
+			out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC;
+			out_REG_ID_EX_MEM_endprogram 		: out STD_LOGIC
 		 );
 		 
 end Pipelinecontrol_EX_MEM;
@@ -79,7 +80,8 @@ begin
 		in_REG_ID_EX_addrmode, 			
 		in_REG_ID_EX_immd_word,
 		in_REG_ID_EX_ExecNextPC,
-		in_REG_ID_EX_getnextpc
+		in_REG_ID_EX_getnextpc,
+		in_REG_ID_EX_endprogram
 	)
 	
 	begin

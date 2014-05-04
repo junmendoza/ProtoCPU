@@ -34,6 +34,7 @@ entity Decode is
 	Port( 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0); 
 			getnextpc : out STD_LOGIC;
+			endprogram : out STD_LOGIC;
 			ExecNextPC : out STD_LOGIC_VECTOR(31 downto 0);
 			op_type : out STD_LOGIC_VECTOR(3 downto 0);  
 			op_alu : out STD_LOGIC_VECTOR(7 downto 0);  
@@ -58,8 +59,6 @@ architecture Behavioral of Decode is
 	signal System_Data : STD_LOGIC_VECTOR(23 downto 0);
 	signal JumpCondition : STD_LOGIC_VECTOR(3 downto 0);	
 	signal NextPC : STD_LOGIC_VECTOR(31 downto 0);		
-	
-	signal endprogram : STD_LOGIC;
 	
 	component DecodeOpcode is  
 		Port(

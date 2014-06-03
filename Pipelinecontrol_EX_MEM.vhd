@@ -40,7 +40,6 @@ entity Pipelinecontrol_EX_MEM is
 			
 			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
-			in_REG_ID_EX_endprogram 			: in STD_LOGIC;
 			
 			
 			-- From Execute
@@ -57,8 +56,7 @@ entity Pipelinecontrol_EX_MEM is
 			out_REG_EX_MEM_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
 			
 			out_REG_ID_EX_MEM_ExecNextPC 		: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC;
-			out_REG_ID_EX_MEM_endprogram 		: out STD_LOGIC
+			out_REG_ID_EX_MEM_getnextpc 		: out STD_LOGIC
 		 );
 		 
 end Pipelinecontrol_EX_MEM;
@@ -80,8 +78,7 @@ begin
 		in_REG_ID_EX_addrmode, 			
 		in_REG_ID_EX_immd_word,
 		in_REG_ID_EX_ExecNextPC,
-		in_REG_ID_EX_getnextpc,
-		in_REG_ID_EX_endprogram
+		in_REG_ID_EX_getnextpc
 	)
 	
 	begin

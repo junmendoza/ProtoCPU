@@ -46,7 +46,6 @@ entity PipelineControl_ID_EX is
 			in_REG_ID_EX_memaddr_offset 		: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_ExecNextPC 			: in STD_LOGIC_VECTOR(31 downto 0);
 			in_REG_ID_EX_getnextpc 				: in STD_LOGIC;
-			in_REG_ID_EX_endprogram 			: in STD_LOGIC;
 			
 			out_REG_ID_EX_op_type 				: out STD_LOGIC_VECTOR(3 downto 0);  
 			out_REG_ID_EX_op_alu 				: out STD_LOGIC_VECTOR(7 downto 0);  
@@ -60,8 +59,7 @@ entity PipelineControl_ID_EX is
 			out_REG_ID_EX_immd_word 			: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_ID_EX_memaddr_offset 		: out STD_LOGIC_VECTOR(31 downto 0);
 			out_REG_ID_EX_ExecNextPC 			: out STD_LOGIC_VECTOR(31 downto 0);
-			out_REG_ID_EX_getnextpc 			: out STD_LOGIC;
-			out_REG_ID_EX_endprogram 			: out STD_LOGIC
+			out_REG_ID_EX_getnextpc 			: out STD_LOGIC
 		 );
 		 
 end PipelineControl_ID_EX;
@@ -84,8 +82,7 @@ begin
 		in_REG_ID_EX_immd_word, 			
 		in_REG_ID_EX_memaddr_offset, 	
 		in_REG_ID_EX_ExecNextPC, 		
-		in_REG_ID_EX_getnextpc, 			
-		in_REG_ID_EX_endprogram 		
+		in_REG_ID_EX_getnextpc	
 	)
 	begin
 	
@@ -104,7 +101,6 @@ begin
 			out_REG_ID_EX_memaddr_offset 		<= in_REG_ID_EX_memaddr_offset; 	
 			out_REG_ID_EX_ExecNextPC 			<= in_REG_ID_EX_ExecNextPC; 		
 			out_REG_ID_EX_getnextpc 			<= in_REG_ID_EX_getnextpc; 	
-			out_REG_ID_EX_endprogram 			<= in_REG_ID_EX_endprogram; 		
 			
 		end if ClockSync;
 		

@@ -11,9 +11,20 @@ use work.cpu_types.ALL;
 
 entity ControlUnitSimulateFetch is
     Port( 
-			clock : in STD_LOGIC;
-			reset : in STD_LOGIC;
-			result : out STD_LOGIC
+			 clock   : in STD_LOGIC;
+			 reset   : in STD_LOGIC;
+			 result  : out STD_LOGIC;
+			 LCD_E   : out STD_LOGIC;
+			 LCD_RS  : out STD_LOGIC;
+			 LCD_RW  : out STD_LOGIC;
+			 LCD_DB7 : out STD_LOGIC;
+			 LCD_DB6 : out STD_LOGIC;
+			 LCD_DB5 : out STD_LOGIC;
+			 LCD_DB4 : out STD_LOGIC;
+			 LCD_DB3 : out STD_LOGIC;
+			 LCD_DB2 : out STD_LOGIC;
+			 LCD_DB1 : out STD_LOGIC;
+			 LCD_DB0 : out STD_LOGIC
 		  );
 			
 end ControlUnitSimulateFetch;
@@ -33,7 +44,18 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component EmitInstruction is
 		Port( 
 				clock : in STD_LOGIC; 
-				instruction : in STD_LOGIC_VECTOR(31 downto 0)
+				instruction : in STD_LOGIC_VECTOR(31 downto 0);
+				LCD_E   : out STD_LOGIC;
+				LCD_RS  : out STD_LOGIC;
+				LCD_RW  : out STD_LOGIC;
+				LCD_DB7 : out STD_LOGIC;
+				LCD_DB6 : out STD_LOGIC;
+				LCD_DB5 : out STD_LOGIC;
+				LCD_DB4 : out STD_LOGIC;
+				LCD_DB3 : out STD_LOGIC;
+				LCD_DB2 : out STD_LOGIC;
+				LCD_DB1 : out STD_LOGIC;
+				LCD_DB0 : out STD_LOGIC
 			 );
 	end component EmitInstruction;
 	
@@ -60,7 +82,18 @@ begin
 	Emit : EmitInstruction port map
 	(
 		clock => clock, 
-		instruction => R2
+		instruction => R2,
+		LCD_E   => LCD_E,   
+		LCD_RS  => LCD_RS,  
+		LCD_RW  => LCD_RW, 
+		LCD_DB7 => LCD_DB7, 
+		LCD_DB6 => LCD_DB6, 
+		LCD_DB5 => LCD_DB5, 
+		LCD_DB4 => LCD_DB4, 
+		LCD_DB3 => LCD_DB3, 
+		LCD_DB2 => LCD_DB2, 
+		LCD_DB1 => LCD_DB1, 
+		LCD_DB0 => LCD_DB0 
 	);
 	
 --	EndProgramExecution : EndProgram port map 

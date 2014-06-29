@@ -30,20 +30,19 @@ architecture Behavioral of ControlUnitSimulateFetch is
 			 );
 	end component Fetch;
 	
+	component EmitInstruction is
+		Port( 
+				clock : in STD_LOGIC; 
+				instruction : in STD_LOGIC_VECTOR(31 downto 0)
+			 );
+	end component EmitInstruction;
+	
 --	component EndProgram is
 --		Port( 
 --				endexecution : in  STD_LOGIC
 --			 );
 --	end component EndProgram;
 	
-	component EmitInstruction is
-		Port( 
-				clock : in STD_LOGIC; 
-				pc : in STD_LOGIC_VECTOR(31 downto 0);
-				instruction : in STD_LOGIC_VECTOR(31 downto 0)
-			 );
-	end component EmitInstruction;
-	 
 	 
 	signal R2 : STD_LOGIC_VECTOR(31 downto 0); 
 	signal nextPC : STD_LOGIC_VECTOR(31 downto 0); 

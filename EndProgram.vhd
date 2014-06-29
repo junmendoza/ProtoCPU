@@ -30,17 +30,21 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity EndProgram is
-    Port( 
-			endexecution : in  STD_LOGIC
-		  );
+	Port( 
+			clock : in STD_LOGIC; 
+			endexecution : in STD_LOGIC
+		 );
 end EndProgram;
 
 architecture Behavioral of EndProgram is
 	 
 begin
 
-	ExecDone: process(endexecution)
+	ExecDone: process(clock, endexecution)
 	begin
+		ClockSync : if rising_edge(clock) then
+			
+		end if ClockSync;
 	end process ExecDone;
 
 

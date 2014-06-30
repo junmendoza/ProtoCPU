@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity InitializeCPU is
 	Port( 
 			clock 	: in  STD_LOGIC; 
-			cpu_init	: out  STD_LOGIC;
+			reset 	: in  STD_LOGIC; 
+			cpu_init	: out STD_LOGIC;
 			firstPC 	: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
 			LCD_E  	: out STD_LOGIC; 
 			LCD_RS  	: out STD_LOGIC;
@@ -50,14 +51,29 @@ end InitializeCPU;
 
 architecture Behavioral of InitializeCPU is
 
+type INIT_STATE is (INIT_STATE_LCD, INIT_STATE_CPU, INIT_STATE_DONE);
+signal initstate : INIT_STATE;
+
 begin
 
-	ProcessInitCPU : process(clock)
+	process(clock, reset)
 	begin
 		ClockSync : if rising_edge(clock) then
+			ResetState : if reset = '1' then
+				initstate <= INIT_STATE_LCD;
+			else
 			
+				InitStateStart: if initstate = INIT_STATE_LCD then
+					initstate <= INIT_STATE_CPU;
+				elsif initstate = INIT_STATE_LCD then
+					firstPC <= "00000000000000000000000000000000";
+					initstate <= INIT_STATE_DONE;
+				end if InitStateStart;
+				
+			end if ResetState; 
 		end if ClockSync;
-	end process ProcessInitCPU;
+	end process;
+	
 
 end Behavioral;
 

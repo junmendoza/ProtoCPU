@@ -35,7 +35,8 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component InitializeCPU is
 		Port( 
 				clock 	: in  STD_LOGIC;
-				cpu_init 	: out  STD_LOGIC;
+				reset 	: in  STD_LOGIC; 
+				cpu_init	: out STD_LOGIC;
 				firstPC 	: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
 				LCD_E  	: out STD_LOGIC; 
 				LCD_RS  	: out STD_LOGIC;
@@ -165,6 +166,7 @@ begin
 	InitCPU : InitializeCPU port map
 	(
 		clock		=> clock, 
+		reset		=> reset,
 		cpu_init => cpu_init,
 		firstPC  => nextPC, 
 		LCD_E   	=> init_LCD_E,   

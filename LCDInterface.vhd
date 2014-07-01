@@ -33,41 +33,41 @@ entity LCDInterface is
 	Port( 
 			sel : in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
 			
-			init_LCD_E   : in STD_LOGIC;
-			init_LCD_RS  : in STD_LOGIC;
-			init_LCD_RW  : in STD_LOGIC;
-			init_LCD_DB7 : in STD_LOGIC;
-			init_LCD_DB6 : in STD_LOGIC;
-			init_LCD_DB5 : in STD_LOGIC;
-			init_LCD_DB4 : in STD_LOGIC;
-			init_LCD_DB3 : in STD_LOGIC;
-			init_LCD_DB2 : in STD_LOGIC;
-			init_LCD_DB1 : in STD_LOGIC;
-			init_LCD_DB0 : in STD_LOGIC;
-			
-			write_LCD_E   : in STD_LOGIC;
-			write_LCD_RS  : in STD_LOGIC;
-			write_LCD_RW  : in STD_LOGIC;
-			write_LCD_DB7 : in STD_LOGIC;
-			write_LCD_DB6 : in STD_LOGIC;
-			write_LCD_DB5 : in STD_LOGIC;
-			write_LCD_DB4 : in STD_LOGIC;
-			write_LCD_DB3 : in STD_LOGIC;
-			write_LCD_DB2 : in STD_LOGIC;
-			write_LCD_DB1 : in STD_LOGIC;
-			write_LCD_DB0 : in STD_LOGIC;
-			
-			LCD_E   : out STD_LOGIC;
-			LCD_RS  : out STD_LOGIC;
-			LCD_RW  : out STD_LOGIC;
-			LCD_DB7 : out STD_LOGIC;
-			LCD_DB6 : out STD_LOGIC;
-			LCD_DB5 : out STD_LOGIC;
-			LCD_DB4 : out STD_LOGIC;
-			LCD_DB3 : out STD_LOGIC;
-			LCD_DB2 : out STD_LOGIC;
-			LCD_DB1 : out STD_LOGIC;
-			LCD_DB0 : out STD_LOGIC
+				init_LCD_DB7 : in STD_LOGIC;
+				init_LCD_DB6 : in STD_LOGIC;
+				init_LCD_DB5 : in STD_LOGIC;
+				init_LCD_DB4 : in STD_LOGIC;
+				init_LCD_DB3 : in STD_LOGIC;
+				init_LCD_DB2 : in STD_LOGIC;
+				init_LCD_DB1 : in STD_LOGIC;
+				init_LCD_DB0 : in STD_LOGIC;
+				init_LCD_E   : in STD_LOGIC;
+				init_LCD_RS  : in STD_LOGIC;
+				init_LCD_RW  : in STD_LOGIC;
+				
+				write_LCD_DB7 : in STD_LOGIC;
+				write_LCD_DB6 : in STD_LOGIC;
+				write_LCD_DB5 : in STD_LOGIC;
+				write_LCD_DB4 : in STD_LOGIC;
+				write_LCD_DB3 : in STD_LOGIC;
+				write_LCD_DB2 : in STD_LOGIC;
+				write_LCD_DB1 : in STD_LOGIC;
+				write_LCD_DB0 : in STD_LOGIC;
+				write_LCD_E   : in STD_LOGIC;
+				write_LCD_RS  : in STD_LOGIC;
+				write_LCD_RW  : in STD_LOGIC;
+				
+				LCD_DB7 : out STD_LOGIC;
+				LCD_DB6 : out STD_LOGIC;
+				LCD_DB5 : out STD_LOGIC;
+				LCD_DB4 : out STD_LOGIC;
+				LCD_DB3 : out STD_LOGIC;
+				LCD_DB2 : out STD_LOGIC;
+				LCD_DB1 : out STD_LOGIC;
+				LCD_DB0 : out STD_LOGIC;
+				LCD_E   : out STD_LOGIC;
+				LCD_RS  : out STD_LOGIC;
+				LCD_RW  : out STD_LOGIC
 		 );
 end LCDInterface;
 

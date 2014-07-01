@@ -31,21 +31,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity InitializeCPU is
 	Port( 
-			clock 	: in  STD_LOGIC; 
-			reset 	: in  STD_LOGIC; 
-			cpu_init	: out STD_LOGIC;
-			firstPC 	: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
-			LCD_E  	: out STD_LOGIC; 
-			LCD_RS  	: out STD_LOGIC;
-			LCD_RW  	: out STD_LOGIC;
-			LCD_DB7 	: out STD_LOGIC;
-			LCD_DB6	: out STD_LOGIC;
-			LCD_DB5 	: out STD_LOGIC;
-			LCD_DB4 	: out STD_LOGIC;
-			LCD_DB3 	: out STD_LOGIC;
-			LCD_DB2 	: out STD_LOGIC;
-			LCD_DB1 	: out STD_LOGIC;
-			LCD_DB0 	: out STD_LOGIC
+			clock 		: in  STD_LOGIC; 
+			reset 		: in  STD_LOGIC; 
+			cpu_init		: out STD_LOGIC;
+			firstPC 		: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
+			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); -- DB7-DB0
+			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)	-- LCD_E, LCD_RS, LCD_RW
 		 );
 end InitializeCPU;
 
@@ -86,6 +77,9 @@ signal initLCDConfig : LCD_CONFIG;
 begin
 
 	process(clock, reset)
+	
+	variable clockCycles : integer;
+	
 	begin
 		ClockSync : if rising_edge(clock) then
 			ResetState : if reset = '1' then
@@ -93,37 +87,79 @@ begin
 				initLCD 			<= LCD_START_POWERON;
 				initLCDPowerOn <= LCD_POWERON_750000CLK;
 				initLCDConfig 	<= LCD_CONFIG_START;
+				clockCycles 	:= 0;
 			else
 				InitStateStart: if initstate = INIT_STATE_LCD then
 				
 					InitStateLCD : if initLCD = LCD_START_POWERON then
+					
 						PowerOnState : if initLCDPowerOn = LCD_POWERON_750000CLK then
-							initLCDPowerOn <= LCD_POWERON_12CLK_1;
+							if clockCycles > 750000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_1;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_1 then
-							initLCDPowerOn <= LCD_POWERON_205000CLK;
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_205000CLK;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_205000CLK then
-							initLCDPowerOn <= LCD_POWERON_12CLK_2;
+							if clockCycles > 205000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_2;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_2 then
-							initLCDPowerOn <= LCD_POWERON_5000CLK;
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_5000CLK;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_5000CLK then
-							initLCDPowerOn <= LCD_POWERON_12CLK_3;
+							if clockCycles > 5000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_3;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_3 then
-							initLCDPowerOn <= LCD_POWERON_2000CLK_1;
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_2000CLK_1;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_2000CLK_1 then
-							initLCDPowerOn <= LCD_POWERON_12CLK_4;
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_4;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_4 then
-							initLCDPowerOn <= LCD_POWERON_2000CLK_2;
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_2000CLK_2;
+							end if;
+							
 						elsif initLCDPowerOn = LCD_POWERON_2000CLK_2 then
-							initLCD <= LCD_START_CONFIG;
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_750000CLK;
+								initLCD <= LCD_START_CONFIG;
+							end if;
 						end if PowerOnState;
 						
 					elsif initLCD = LCD_START_CONFIG then
+					
 						ConfigState : if initLCDConfig = LCD_CONFIG_START then
 							initLCDConfig <= LCD_CONFIG_82000CLK;
 						elsif initLCDConfig = LCD_CONFIG_82000CLK then
 							initstate <= INIT_STATE_CPU;
 						end if ConfigState;
+							
 					end if InitStateLCD;
+					
+					clockCycles := clockCycles + 1;
 					
 				elsif initstate = INIT_STATE_CPU then
 					firstPC <= "00000000000000000000000000000000";

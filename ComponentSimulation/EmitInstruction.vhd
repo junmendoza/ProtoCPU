@@ -11,9 +11,6 @@ entity EmitInstruction is
 	Port( 
 			clock : in STD_LOGIC; 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0);
-			LCD_E   : out STD_LOGIC;
-			LCD_RS  : out STD_LOGIC;
-			LCD_RW  : out STD_LOGIC;
 			LCD_DB7 : out STD_LOGIC;
 			LCD_DB6 : out STD_LOGIC;
 			LCD_DB5 : out STD_LOGIC;
@@ -21,7 +18,10 @@ entity EmitInstruction is
 			LCD_DB3 : out STD_LOGIC;
 			LCD_DB2 : out STD_LOGIC;
 			LCD_DB1 : out STD_LOGIC;
-			LCD_DB0 : out STD_LOGIC
+			LCD_DB0 : out STD_LOGIC;
+			LCD_E   : out STD_LOGIC;
+			LCD_RS  : out STD_LOGIC;
+			LCD_RW  : out STD_LOGIC
 		 );
 end EmitInstruction;
 

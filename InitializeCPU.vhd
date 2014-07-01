@@ -100,6 +100,8 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_1 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
 							if clockCycles > 12 then
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_205000CLK;
@@ -112,6 +114,8 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_2 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
 							if clockCycles > 12 then
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_5000CLK;
@@ -124,6 +128,8 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_3 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
 							if clockCycles > 12 then
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_2000CLK_1;
@@ -136,6 +142,8 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_12CLK_4 then
+							LCDDataBus <= "00100000";
+							LCDControl <= "100";
 							if clockCycles > 12 then
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_2000CLK_2;

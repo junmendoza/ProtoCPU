@@ -168,7 +168,7 @@ begin
 		LCDDataBus(2) 	=> init_LCD_DB2, 
 		LCDDataBus(1) 	=> init_LCD_DB1, 
 		LCDDataBus(0) 	=> init_LCD_DB0, 
-		LCDControl(2)   => init_LCD_E,   
+		LCDControl(2)  => init_LCD_E,   
 		LCDControl(1)  => init_LCD_RS,  
 		LCDControl(0)  => init_LCD_RW 
 	);

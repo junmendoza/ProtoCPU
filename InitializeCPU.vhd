@@ -28,7 +28,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- any Xilinx primitives in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
-
+ 
 entity InitializeCPU is
 	Port( 
 			clock 		: in  STD_LOGIC; 
@@ -38,7 +38,7 @@ entity InitializeCPU is
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); -- DB7-DB0
 			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)	-- LCD_E, LCD_RS, LCD_RW
 		 );
-end InitializeCPU;
+end InitializeCPU; 
 
 architecture Behavioral of InitializeCPU is
 
@@ -76,7 +76,7 @@ signal initLCDConfig : LCD_CONFIG;
 
 begin
 
-	process(clock, reset)
+	process(clock)
 	
 	variable clockCycles : integer;
 	
@@ -160,6 +160,7 @@ begin
 					elsif initLCD = LCD_START_CONFIG then
 					
 						ConfigState : if initLCDConfig = LCD_CONFIG_START then
+							
 							initLCDConfig <= LCD_CONFIG_82000CLK;
 						elsif initLCDConfig = LCD_CONFIG_82000CLK then
 							initstate <= INIT_STATE_CPU;
@@ -168,7 +169,7 @@ begin
 					end if InitStateLCD;
 					
 					clockCycles := clockCycles + 1;
-					
+					   
 				elsif initstate = INIT_STATE_CPU then
 					firstPC <= "00000000000000000000000000000000";
 					initstate <= INIT_STATE_DONE;

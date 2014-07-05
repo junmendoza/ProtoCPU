@@ -284,15 +284,15 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="4"/>
     </file>
-    <file xil_pn:name="InitializeCPU.vhd" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="1"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="5"/>
-    </file>
     <file xil_pn:name="Testbench/Testbench_InitializeCPU.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="2"/>
       <association xil_pn:name="PostMapSimulation" xil_pn:seqID="108"/>
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="108"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="108"/>
+    </file>
+    <file xil_pn:name="InitializeCPU.vhd" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="111"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="111"/>
     </file>
   </files>
 

@@ -219,17 +219,17 @@ begin
 		clock => clock, 
 		reset	=> reset,
 		instruction => R2,
-		LCD_DB7 => write_LCD_DB7, 
-		LCD_DB6 => write_LCD_DB6, 
-		LCD_DB5 => write_LCD_DB5, 
-		LCD_DB4 => write_LCD_DB4, 	
-		LCD_DB3 => write_LCD_DB3, 
-		LCD_DB2 => write_LCD_DB2, 
-		LCD_DB1 => write_LCD_DB1, 
-		LCD_DB0 => write_LCD_DB0, 
-		LCD_E   => write_LCD_E,   
-		LCD_RS  => write_LCD_RS,  
-		LCD_RW  => write_LCD_RW
+		LCDDataBus(7) 	=> write_LCD_DB7, 
+		LCDDataBus(6) 	=> write_LCD_DB6, 
+		LCDDataBus(5) 	=> write_LCD_DB5, 
+		LCDDataBus(4) 	=> write_LCD_DB4, 
+		LCDDataBus(3) 	=> write_LCD_DB3, 
+		LCDDataBus(2) 	=> write_LCD_DB2, 
+		LCDDataBus(1) 	=> write_LCD_DB1, 
+		LCDDataBus(0) 	=> write_LCD_DB0, 
+		LCDControl(2)  => write_LCD_E,   
+		LCDControl(1)  => write_LCD_RS,  
+		LCDControl(0)  => write_LCD_RW 
 	);
 	
 --	EndProgramExecution : EndProgram port map 

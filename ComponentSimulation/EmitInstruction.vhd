@@ -25,7 +25,7 @@ architecture Behavioral of EmitInstruction is
 							 );
 							 
 	signal writeState : WRITE_STATE;
-	constant WRITE_CLKWAIT 	: integer := 2000;
+	constant WRITE_CLKWAIT : integer := 1;
 
 begin
 
@@ -60,7 +60,7 @@ begin
 				clockCycles := 0;
 			else
 				if writeState = WRITE_INIT then
-					LCDControl <= "00001000";
+					LCDDataBus <= "00001000";
 					if clockCycles > WRITE_CLKWAIT then
 						clockCycles := 0;
 						writeState <= WRITE_DATA;

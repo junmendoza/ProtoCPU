@@ -97,18 +97,10 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component EmitInstruction is
 		Port( 
 				clock : in STD_LOGIC; 
+				reset	: in STD_LOGIC; 
 				instruction : in STD_LOGIC_VECTOR(31 downto 0);
-				LCD_DB7 : out STD_LOGIC;
-				LCD_DB6 : out STD_LOGIC;
-				LCD_DB5 : out STD_LOGIC;
-				LCD_DB4 : out STD_LOGIC;
-				LCD_DB3 : out STD_LOGIC;
-				LCD_DB2 : out STD_LOGIC;
-				LCD_DB1 : out STD_LOGIC;
-				LCD_DB0 : out STD_LOGIC;
-				LCD_E   : out STD_LOGIC;
-				LCD_RS  : out STD_LOGIC;
-				LCD_RW  : out STD_LOGIC
+				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
+				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
 			 );
 	end component EmitInstruction;
 	
@@ -225,6 +217,7 @@ begin
 	Emit : EmitInstruction port map
 	(
 		clock => clock, 
+		reset	=> reset,
 		instruction => R2,
 		LCD_DB7 => write_LCD_DB7, 
 		LCD_DB6 => write_LCD_DB6, 

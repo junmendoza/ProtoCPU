@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    16:29:36 07/06/2014 
+-- Create Date:    22:54:23 06/29/2014 
 -- Design Name: 
 -- Module Name:    InitializeCPU - Behavioral 
 -- Project Name: 
@@ -15,21 +15,21 @@
 -- Revision: 
 -- Revision 0.01 - File Created
 -- Additional Comments: 
---
+--   
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--use IEEE.NUMERIC_STD.ALL; 
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
 --library UNISIM;
---use UNISIM.VComponents.all;
-
-entity InitializeCPU is
+--use UNISIM.VComponents.all;   
+ 
+entity InitializeCPU is   
 	Port( 
 			clock 		: in  STD_LOGIC; 
 			reset 		: in  STD_LOGIC; 
@@ -38,12 +38,175 @@ entity InitializeCPU is
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); -- DB7-DB0
 			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)	-- LCD_E, LCD_RS, LCD_RW
 		 );
-end InitializeCPU;
+end InitializeCPU; 
 
 architecture Behavioral of InitializeCPU is
 
+type INIT_STATE is (	INIT_STATE_LCD, 
+							INIT_STATE_CPU, 
+							INIT_STATE_DONE
+						 );
+						 
+type LCD_START is (	LCD_START_POWERON, 
+							LCD_START_CONFIG
+						 );
+
+type LCD_POWERON is (
+							LCD_POWERON_750000CLK,
+							LCD_POWERON_12CLK_1, 
+							LCD_POWERON_205000CLK, 
+							LCD_POWERON_12CLK_2, 
+							LCD_POWERON_5000CLK,
+							LCD_POWERON_12CLK_3,
+							LCD_POWERON_2000CLK_1,
+							LCD_POWERON_12CLK_4,
+							LCD_POWERON_2000CLK_2
+							);
+							
+type LCD_CONFIG is (
+							LCD_CONFIG_FUNCTION_SET,
+							LCD_CONFIG_ENTRYMODE_SET,
+							LCD_CONFIG_DISPLAY_ONOFF,
+							LCD_CONFIG_CLEAR_DISPLAY,
+							LCD_CONFIG_82000CLK
+						 );
+							
+							
+signal initstate : INIT_STATE;
+signal initLCD : LCD_START;
+signal initLCDPowerOn : LCD_POWERON;
+signal initLCDConfig : LCD_CONFIG;
+
 begin
-   
+
+	process(clock)
+	
+	variable clockCycles : integer;
+	
+	begin
+		ClockSync : if rising_edge(clock) then
+			ResetState : if reset = '1' then
+				initstate 		<= INIT_STATE_LCD;
+				initLCD 			<= LCD_START_POWERON;
+				initLCDPowerOn <= LCD_POWERON_750000CLK;
+				initLCDConfig 	<= LCD_CONFIG_FUNCTION_SET;
+				clockCycles 	:= 0;
+			else
+				InitStateStart: if initstate = INIT_STATE_LCD then
+				
+					InitStateLCD : if initLCD = LCD_START_POWERON then
+					
+						PowerOnState : if initLCDPowerOn = LCD_POWERON_750000CLK then
+							if clockCycles > 750000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_1;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_12CLK_1 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_205000CLK;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_205000CLK then
+							if clockCycles > 205000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_2;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_12CLK_2 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_5000CLK;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_5000CLK then
+							if clockCycles > 5000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_3;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_12CLK_3 then
+							LCDDataBus <= "00110000";
+							LCDControl <= "100";
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_2000CLK_1;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_2000CLK_1 then
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_12CLK_4;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_12CLK_4 then
+							LCDDataBus <= "00100000";
+							LCDControl <= "100";
+							if clockCycles > 12 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_2000CLK_2;
+							end if;
+							
+						elsif initLCDPowerOn = LCD_POWERON_2000CLK_2 then
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDPowerOn <= LCD_POWERON_750000CLK;
+								initLCD <= LCD_START_CONFIG;
+								initLCDConfig <= LCD_CONFIG_FUNCTION_SET;
+							end if;
+						end if PowerOnState;
+						
+					elsif initLCD = LCD_START_CONFIG then
+					
+						ConfigState : if initLCDConfig = LCD_CONFIG_FUNCTION_SET then
+							-- 0x28
+							LCDDataBus <= "00101000";
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDConfig <= LCD_CONFIG_ENTRYMODE_SET;
+							end if;
+							
+						elsif initLCDConfig = LCD_CONFIG_ENTRYMODE_SET then
+							-- 0x06
+							LCDDataBus <= "00000110";
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDConfig <= LCD_CONFIG_DISPLAY_ONOFF;
+							end if;
+							
+						
+						elsif initLCDConfig = LCD_CONFIG_DISPLAY_ONOFF then
+							-- 0x0C
+							LCDDataBus <= "00001100";
+							if clockCycles > 2000 then
+								clockCycles := 0;
+								initLCDConfig <= LCD_CONFIG_CLEAR_DISPLAY;
+							end if;	
+							
+						elsif initLCDConfig = LCD_CONFIG_CLEAR_DISPLAY then
+							LCDDataBus <= "00000001";
+							if clockCycles > 82000 then
+								clockCycles := 0;
+								initstate <= INIT_STATE_CPU;
+							end if;
+						end if ConfigState; 
+					end if InitStateLCD;
+					
+					clockCycles := clockCycles + 1;
+					   
+				elsif initstate = INIT_STATE_CPU then
+					firstPC <= "00000000000000000000000000000000";
+					initstate <= INIT_STATE_DONE;
+				end if InitStateStart;
+			end if ResetState; 
+		end if ClockSync;
+	end process;
+	
 
 end Behavioral;
 

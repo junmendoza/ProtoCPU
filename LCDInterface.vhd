@@ -31,59 +31,33 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity LCDInterface is
 	Port( 
-			sel : in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+			sel 					: in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+		
+			init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+			init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
 			
-				init_LCD_DB7 : in STD_LOGIC;
-				init_LCD_DB6 : in STD_LOGIC;
-				init_LCD_DB5 : in STD_LOGIC;
-				init_LCD_DB4 : in STD_LOGIC;
-				init_LCD_DB3 : in STD_LOGIC;
-				init_LCD_DB2 : in STD_LOGIC;
-				init_LCD_DB1 : in STD_LOGIC;
-				init_LCD_DB0 : in STD_LOGIC;
-				init_LCD_E   : in STD_LOGIC;
-				init_LCD_RS  : in STD_LOGIC;
-				init_LCD_RW  : in STD_LOGIC;
-				
-				write_LCD_DB7 : in STD_LOGIC;
-				write_LCD_DB6 : in STD_LOGIC;
-				write_LCD_DB5 : in STD_LOGIC;
-				write_LCD_DB4 : in STD_LOGIC;
-				write_LCD_DB3 : in STD_LOGIC;
-				write_LCD_DB2 : in STD_LOGIC;
-				write_LCD_DB1 : in STD_LOGIC;
-				write_LCD_DB0 : in STD_LOGIC;
-				write_LCD_E   : in STD_LOGIC;
-				write_LCD_RS  : in STD_LOGIC;
-				write_LCD_RW  : in STD_LOGIC;
-				
-				LCD_DB7 : out STD_LOGIC;
-				LCD_DB6 : out STD_LOGIC;
-				LCD_DB5 : out STD_LOGIC;
-				LCD_DB4 : out STD_LOGIC;
-				LCD_DB3 : out STD_LOGIC;
-				LCD_DB2 : out STD_LOGIC;
-				LCD_DB1 : out STD_LOGIC;
-				LCD_DB0 : out STD_LOGIC;
-				LCD_E   : out STD_LOGIC;
-				LCD_RS  : out STD_LOGIC;
-				LCD_RW  : out STD_LOGIC
+			write_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+			write_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
+			
+			LCDDataBus			: out STD_LOGIC_VECTOR(7 downto 0); 
+			LCDControl			: out STD_LOGIC_VECTOR(2 downto 0)
 		 );
 end LCDInterface;
 
 architecture Behavioral of LCDInterface is
 
 begin
-	LCD_E 	<= init_LCD_E		when sel='0' else write_LCD_E;
-	LCD_RS 	<= init_LCD_RS  	when sel='0' else write_LCD_RS;  
-	LCD_RW	<= init_LCD_RW 	when sel='0' else write_LCD_RW; 
-	LCD_DB7 	<= init_LCD_DB7 	when sel='0' else write_LCD_DB7; 
-	LCD_DB6 	<= init_LCD_DB6 	when sel='0' else write_LCD_DB6; 
-	LCD_DB5  <= init_LCD_DB5 	when sel='0' else write_LCD_DB5;
-	LCD_DB4 	<= init_LCD_DB4 	when sel='0' else write_LCD_DB4; 
-	LCD_DB3  <= init_LCD_DB3 	when sel='0' else write_LCD_DB3;
-	LCD_DB2  <= init_LCD_DB2 	when sel='0' else write_LCD_DB2;
-	LCD_DB1  <= init_LCD_DB1 	when sel='0' else write_LCD_DB1;
-	LCD_DB0 	<= init_LCD_DB0 	when sel='0' else write_LCD_DB0; 
+
+	ProcMux : process (sel, init_LCDDataBus, init_LCDControl, write_LCDDataBus, write_LCDControl)
+	begin
+		if sel = '0' then
+			LCDDataBus <= init_LCDDataBus;
+			LCDControl <= init_LCDControl;
+		elsif sel = '1' then
+			LCDDataBus <= write_LCDDataBus;
+			LCDControl <= write_LCDControl;
+		end if;
+	end process ProcMux;
+	
 end Behavioral;
 

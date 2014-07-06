@@ -45,43 +45,16 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	
 	component LCDInterface is
 		Port( 
-				sel : in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+				sel 					: in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+			
+				init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+				init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
 				
-				init_LCD_DB7 : in STD_LOGIC;
-				init_LCD_DB6 : in STD_LOGIC;
-				init_LCD_DB5 : in STD_LOGIC;
-				init_LCD_DB4 : in STD_LOGIC;
-				init_LCD_DB3 : in STD_LOGIC;
-				init_LCD_DB2 : in STD_LOGIC;
-				init_LCD_DB1 : in STD_LOGIC;
-				init_LCD_DB0 : in STD_LOGIC;
-				init_LCD_E   : in STD_LOGIC;
-				init_LCD_RS  : in STD_LOGIC;
-				init_LCD_RW  : in STD_LOGIC;
+				write_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+				write_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
 				
-				write_LCD_DB7 : in STD_LOGIC;
-				write_LCD_DB6 : in STD_LOGIC;
-				write_LCD_DB5 : in STD_LOGIC;
-				write_LCD_DB4 : in STD_LOGIC;
-				write_LCD_DB3 : in STD_LOGIC;
-				write_LCD_DB2 : in STD_LOGIC;
-				write_LCD_DB1 : in STD_LOGIC;
-				write_LCD_DB0 : in STD_LOGIC;
-				write_LCD_E   : in STD_LOGIC;
-				write_LCD_RS  : in STD_LOGIC;
-				write_LCD_RW  : in STD_LOGIC;
-				
-				LCD_DB7 : out STD_LOGIC;
-				LCD_DB6 : out STD_LOGIC;
-				LCD_DB5 : out STD_LOGIC;
-				LCD_DB4 : out STD_LOGIC;
-				LCD_DB3 : out STD_LOGIC;
-				LCD_DB2 : out STD_LOGIC;
-				LCD_DB1 : out STD_LOGIC;
-				LCD_DB0 : out STD_LOGIC;
-				LCD_E   : out STD_LOGIC;
-				LCD_RS  : out STD_LOGIC;
-				LCD_RW  : out STD_LOGIC
+				LCDDataBus			: out STD_LOGIC_VECTOR(7 downto 0); 
+				LCDControl			: out STD_LOGIC_VECTOR(2 downto 0)
 			 );
 	end component LCDInterface;
 
@@ -169,41 +142,41 @@ begin
 	(
 		sel => cpu_init,
 		
-		init_LCD_DB7 	=> init_LCD_DB7, 
-		init_LCD_DB6 	=> init_LCD_DB6, 
-		init_LCD_DB5 	=> init_LCD_DB5, 
-		init_LCD_DB4 	=> init_LCD_DB4, 
-		init_LCD_DB3 	=> init_LCD_DB3, 
-		init_LCD_DB2 	=> init_LCD_DB2, 
-		init_LCD_DB1 	=> init_LCD_DB1, 
-		init_LCD_DB0 	=> init_LCD_DB0, 
-		init_LCD_E   	=> init_LCD_E,   
-		init_LCD_RS  	=> init_LCD_RS,  
-		init_LCD_RW  	=> init_LCD_RW, 
+		init_LCDDataBus(7)	=> init_LCD_DB7, 
+		init_LCDDataBus(6)	=> init_LCD_DB6, 
+		init_LCDDataBus(5)	=> init_LCD_DB5, 
+		init_LCDDataBus(4)	=> init_LCD_DB4, 
+		init_LCDDataBus(3)	=> init_LCD_DB3, 
+		init_LCDDataBus(2)	=> init_LCD_DB2, 
+		init_LCDDataBus(1)	=> init_LCD_DB1, 
+		init_LCDDataBus(0)	=> init_LCD_DB0, 
+		init_LCDControl(2)	=> init_LCD_E,   
+		init_LCDControl(1)	=> init_LCD_RS,  
+		init_LCDControl(0)	=> init_LCD_RW, 
 		
-		write_LCD_DB7 	=> write_LCD_DB7, 
-		write_LCD_DB6 	=> write_LCD_DB6, 
-		write_LCD_DB5 	=> write_LCD_DB5, 
-		write_LCD_DB4 	=> write_LCD_DB4, 
-		write_LCD_DB3 	=> write_LCD_DB3, 
-		write_LCD_DB2 	=> write_LCD_DB2, 
-		write_LCD_DB1 	=> write_LCD_DB1, 
-		write_LCD_DB0 	=> write_LCD_DB0,
-		write_LCD_E   	=> write_LCD_E,   
-		write_LCD_RS  	=> write_LCD_RS,  
-		write_LCD_RW  	=> write_LCD_RW, 
+		write_LCDDataBus(7)	=> write_LCD_DB7, 
+		write_LCDDataBus(6)	=> write_LCD_DB6, 
+		write_LCDDataBus(5)	=> write_LCD_DB5, 
+		write_LCDDataBus(4)	=> write_LCD_DB4, 
+		write_LCDDataBus(3)	=> write_LCD_DB3, 
+		write_LCDDataBus(2)	=> write_LCD_DB2, 
+		write_LCDDataBus(1)	=> write_LCD_DB1, 
+		write_LCDDataBus(0)	=> write_LCD_DB0,
+		write_LCDControl(2)	=> write_LCD_E,   
+		write_LCDControl(1)	=> write_LCD_RS,  
+		write_LCDControl(0)	=> write_LCD_RW, 
 		
-		LCD_DB7 	=> LCD_DB7, 
-		LCD_DB6 	=> LCD_DB6, 
-		LCD_DB5 	=> LCD_DB5, 
-		LCD_DB4 	=> LCD_DB4, 
-		LCD_DB3 	=> LCD_DB3, 
-		LCD_DB2 	=> LCD_DB2, 
-		LCD_DB1 	=> LCD_DB1, 
-		LCD_DB0 	=> LCD_DB0,
-		LCD_E   	=> LCD_E,   
-		LCD_RS  	=> LCD_RS,  
-		LCD_RW  	=> LCD_RW
+		LCDDataBus(7) => LCD_DB7, 
+		LCDDataBus(6) => LCD_DB6, 
+		LCDDataBus(5) => LCD_DB5, 
+		LCDDataBus(4) => LCD_DB4, 
+		LCDDataBus(3) => LCD_DB3, 
+		LCDDataBus(2) => LCD_DB2, 
+		LCDDataBus(1) => LCD_DB1, 
+		LCDDataBus(0) => LCD_DB0,
+		LCDControl(2) => LCD_E,   
+		LCDControl(1) => LCD_RS,  
+		LCDControl(0) => LCD_RW
 	);
 	
 	FetchInstruction : Fetch port map

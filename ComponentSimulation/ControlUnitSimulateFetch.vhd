@@ -37,9 +37,9 @@ architecture Behavioral of ControlUnitSimulateFetch is
 				clock 		: in  STD_LOGIC;
 				reset 		: in  STD_LOGIC; 
 				cpu_init		: out STD_LOGIC;
-				firstPC 		: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
-				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); -- DB7-DB0
-				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)	-- LCD_E, LCD_RS, LCD_RW
+				firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
+				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
+				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
 			 );
 	end component InitializeCPU;
 	

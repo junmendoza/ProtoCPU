@@ -26,7 +26,7 @@ architecture Behavioral of EmitInstruction is
 							 
 	signal writeState : WRITE_STATE;
 	
-	constant WRITE_CLKWAIT : integer := 2000;
+	constant WRITE_CLKWAIT : integer := 1;
 
 begin
 

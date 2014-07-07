@@ -34,9 +34,9 @@ entity InitializeCPU is
 			clock 		: in  STD_LOGIC; 
 			reset 		: in  STD_LOGIC; 
 			cpu_init		: out STD_LOGIC;
-			firstPC 		: out STD_LOGIC_VECTOR(31 downto 0); -- firstPC signals the first isntruction needs to be fetched
-			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); -- DB7-DB0
-			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)	-- LCD_E, LCD_RS, LCD_RW
+			firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
+			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
+			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
 		 );
 end InitializeCPU; 
 
@@ -72,20 +72,38 @@ type LCD_CONFIG is (
 						 );
 						 
 						 
-constant POWERON_CLKWAIT_1 : integer := 750000;
-constant POWERON_CLKWAIT_2 : integer := 12;
-constant POWERON_CLKWAIT_3 : integer := 205000;
-constant POWERON_CLKWAIT_4 : integer := 12;
-constant POWERON_CLKWAIT_5 : integer := 5000;
-constant POWERON_CLKWAIT_6 : integer := 12;
-constant POWERON_CLKWAIT_7 : integer := 2000;
-constant POWERON_CLKWAIT_8 : integer := 12;
-constant POWERON_CLKWAIT_9 : integer := 2000;
+--constant POWERON_CLKWAIT_1 : integer := 750000;
+--constant POWERON_CLKWAIT_2 : integer := 12;
+--constant POWERON_CLKWAIT_3 : integer := 205000;
+--constant POWERON_CLKWAIT_4 : integer := 12;
+--constant POWERON_CLKWAIT_5 : integer := 5000;
+--constant POWERON_CLKWAIT_6 : integer := 12;
+--constant POWERON_CLKWAIT_7 : integer := 2000;
+--constant POWERON_CLKWAIT_8 : integer := 12;
+--constant POWERON_CLKWAIT_9 : integer := 2000;
 
-constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
-constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
-constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
-constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
+--
+--constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
+--constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
+--constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
+--constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
+
+
+constant POWERON_CLKWAIT_1 : integer := 1;
+constant POWERON_CLKWAIT_2 : integer := 1;
+constant POWERON_CLKWAIT_3 : integer := 1;
+constant POWERON_CLKWAIT_4 : integer := 1;
+constant POWERON_CLKWAIT_5 : integer := 1;
+constant POWERON_CLKWAIT_6 : integer := 1;
+constant POWERON_CLKWAIT_7 : integer := 1;
+constant POWERON_CLKWAIT_8 : integer := 1;
+constant POWERON_CLKWAIT_9 : integer := 1;
+
+
+constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 1;
+constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 1;
+constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 1;
+constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 1;
 							
 							
 signal initstate : INIT_STATE;

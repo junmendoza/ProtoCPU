@@ -60,10 +60,9 @@ ARCHITECTURE behavior OF Testbench_InitializeCPU IS
    signal firstPC : std_logic_vector(31 downto 0);
    signal LCDDataBus : std_logic_vector(7 downto 0);
    signal LCDControl : std_logic_vector(2 downto 0);
-
-   -- Clock period definitions
-   constant clock_period : time := 10 ns;
  
+	constant clkCycles : integer := 100;
+	
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
@@ -91,152 +90,14 @@ BEGIN
 		reset <= '0';
 		wait for 10 ns;
 
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
-		
-		-- cycle
-		clock <= '1';
-		wait for 10 ns;
-		clock <= '0';
-		wait for 10 ns;
 
+		for i in 1 to clkCycles loop
+			clock <= not clock;
+			wait for 5 ns;
+			clock <= not clock;
+			wait for 5 ns;
+		end loop;
+	
       wait;
    end process;
 

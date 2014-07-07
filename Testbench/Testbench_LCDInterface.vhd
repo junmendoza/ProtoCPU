@@ -41,7 +41,7 @@ ARCHITECTURE behavior OF Testbench_LCDInterface IS
  
     COMPONENT LCDInterface
     PORT(
-         sel : IN  std_logic;
+			sel : IN  std_logic;
          init_LCDDataBus : IN  std_logic_vector(7 downto 0);
          init_LCDControl : IN  std_logic_vector(2 downto 0);
          write_LCDDataBus : IN  std_logic_vector(7 downto 0);

@@ -27,6 +27,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity GetNextPC is
 	Port( 
 			clock : in STD_LOGIC; 
+			reset : in  STD_LOGIC; 
 			sel_getnextpc : in STD_LOGIC;
 			pc : in STD_LOGIC_VECTOR(31 downto 0);
 			nextpc : out STD_LOGIC_VECTOR(31 downto 0)
@@ -37,7 +38,7 @@ architecture Behavioral of GetNextPC is
 	
 begin
 
-	ProcGetNextPC : process(clock, sel_getnextpc, pc)
+	ProcGetNextPC : process(reset, sel_getnextpc, pc)
 	
 	variable pc_instr_address : integer;
 	
@@ -45,19 +46,22 @@ begin
 	
 		ClockSync : if rising_edge(clock) then
 			
-			ifComputeNextPC : if sel_getnextpc = '1' then
-			
-				-- compute the next pc by offsetting the current pc
-				pc_instr_address := to_integer(unsigned(pc));
-				pc_instr_address := pc_instr_address + 1;
-				nextpc <= std_logic_vector(to_signed(pc_instr_address, 32));
-				
+			ResetState : if reset = '1' then
+				-- Reset component
 			else
-			
-				nextpc <= pc;
+				ifComputeNextPC : if sel_getnextpc = '1' then
 				
-			end if ifComputeNextPC;
+					-- compute the next pc by offsetting the current pc
+					pc_instr_address := to_integer(unsigned(pc));
+					pc_instr_address := pc_instr_address + 1;
+					nextpc <= std_logic_vector(to_signed(pc_instr_address, 32));
+					
+				else
 			
+					nextpc <= pc;
+				
+				end if ifComputeNextPC;
+			end if ResetState;
 		end if ClockSync;
 		
 	end process ProcGetNextPC;

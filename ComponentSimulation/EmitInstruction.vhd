@@ -30,7 +30,8 @@ architecture Behavioral of EmitInstruction is
 
 begin
 
-	EmitData : process(clock, instruction)
+	-- trigger this component only ony resetting and emitting an instruction
+	EmitData : process(reset, instruction)
 	
 	variable clockCycles : integer;
 		

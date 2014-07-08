@@ -28,12 +28,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- any Xilinx primitives in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;   
+
+use work.cpu_types.ALL;
  
 entity InitializeCPU is   
 	Port( 
 			clock 		: in  STD_LOGIC; 
 			reset 		: in  STD_LOGIC; 
-			cpu_init		: out STD_LOGIC;
+			lcd_state	: out STD_LOGIC;
 			firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
 			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
@@ -128,6 +130,8 @@ begin
 			else
 				InitStateStart: if initstate = INIT_STATE_LCD then
 				
+					lcd_state <= '0';
+					
 					InitStateLCD : if initLCD = LCD_START_POWERON then
 					
 						PowerOnState : if initLCDPowerOn = LCD_POWERON_1 then
@@ -236,6 +240,10 @@ begin
 				elsif initstate = INIT_STATE_CPU then
 					firstPC <= "00000000000000000000000000000000";
 					initstate <= INIT_STATE_DONE;
+					
+					lcd_state <= '1';
+					
+					
 				end if InitStateStart;
 			end if ResetState; 
 		end if ClockSync;

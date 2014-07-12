@@ -25,6 +25,7 @@ use work.cpu_types.all;
 
 entity MemRegion_Program is
 	Port( 
+			enable : in STD_LOGIC;
 			offset : in STD_LOGIC_VECTOR(31 downto 0);
 			mem_word : out STD_LOGIC_VECTOR(31 downto 0)
 		  );
@@ -110,9 +111,10 @@ begin
 	variable offset_addr : integer;
 	
 	begin
+		if enable = '1' then
 			offset_addr := to_integer(unsigned(offset));
 			mem_word  <= MemoryRegion(offset_addr);
-			
+		end if;
 	end process ProcMemAccess;
 
 end Behavioral;

@@ -34,7 +34,7 @@ use work.cpu_types.ALL;
 entity Fetch is
 	Port( 
 			clock : in STD_LOGIC; 
-			reset : in STD_LOGIC;
+			enable : in STD_LOGIC;
 			sel_getnextpc : in STD_LOGIC;
 			pc : in STD_LOGIC_VECTOR(31 downto 0);
 			instr : out STD_LOGIC_VECTOR(31 downto 0)
@@ -46,7 +46,7 @@ architecture Behavioral of Fetch is
 	component GetNextPC is
 	Port( 
 			clock : in STD_LOGIC; 
-			reset : in STD_LOGIC;
+			enable : in STD_LOGIC;
 			sel_getnextpc : in STD_LOGIC;
 			pc : in STD_LOGIC_VECTOR(31 downto 0);
 			nextpc : out STD_LOGIC_VECTOR(31 downto 0)
@@ -55,6 +55,7 @@ architecture Behavioral of Fetch is
 	
 	component MemRegion_Program is
 		Port( 
+				enable : in STD_LOGIC;
 				offset : in STD_LOGIC_VECTOR(31 downto 0);
 				mem_word : out STD_LOGIC_VECTOR(31 downto 0)
 			  );
@@ -68,7 +69,7 @@ begin
 	GetNext : GetNextPC port map
 	(
 		clock 			=> clock,
-		reset 			=> reset,
+		enable 			=> enable,
 		sel_getnextpc 	=> sel_getnextpc,
 		pc 				=> pc,
 		nextpc 			=> nextpc
@@ -76,6 +77,7 @@ begin
 
 	InstructionMemory : MemRegion_Program port map
 	(
+		enable => enable,
 		offset => nextpc,
 		mem_word => instr
 	);

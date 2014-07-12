@@ -12,7 +12,6 @@ use work.cpu_types.ALL;
 entity ControlUnitSimulateFetch is
     Port( 
 			 clock   : in STD_LOGIC;
-			 reset   : in STD_LOGIC;
 			 result  : out STD_LOGIC;
 			 LCD_E   : out STD_LOGIC;
 			 LCD_RS  : out STD_LOGIC;
@@ -36,7 +35,8 @@ architecture Behavioral of ControlUnitSimulateFetch is
 		Port( 
 				clock 		: in  STD_LOGIC;
 				reset 		: in  STD_LOGIC; 
-				lcd_state		: out STD_LOGIC;
+				enable_lcd	: out STD_LOGIC; 
+				lcd_state	: out STD_LOGIC;
 				firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
 				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
 				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
@@ -46,6 +46,7 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component LCDInterface is
 		Port( 
 				sel 					: in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+				enable_lcd 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD 	
 			
 				init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
 				init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
@@ -61,7 +62,7 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component Fetch is 
 		Port( 
 				clock : in STD_LOGIC; 
-				reset : in STD_LOGIC; 
+				enable : in STD_LOGIC; 
 				sel_getnextpc : in STD_LOGIC;
 				pc : in STD_LOGIC_VECTOR(31 downto 0);
 				instr : out STD_LOGIC_VECTOR(31 downto 0)
@@ -71,7 +72,7 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	component EmitInstruction is
 		Port( 
 				clock : in STD_LOGIC; 
-				reset	: in STD_LOGIC; 
+				enable : in STD_LOGIC; 
 				instruction : in STD_LOGIC_VECTOR(31 downto 0);
 				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
 				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
@@ -85,7 +86,13 @@ architecture Behavioral of ControlUnitSimulateFetch is
 --	end component EndProgram;
 
 
-	signal lcd_state		: STD_LOGIC;   
+	signal lcd_state		: STD_LOGIC := '0';   
+	signal enable_lcd		: STD_LOGIC := '0';   
+	
+	-- Manually set the flag for retrieving the next PC. 
+	-- '0' - Use specified pc, '1' - increment current pc  
+	signal sel_getnextpc		: STD_LOGIC := '1';   
+	
 	
 	-- LCD signals local to the control unit
 	-- These are multiplxed to the LCD 
@@ -117,6 +124,7 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	 
 	signal R2 : STD_LOGIC_VECTOR(31 downto 0); 
 	signal nextPC : STD_LOGIC_VECTOR(31 downto 0); 
+	signal reset : STD_LOGIC := '1';
 	
 begin
 		
@@ -124,6 +132,7 @@ begin
 	(
 		clock		=> clock, 
 		reset		=> reset,
+		enable_lcd => enable_lcd,
 		lcd_state => lcd_state,
 		firstPC  => nextPC, 
 		LCDDataBus(7) 	=> init_LCD_DB7, 
@@ -142,6 +151,7 @@ begin
 	LCDControl : LCDInterface port map
 	(
 		sel => lcd_state,
+		enable_lcd => enable_lcd,
 		
 		init_LCDDataBus(7)	=> init_LCD_DB7, 
 		init_LCDDataBus(6)	=> init_LCD_DB6, 
@@ -183,8 +193,8 @@ begin
 	FetchInstruction : Fetch port map
 	(
 		clock => clock, 
-		reset	=> reset,
-		sel_getnextpc => '1',	-- in fetch op
+		enable => lcd_state,
+		sel_getnextpc => sel_getnextpc,	-- in fetch op
 		pc => nextPC, 				-- in current pc
 		instr => R2					-- out next instruction -> ID
 	);
@@ -192,7 +202,7 @@ begin
 	Emit : EmitInstruction port map
 	(
 		clock => clock, 
-		reset	=> reset,
+		enable => lcd_state,
 		instruction => R2,
 		LCDDataBus(7) 	=> write_LCD_DB7, 
 		LCDDataBus(6) 	=> write_LCD_DB6, 

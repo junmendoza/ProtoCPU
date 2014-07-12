@@ -32,6 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity LCDInterface is
 	Port( 
 			sel 					: in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
+			enable_lcd 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD 	
 		
 			init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
 			init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
@@ -48,14 +49,16 @@ architecture Behavioral of LCDInterface is
 
 begin
 
-	ProcMux : process (sel, init_LCDDataBus, init_LCDControl, write_LCDDataBus, write_LCDControl)
+	ProcMux : process (init_LCDDataBus, init_LCDControl, write_LCDDataBus, write_LCDControl)
 	begin
-		if sel = '0' then
-			LCDDataBus <= init_LCDDataBus;
-			LCDControl <= init_LCDControl;
-		elsif sel = '1' then
-			LCDDataBus <= write_LCDDataBus;
-			LCDControl <= write_LCDControl;
+		if enable_lcd = '1' then
+			if sel = '0' then
+				LCDDataBus <= init_LCDDataBus;
+				LCDControl <= init_LCDControl;
+			elsif sel = '1' then
+				LCDDataBus <= write_LCDDataBus;
+				LCDControl <= write_LCDControl;
+			end if;
 		end if;
 	end process ProcMux;
 	

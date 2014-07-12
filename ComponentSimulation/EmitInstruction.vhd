@@ -11,7 +11,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity EmitInstruction is
 	Port( 
 			clock 		: in STD_LOGIC; 
-			reset 		: in STD_LOGIC; 
+			enable 		: in STD_LOGIC; 
 			instruction : in STD_LOGIC_VECTOR(31 downto 0);
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
 			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
@@ -24,14 +24,19 @@ architecture Behavioral of EmitInstruction is
 								WRITE_DATA
 							 );
 							 
+	type EMIT_COMPONENT_STATE is( WRITE_IDLE, 
+									 WRITE_ENABLE
+								   );
+							 
 	signal writeState : WRITE_STATE;
+	signal emitState : EMIT_COMPONENT_STATE;
 	
 	constant WRITE_CLKWAIT : integer := 1;
 
 begin
 
 	-- trigger this component only ony resetting and emitting an instruction
-	EmitData : process(reset, instruction)
+	EmitData : process(clock, instruction)
 	
 	variable clockCycles : integer;
 		
@@ -57,7 +62,7 @@ begin
 --		1 		1 		Shift the entire display to the right. The cursor follows the display shift. The address counter is unchanged.
 		
 		
-			ResetState : if reset = '1' then
+			ResetState : if enable = '0' then
 				writeState	<= WRITE_INIT;
 				clockCycles := 0;
 			else

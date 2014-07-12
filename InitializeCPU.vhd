@@ -35,6 +35,7 @@ entity InitializeCPU is
 	Port( 
 			clock 		: in  STD_LOGIC; 
 			reset 		: in  STD_LOGIC; 
+			enable_lcd	: out STD_LOGIC; 
 			lcd_state	: out STD_LOGIC;
 			firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
@@ -74,38 +75,38 @@ type LCD_CONFIG is (
 						 );
 						 
 						 
-constant POWERON_CLKWAIT_1 : integer := 750000;
-constant POWERON_CLKWAIT_2 : integer := 12;
-constant POWERON_CLKWAIT_3 : integer := 205000;
-constant POWERON_CLKWAIT_4 : integer := 12;
-constant POWERON_CLKWAIT_5 : integer := 5000;
-constant POWERON_CLKWAIT_6 : integer := 12;
-constant POWERON_CLKWAIT_7 : integer := 2000;
-constant POWERON_CLKWAIT_8 : integer := 12;
-constant POWERON_CLKWAIT_9 : integer := 2000;
-
-
-constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
-constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
-constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
-constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
-
-
---constant POWERON_CLKWAIT_1 : integer := 1;
---constant POWERON_CLKWAIT_2 : integer := 1;
---constant POWERON_CLKWAIT_3 : integer := 1;
---constant POWERON_CLKWAIT_4 : integer := 1;
---constant POWERON_CLKWAIT_5 : integer := 1;
---constant POWERON_CLKWAIT_6 : integer := 1;
---constant POWERON_CLKWAIT_7 : integer := 1;
---constant POWERON_CLKWAIT_8 : integer := 1;
---constant POWERON_CLKWAIT_9 : integer := 1;
+--constant POWERON_CLKWAIT_1 : integer := 750000;
+--constant POWERON_CLKWAIT_2 : integer := 12;
+--constant POWERON_CLKWAIT_3 : integer := 205000;
+--constant POWERON_CLKWAIT_4 : integer := 12;
+--constant POWERON_CLKWAIT_5 : integer := 5000;
+--constant POWERON_CLKWAIT_6 : integer := 12;
+--constant POWERON_CLKWAIT_7 : integer := 2000;
+--constant POWERON_CLKWAIT_8 : integer := 12;
+--constant POWERON_CLKWAIT_9 : integer := 2000;
 --
 --
---constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 1;
---constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 1;
---constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 1;
---constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 1;
+--constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
+--constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
+--constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
+--constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
+
+
+constant POWERON_CLKWAIT_1 : integer := 2;
+constant POWERON_CLKWAIT_2 : integer := 2;
+constant POWERON_CLKWAIT_3 : integer := 2;
+constant POWERON_CLKWAIT_4 : integer := 2;
+constant POWERON_CLKWAIT_5 : integer := 2;
+constant POWERON_CLKWAIT_6 : integer := 2;
+constant POWERON_CLKWAIT_7 : integer := 2;
+constant POWERON_CLKWAIT_8 : integer := 2;
+constant POWERON_CLKWAIT_9 : integer := 2;
+
+
+constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2;
+constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2;
+constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2;
+constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 2;
 							
 							
 signal initstate : INIT_STATE;
@@ -113,19 +114,33 @@ signal initLCD : LCD_START;
 signal initLCDPowerOn : LCD_POWERON;
 signal initLCDConfig : LCD_CONFIG;
 
+
+signal start_init : STD_LOGIC := '1';
+
 begin
 
+--	process(clock)
+--	begin
+--		ClockSync : if rising_edge(clock) then
+--			ResetState : if start_init = '0' then
+--				start_init <= '1';
+--			end if ResetState;
+--		end if;
+--	end process;
+				
 	process(clock)
 	
-	variable clockCycles : integer;
+	variable clockCycles : integer := 0;
 	
 	begin
 		ClockSync : if rising_edge(clock) then
-			ResetState : if reset = '1' then
+			ResetState : if start_init = '1' then
 				initstate 		<= INIT_STATE_LCD;
 				initLCD 			<= LCD_START_POWERON;
 				initLCDPowerOn <= LCD_POWERON_1;
 				initLCDConfig 	<= LCD_CONFIG_FUNCTION_SET;
+				enable_lcd 		<= '1';
+				start_init		<= '0';
 				clockCycles 	:= 0;
 			else
 				InitStateStart: if initstate = INIT_STATE_LCD then
@@ -141,9 +156,10 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_2 then
-							LCDDataBus <= "00110000";	
-							LCDControl <= "100";			-- Set pulse high
-							if clockCycles > POWERON_CLKWAIT_2 then
+							if clockCycles < POWERON_CLKWAIT_2 then
+								LCDDataBus <= "00110000";	
+								LCDControl <= "100";			-- Set pulse high
+							else
 								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_3;
@@ -156,9 +172,10 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_4 then
-							LCDDataBus <= "00110000";
-							LCDControl <= "100";
-							if clockCycles > POWERON_CLKWAIT_4 then
+							if clockCycles < POWERON_CLKWAIT_4 then
+								LCDDataBus <= "00110000";
+								LCDControl <= "100";
+							else
 								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_5;
@@ -171,9 +188,10 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_6 then
-							LCDDataBus <= "00110000";
-							LCDControl <= "100";
-							if clockCycles > POWERON_CLKWAIT_6 then
+							if clockCycles < POWERON_CLKWAIT_6 then
+								LCDDataBus <= "00110000";
+								LCDControl <= "100";
+							else
 								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_7;
@@ -186,9 +204,10 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_8 then
-							LCDDataBus <= "00100000";
-							LCDControl <= "100";
-							if clockCycles > POWERON_CLKWAIT_8 then
+							if clockCycles < POWERON_CLKWAIT_8 then
+								LCDDataBus <= "00100000";
+								LCDControl <= "100";
+							else
 								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_9;
@@ -242,7 +261,7 @@ begin
 					clockCycles := clockCycles + 1;
 					   
 				elsif initstate = INIT_STATE_CPU then
-					firstPC <= "00000000000000000000000000000000";
+					firstPC <= "00000000000000000000000000000001";
 					initstate <= INIT_STATE_DONE;
 					
 					lcd_state <= '1';

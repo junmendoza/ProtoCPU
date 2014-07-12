@@ -74,38 +74,38 @@ type LCD_CONFIG is (
 						 );
 						 
 						 
---constant POWERON_CLKWAIT_1 : integer := 750000;
---constant POWERON_CLKWAIT_2 : integer := 12;
---constant POWERON_CLKWAIT_3 : integer := 205000;
---constant POWERON_CLKWAIT_4 : integer := 12;
---constant POWERON_CLKWAIT_5 : integer := 5000;
---constant POWERON_CLKWAIT_6 : integer := 12;
---constant POWERON_CLKWAIT_7 : integer := 2000;
---constant POWERON_CLKWAIT_8 : integer := 12;
---constant POWERON_CLKWAIT_9 : integer := 2000;
+constant POWERON_CLKWAIT_1 : integer := 750000;
+constant POWERON_CLKWAIT_2 : integer := 12;
+constant POWERON_CLKWAIT_3 : integer := 205000;
+constant POWERON_CLKWAIT_4 : integer := 12;
+constant POWERON_CLKWAIT_5 : integer := 5000;
+constant POWERON_CLKWAIT_6 : integer := 12;
+constant POWERON_CLKWAIT_7 : integer := 2000;
+constant POWERON_CLKWAIT_8 : integer := 12;
+constant POWERON_CLKWAIT_9 : integer := 2000;
 
+
+constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
+constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
+constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
+constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
+
+
+--constant POWERON_CLKWAIT_1 : integer := 1;
+--constant POWERON_CLKWAIT_2 : integer := 1;
+--constant POWERON_CLKWAIT_3 : integer := 1;
+--constant POWERON_CLKWAIT_4 : integer := 1;
+--constant POWERON_CLKWAIT_5 : integer := 1;
+--constant POWERON_CLKWAIT_6 : integer := 1;
+--constant POWERON_CLKWAIT_7 : integer := 1;
+--constant POWERON_CLKWAIT_8 : integer := 1;
+--constant POWERON_CLKWAIT_9 : integer := 1;
 --
---constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
---constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
---constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
---constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
-
-
-constant POWERON_CLKWAIT_1 : integer := 1;
-constant POWERON_CLKWAIT_2 : integer := 1;
-constant POWERON_CLKWAIT_3 : integer := 1;
-constant POWERON_CLKWAIT_4 : integer := 1;
-constant POWERON_CLKWAIT_5 : integer := 1;
-constant POWERON_CLKWAIT_6 : integer := 1;
-constant POWERON_CLKWAIT_7 : integer := 1;
-constant POWERON_CLKWAIT_8 : integer := 1;
-constant POWERON_CLKWAIT_9 : integer := 1;
-
-
-constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 1;
-constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 1;
-constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 1;
-constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 1;
+--
+--constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 1;
+--constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 1;
+--constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 1;
+--constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 1;
 							
 							
 signal initstate : INIT_STATE;
@@ -141,9 +141,10 @@ begin
 							end if;
 							
 						elsif initLCDPowerOn = LCD_POWERON_2 then
-							LCDDataBus <= "00110000";
-							LCDControl <= "100";
+							LCDDataBus <= "00110000";	
+							LCDControl <= "100";			-- Set pulse high
 							if clockCycles > POWERON_CLKWAIT_2 then
+								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_3;
 							end if;
@@ -158,6 +159,7 @@ begin
 							LCDDataBus <= "00110000";
 							LCDControl <= "100";
 							if clockCycles > POWERON_CLKWAIT_4 then
+								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_5;
 							end if;
@@ -172,6 +174,7 @@ begin
 							LCDDataBus <= "00110000";
 							LCDControl <= "100";
 							if clockCycles > POWERON_CLKWAIT_6 then
+								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_7;
 							end if;
@@ -186,6 +189,7 @@ begin
 							LCDDataBus <= "00100000";
 							LCDControl <= "100";
 							if clockCycles > POWERON_CLKWAIT_8 then
+								LCDControl <= "000"; 	-- Reset pulse low
 								clockCycles := 0;
 								initLCDPowerOn <= LCD_POWERON_9;
 							end if;
@@ -205,7 +209,7 @@ begin
 							-- 0x28
 							LCDDataBus <= "00101000";
 							if clockCycles > CONFIG_FUNCTIONSET_CLKWAIT then
-								clockCycles := 0;
+								clockCycles := 0; 
 								initLCDConfig <= LCD_CONFIG_ENTRYMODE_SET;
 							end if;
 							

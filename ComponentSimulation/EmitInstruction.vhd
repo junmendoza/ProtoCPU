@@ -10,11 +10,13 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity EmitInstruction is
 	Port( 
-			clock 		: in STD_LOGIC; 
-			enable 		: in STD_LOGIC; 
+			clock 		: in STD_LOGIC;
+			enable 		: in STD_LOGIC; 		-- 0 - initializing, 1 - ready for writing
 			instruction : in STD_LOGIC_VECTOR(31 downto 0);
+			emit	 		: in STD_LOGIC; 	-- 0 - idle, 1 - emits to lcd
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
-			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
+			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0);
+			emit_done 	: out STD_LOGIC
 		 );
 end EmitInstruction;
 
@@ -24,19 +26,13 @@ architecture Behavioral of EmitInstruction is
 								WRITE_DATA
 							 );
 							 
-	type EMIT_COMPONENT_STATE is( WRITE_IDLE, 
-									 WRITE_ENABLE
-								   );
-							 
 	signal writeState : WRITE_STATE;
-	signal emitState : EMIT_COMPONENT_STATE;
-	
 	constant WRITE_CLKWAIT : integer := 1;
 
 begin
 
 	-- trigger this component only ony resetting and emitting an instruction
-	EmitData : process(clock, instruction)
+	EmitData : process(clock)
 	
 	variable clockCycles : integer;
 		
@@ -54,34 +50,36 @@ begin
 		-- The stored bitmap in the CG ROM or CG RAM drives the 5 x 8 dot matrix torepresent the associated character.	
 		
 		
-		
---		DB3	DB2	Operation
---		0 		0 		Shift the cursor position to the left. The address counter is decremented by one.
---		0 		1 		Shift the cursor position to the right. The address counter is incremented by one.
---		1 		0 		Shift the entire display to the left. The cursor follows the display shift. The address counter is unchanged.
---		1 		1 		Shift the entire display to the right. The cursor follows the display shift. The address counter is unchanged.
+		--	DB3	DB2	Operation
+		--	0 		0 		Shift the cursor position to the left. The address counter is decremented by one.
+		--	0 		1 		Shift the cursor position to the right. The address counter is incremented by one.
+		--	1 		0 		Shift the entire display to the left. The cursor follows the display shift. The address counter is unchanged.
+		--	1 		1 		Shift the entire display to the right. The cursor follows the display shift. The address counter is unchanged.
 		
 		
 			ResetState : if enable = '0' then
 				writeState	<= WRITE_INIT;
 				clockCycles := 0;
 			else
-				if writeState = WRITE_INIT then
-					LCDDataBus <= "00001000";
-					if clockCycles > WRITE_CLKWAIT then
-						clockCycles := 0;
-						writeState <= WRITE_DATA;
-					end if;
+				IsEmitting : if emit = '1' then
+					if writeState = WRITE_INIT then
+						LCDDataBus <= "00001000";
+						if clockCycles > WRITE_CLKWAIT then
+							clockCycles := 0;
+							writeState <= WRITE_DATA;
+						end if;
+						
+					elsif writeState = WRITE_DATA then
+						if clockCycles > WRITE_CLKWAIT then
+							clockCycles := 0;
+							emit_done <= '1';
+							writeState <= WRITE_INIT;
+						end if;
+					end if; 
 					
-				elsif writeState = WRITE_DATA then
-					if clockCycles > WRITE_CLKWAIT then
-						clockCycles := 0;
-						writeState <= WRITE_INIT;
-					end if;
-				end if; 
-				
-				clockCycles := clockCycles + 1;
-			
+					clockCycles := clockCycles + 1;
+					
+				end if IsEmitting;
 			end if ResetState;
 		end if ClockSync;
 	end process EmitData;

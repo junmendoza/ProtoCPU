@@ -71,31 +71,13 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	
 	component EmitInstruction is
 		Port( 
-				clock 		: in STD_LOGIC; 
-				enable 		: in STD_LOGIC; 
+				clock 		: in STD_LOGIC;
+				enable 		: in STD_LOGIC; 		-- 0 - initializing, 1 - ready for writing
 				instruction : in STD_LOGIC_VECTOR(31 downto 0);
-				emit	 		: in STD_LOGIC; 	-- 0 - idle, 1 - emits to lcd
 				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
-				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0);
-				emit_done 	: out STD_LOGIC
+				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
 			 );
 	end component EmitInstruction;
-	
-	component TriggerLCDWrite is
-	Port( 
-			instruction : in STD_LOGIC_VECTOR(31 downto 0);
-			emit	 		: out STD_LOGIC; 	-- 0 - idle, 1 - emits to lcd
-			emit_done	: out STD_LOGIC 	
-		 );
-	end component TriggerLCDWrite;
-	
-	component ResetLCDWrite is
-	Port( 
-			emit_done 	: in STD_LOGIC;
-			emitReset	: out STD_LOGIC 	-- 0 - idle, 1 - emits to lcd
-		 );
-	end component ResetLCDWrite;
-
 
 	signal lcd_state		: STD_LOGIC := '0';   
 	signal enable_lcd		: STD_LOGIC := '0';   
@@ -212,18 +194,10 @@ begin
 		instr => R2					-- out next instruction -> ID
 	);
 	
---	TriggerWrite : TriggerLCDWrite port map
---	(
---		instruction => R2,
---		emit => emit,
---		emit_done => emit_done
---	);
-	
 	EmitInstr : EmitInstruction port map
 	(
 		clock => clock, 
 		enable => lcd_state, 	-- 0 - initializing, 1 - ready for writing
-		emit => emit,
 		instruction => R2,	
 		LCDDataBus(7) 	=> write_LCD_DB7, 
 		LCDDataBus(6) 	=> write_LCD_DB6, 
@@ -235,15 +209,8 @@ begin
 		LCDDataBus(0) 	=> write_LCD_DB0, 
 		LCDControl(2)  => write_LCD_E,   
 		LCDControl(1)  => write_LCD_RS,  
-		LCDControl(0)  => write_LCD_RW,
-		emit_done => emit_done
+		LCDControl(0)  => write_LCD_RW
 	);
-	
---	ResetLCD : ResetLCDWrite port map
---	(
---		emit_done => emit_done,
---		emitReset => emit
---	);
 	
 end architecture Behavioral;
 

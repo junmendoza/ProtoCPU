@@ -13,10 +13,8 @@ entity EmitInstruction is
 			clock 		: in STD_LOGIC;
 			enable 		: in STD_LOGIC; 		-- 0 - initializing, 1 - ready for writing
 			instruction : in STD_LOGIC_VECTOR(31 downto 0);
-			emit	 		: in STD_LOGIC; 	-- 0 - idle, 1 - emits to lcd
 			LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
-			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0);
-			emit_done 	: out STD_LOGIC
+			LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
 		 );
 end EmitInstruction;
 
@@ -26,10 +24,30 @@ architecture Behavioral of EmitInstruction is
 								WRITE_DATA
 							 );
 							 
+	type COMPONENT_STATE is( COMPONENT_IDLE, 
+									 COMPONENT_WRITE
+								  );
+								  
+							 
 	signal writeState : WRITE_STATE;
+	signal emitState	: COMPONENT_STATE := COMPONENT_IDLE; 
+	
+	-- TODO: perhaps this needs a different state as the intention of this signal is to flag that this component is done writing
+	signal emitRunState : COMPONENT_STATE := COMPONENT_IDLE; 	
 	constant WRITE_CLKWAIT : integer := 1;
 
 begin
+
+
+	process(instruction, emitRunState)
+	begin
+		if emitRunState = COMPONENT_IDLE then
+			emitState <= COMPONENT_WRITE;
+		elsif emitRunState = COMPONENT_WRITE then
+			emitState <= COMPONENT_IDLE;
+		end if;
+	end process;
+	
 
 	-- trigger this component only ony resetting and emitting an instruction
 	EmitData : process(clock)
@@ -61,7 +79,7 @@ begin
 				writeState	<= WRITE_INIT;
 				clockCycles := 0;
 			else
-				IsEmitting : if emit = '1' then
+				IsEmitting : if emitState = COMPONENT_WRITE then
 					if writeState = WRITE_INIT then
 						LCDDataBus <= "00001000";
 						if clockCycles > WRITE_CLKWAIT then
@@ -72,7 +90,7 @@ begin
 					elsif writeState = WRITE_DATA then
 						if clockCycles > WRITE_CLKWAIT then
 							clockCycles := 0;
-							emit_done <= '1';
+							emitRunState <= COMPONENT_WRITE;
 							writeState <= WRITE_INIT;
 						end if;
 					end if; 

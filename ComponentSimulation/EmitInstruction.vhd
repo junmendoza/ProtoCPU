@@ -34,7 +34,9 @@ architecture Behavioral of EmitInstruction is
 	
 	-- TODO: perhaps this needs a different state as the intention of this signal is to flag that this component is done writing
 	signal emitRunState : COMPONENT_STATE := COMPONENT_IDLE; 	
-	constant WRITE_CLKWAIT : integer := 1;
+	
+	-- constant WRITE_CLKWAIT : integer := 1;
+	constant WRITE_CLKWAIT : integer := 2000;
 
 begin
 

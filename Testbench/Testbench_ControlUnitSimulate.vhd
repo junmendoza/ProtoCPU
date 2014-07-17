@@ -76,7 +76,7 @@ ARCHITECTURE behavior OF Testbench_ControlUnitSimulate IS
    signal LCD_DB1 : std_logic;
    signal LCD_DB0 : std_logic;
  
-	constant clkCycles : integer := 100;
+	constant clkCycles : integer := 7000000;
 	
 BEGIN
  

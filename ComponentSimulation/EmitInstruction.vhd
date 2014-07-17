@@ -35,18 +35,20 @@ architecture Behavioral of EmitInstruction is
 	-- TODO: perhaps this needs a different state as the intention of this signal is to flag that this component is done writing
 	signal emitRunState : COMPONENT_STATE := COMPONENT_IDLE; 	
 	
-	-- constant WRITE_CLKWAIT : integer := 1;
-	constant WRITE_CLKWAIT : integer := 2000;
+	--constant WRITE_CLKWAIT : integer := 2000;
+	constant WRITE_CLKWAIT : integer := 4000;
 
 begin
 
 
 	process(instruction, emitRunState)
 	begin
-		if emitRunState = COMPONENT_IDLE then
-			emitState <= COMPONENT_WRITE;
-		elsif emitRunState = COMPONENT_WRITE then
-			emitState <= COMPONENT_IDLE;
+		if enable = '1' then
+			if emitRunState = COMPONENT_IDLE then
+				emitState <= COMPONENT_WRITE;
+			elsif emitRunState = COMPONENT_WRITE then
+				emitState <= COMPONENT_IDLE;
+			end if;
 		end if;
 	end process;
 	
@@ -90,6 +92,7 @@ begin
 						end if;
 						
 					elsif writeState = WRITE_DATA then
+						LCDDataBus <= "00010100";
 						if clockCycles > WRITE_CLKWAIT then
 							clockCycles := 0;
 							emitRunState <= COMPONENT_WRITE;

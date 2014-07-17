@@ -75,21 +75,38 @@ type LCD_CONFIG is (
 						 );
 						 
 						 
-constant POWERON_CLKWAIT_1 : integer := 750000;
-constant POWERON_CLKWAIT_2 : integer := 12;
-constant POWERON_CLKWAIT_3 : integer := 205000;
-constant POWERON_CLKWAIT_4 : integer := 12;
-constant POWERON_CLKWAIT_5 : integer := 5000;
-constant POWERON_CLKWAIT_6 : integer := 12;
-constant POWERON_CLKWAIT_7 : integer := 2000;
-constant POWERON_CLKWAIT_8 : integer := 12;
-constant POWERON_CLKWAIT_9 : integer := 2000;
+--constant POWERON_CLKWAIT_1 : integer := 750000;
+--constant POWERON_CLKWAIT_2 : integer := 12;
+--constant POWERON_CLKWAIT_3 : integer := 205000;
+--constant POWERON_CLKWAIT_4 : integer := 12;
+--constant POWERON_CLKWAIT_5 : integer := 5000;
+--constant POWERON_CLKWAIT_6 : integer := 12;
+--constant POWERON_CLKWAIT_7 : integer := 2000;
+--constant POWERON_CLKWAIT_8 : integer := 12;
+--constant POWERON_CLKWAIT_9 : integer := 2000;
+--
+--
+--constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
+--constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
+--constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
+--constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
 
 
-constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 2000;
-constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 2000;
-constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 2000;
-constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 82000;
+constant POWERON_CLKWAIT_1 : integer := 1000000;
+constant POWERON_CLKWAIT_2 : integer := 50;
+constant POWERON_CLKWAIT_3 : integer := 300000;
+constant POWERON_CLKWAIT_4 : integer := 50;
+constant POWERON_CLKWAIT_5 : integer := 10000;
+constant POWERON_CLKWAIT_6 : integer := 50;
+constant POWERON_CLKWAIT_7 : integer := 10000;
+constant POWERON_CLKWAIT_8 : integer := 50;
+constant POWERON_CLKWAIT_9 : integer := 10000;
+
+
+constant CONFIG_FUNCTIONSET_CLKWAIT 	: integer := 10000;
+constant CONFIG_ENTRYMODE_CLKWAIT 		: integer := 10000;
+constant CONFIG_DISPLAY_ONOFF_CLKWAIT 	: integer := 10000;
+constant CONFIG_CLEAR_DISPLAY_CLKWAIT 	: integer := 100000;
 
 
 --constant POWERON_CLKWAIT_1 : integer := 2;

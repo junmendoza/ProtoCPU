@@ -21,7 +21,10 @@ end EmitInstruction;
 architecture Behavioral of EmitInstruction is
 
 	type WRITE_STATE is(	WRITE_INIT, 
-								WRITE_DATA
+								 W1,
+								 W2,
+								 W3,
+								 W4
 							 );
 							 
 	type COMPONENT_STATE is( COMPONENT_IDLE, 
@@ -35,8 +38,8 @@ architecture Behavioral of EmitInstruction is
 	-- TODO: perhaps this needs a different state as the intention of this signal is to flag that this component is done writing
 	signal emitRunState : COMPONENT_STATE := COMPONENT_IDLE; 	
 	
-	--constant WRITE_CLKWAIT : integer := 2000;
-	constant WRITE_CLKWAIT : integer := 4000;
+	constant WRITE_CLKWAIT : integer := 2000;
+	--constant WRITE_CLKWAIT : integer := 3000;
 
 begin
 
@@ -85,19 +88,55 @@ begin
 			else
 				IsEmitting : if emitState = COMPONENT_WRITE then
 					if writeState = WRITE_INIT then
-						LCDDataBus <= "00001000";
+						LCDDataBus <= "00001100";
 						if clockCycles > WRITE_CLKWAIT then
 							clockCycles := 0;
-							writeState <= WRITE_DATA;
+							writeState <= W1;
 						end if;
 						
-					elsif writeState = WRITE_DATA then
-						LCDDataBus <= "00010100";
+						elsif writeState = W1 then
+						LCDDataBus <= "01000110";
+						LCDControl(1) <= '1';		
+						if clockCycles > WRITE_CLKWAIT then
+							clockCycles := 0;
+							writeState <= W2;
+						end if;
+						
+						elsif writeState = W2 then
+						LCDDataBus <= "01010000";
+						LCDControl(1) <= '1';		
+						if clockCycles > WRITE_CLKWAIT then
+							clockCycles := 0;
+							writeState <= W3;
+						end if;
+						
+						
+						elsif writeState = W3 then
+						LCDDataBus <= "01000111";
+						LCDControl(1) <= '1';		
+						if clockCycles > WRITE_CLKWAIT then
+							clockCycles := 0;
+							writeState <= W4;
+						end if;
+						
+						elsif writeState = W4 then
+						LCDDataBus <= "01000001";
+						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
 							clockCycles := 0;
 							emitRunState <= COMPONENT_WRITE;
 							writeState <= WRITE_INIT;
 						end if;
+--						
+--					elsif writeState = W1 then
+--						LCDDataBus <= "00010100";
+--						LCDControl <= "000";
+--						if clockCycles > WRITE_CLKWAIT then
+--							clockCycles := 0;
+--							emitRunState <= COMPONENT_WRITE;
+--							writeState <= WRITE_INIT;
+--						end if;
+--						
 					end if; 
 					
 					clockCycles := clockCycles + 1;

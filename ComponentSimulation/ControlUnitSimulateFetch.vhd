@@ -12,7 +12,6 @@ use work.cpu_types.ALL;
 entity ControlUnitSimulateFetch is
     Port( 
 			 clock   : in STD_LOGIC;
-			 result  : out STD_LOGIC;
 			 LCD_E   : out STD_LOGIC;
 			 LCD_RS  : out STD_LOGIC;
 			 LCD_RW  : out STD_LOGIC;

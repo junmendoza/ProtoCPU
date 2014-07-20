@@ -49,7 +49,7 @@ architecture Behavioral of LCDInterface is
 
 begin
 
-	ProcMux : process (init_LCDDataBus, init_LCDControl, write_LCDDataBus, write_LCDControl)
+	process (init_LCDDataBus, init_LCDControl, write_LCDDataBus, write_LCDControl)
 	begin
 		if enable_lcd = '1' then
 			if sel = '0' then
@@ -60,7 +60,43 @@ begin
 				LCDControl <= write_LCDControl;
 			end if;
 		end if;
-	end process ProcMux;
+	end process;
+
+--	process (init_LCDDataBus)
+--	begin
+--		if enable_lcd = '1' then
+--			if sel = '0' then
+--				LCDDataBus <= init_LCDDataBus;
+--			end if;
+--		end if;
+--	end process;
+--	
+--	process (init_LCDControl)
+--	begin
+--		if enable_lcd = '1' then
+--			if sel = '0' then
+--				LCDControl <= init_LCDControl;
+--			end if;
+--		end if;
+--	end process;
+--	
+--	process (write_LCDDataBus)
+--	begin
+--		if enable_lcd = '1' then
+--			if sel = '1' then
+--				LCDDataBus <= write_LCDDataBus;
+--			end if;
+--		end if;
+--	end process;
+--	
+--	process (write_LCDControl)
+--	begin
+--		if enable_lcd = '1' then
+--			if sel = '1' then
+--				LCDControl <= write_LCDControl;
+--			end if;
+--		end if;
+--	end process;
 	
 end Behavioral;
 

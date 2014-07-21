@@ -42,6 +42,7 @@ ARCHITECTURE behavior OF Testbench_ControlUnitSimulate IS
     COMPONENT ControlUnitSimulateFetch
     PORT(
          clock 	: IN std_logic;
+         reset 	: IN std_logic;
          LCD_E 	: OUT std_logic;
          LCD_RS 	: OUT std_logic;
          LCD_RW 	: OUT std_logic;
@@ -59,7 +60,7 @@ ARCHITECTURE behavior OF Testbench_ControlUnitSimulate IS
 
    --Inputs
    signal clock : std_logic := '0';
-   signal reset : std_logic;
+   signal reset : std_logic := '1';
 
  	--Outputs
    signal result : std_logic;
@@ -82,6 +83,7 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: ControlUnitSimulateFetch PORT MAP (
           clock => clock,
+          reset => reset,
           LCD_E => LCD_E,
           LCD_RS => LCD_RS,
           LCD_RW => LCD_RW,

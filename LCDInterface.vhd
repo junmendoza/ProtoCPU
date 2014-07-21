@@ -41,11 +41,14 @@ entity LCDInterface is
 			write_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
 			
 			LCDDataBus			: out STD_LOGIC_VECTOR(7 downto 0); 
-			LCDControl			: out STD_LOGIC_VECTOR(2 downto 0)
+			LCDControl			: out STD_LOGIC_VECTOR(2 downto 0);
+			LED : out STD_LOGIC_VECTOR(7 downto 0)
 		 );
 end LCDInterface;
 
 architecture Behavioral of LCDInterface is
+
+signal disp : STD_LOGIC := '0';
 
 begin
 
@@ -53,11 +56,13 @@ begin
 	begin
 		if enable_lcd = '1' then
 			if sel = '0' then
+				LED(4) <= '1';
 				LCDDataBus <= init_LCDDataBus;
 				LCDControl <= init_LCDControl;
 			elsif sel = '1' then
 				LCDDataBus <= write_LCDDataBus;
 				LCDControl <= write_LCDControl;
+				LED(5) <= '1';
 			end if;
 		end if;
 	end process;

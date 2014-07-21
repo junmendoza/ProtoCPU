@@ -38,8 +38,8 @@ architecture Behavioral of EmitInstruction is
 	-- TODO: perhaps this needs a different state as the intention of this signal is to flag that this component is done writing
 	signal emitRunState : COMPONENT_STATE := COMPONENT_IDLE; 	
 	
-	constant WRITE_CLKWAIT : integer := 2000;
-	--constant WRITE_CLKWAIT : integer := 3000;
+	--constant WRITE_CLKWAIT : integer := 2000;
+	constant WRITE_CLKWAIT : integer := 50000000;
 
 begin
 
@@ -90,6 +90,7 @@ begin
 					if writeState = WRITE_INIT then
 						LCDDataBus <= "00001100";
 						if clockCycles > WRITE_CLKWAIT then
+							--LED(6) <= '1';
 							clockCycles := 0;
 							writeState <= W1;
 						end if;
@@ -98,6 +99,7 @@ begin
 						LCDDataBus <= "01000110";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
+							--LED(6) <= '0';
 							clockCycles := 0;
 							writeState <= W2;
 						end if;
@@ -106,6 +108,7 @@ begin
 						LCDDataBus <= "01010000";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
+							--LED(6) <= '1';
 							clockCycles := 0;
 							writeState <= W3;
 						end if;
@@ -115,6 +118,7 @@ begin
 						LCDDataBus <= "01000111";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
+							--LED(6) <= '0';
 							clockCycles := 0;
 							writeState <= W4;
 						end if;
@@ -123,6 +127,7 @@ begin
 						LCDDataBus <= "01000001";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
+							--LED(6) <= '1';
 							clockCycles := 0;
 							emitRunState <= COMPONENT_WRITE;
 							writeState <= WRITE_INIT;

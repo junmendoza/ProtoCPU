@@ -132,8 +132,6 @@ signal initLCDPowerOn : LCD_POWERON;
 signal initLCDConfig : LCD_CONFIG;
 
 
-signal start_init : STD_LOGIC := '1';
-
 begin
 
 --	process(clock)
@@ -151,15 +149,14 @@ begin
 	
 	begin
 		ClockSync : if rising_edge(clock) then
-			ResetState : if start_init = '1' then
+			ResetState : if reset = '1' then
 				initstate 		<= INIT_STATE_LCD;
 				initLCD 			<= LCD_START_POWERON;
 				initLCDPowerOn <= LCD_POWERON_1;
 				initLCDConfig 	<= LCD_CONFIG_FUNCTION_SET;
 				enable_lcd 		<= '1';
-				start_init		<= '0';
 				clockCycles 	:= 0;
-			else
+			elsif reset = '0' then
 				InitStateStart: if initstate = INIT_STATE_LCD then
 				
 					lcd_state <= '0';

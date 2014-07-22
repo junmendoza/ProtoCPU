@@ -30,30 +30,28 @@ architecture Behavioral of ControlUnitSimulateFetch is
 				clock 		: in  STD_LOGIC;
 				reset 		: in  STD_LOGIC; 
 				enable_lcd	: out STD_LOGIC; 
-				lcd_state	: out STD_LOGIC;
-				firstPC 		: out STD_LOGIC_VECTOR(31 downto 0);
-				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0);
-				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
+				firstPC 		: out STD_LOGIC_VECTOR(31 downto 0)
 			 );
 	end component InitializeCPU;
 	
-	component LCDInterface is
-		Port( 
-				reset 				: in STD_LOGIC;	
-				sel 					: in STD_LOGIC;	-- 0 -> Initialize LCD, 1 -> Write LCD	
-				enable_lcd 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD 	
-			
-				init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
-				init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
-				
-				write_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
-				write_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
-				
-				LCDDataBus			: out STD_LOGIC_VECTOR(7 downto 0); 
-				LCDControl			: out STD_LOGIC_VECTOR(2 downto 0);
-				LED : out STD_LOGIC_VECTOR(7 downto 0)
-			 );
-	end component LCDInterface;
+--	component LCDInterface is
+--		Port( 
+--			clock 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD 	
+--			reset 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD
+--				sel 					: in STD_LOGIC_VECTOR(1 downto 0);	-- 0 -> Initialize LCD, 1 -> Write LCD	
+--				enable_lcd 			: in STD_LOGIC;	-- 0 -> Disable signals to LCD, 1 -> Enable signals to LCD 	
+--			
+--				init_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+--				init_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
+--				
+--				write_LCDDataBus	: in STD_LOGIC_VECTOR(7 downto 0); 
+--				write_LCDControl	: in STD_LOGIC_VECTOR(2 downto 0);
+--				
+--				LCDDataBus			: out STD_LOGIC_VECTOR(7 downto 0); 
+--				LCDControl			: out STD_LOGIC_VECTOR(2 downto 0);
+--				LED : out STD_LOGIC_VECTOR(7 downto 0)
+--			 );
+--	end component LCDInterface;
 
 	component Fetch is 
 		Port( 
@@ -65,17 +63,30 @@ architecture Behavioral of ControlUnitSimulateFetch is
 			 );
 	end component Fetch;
 	
-	component EmitInstruction is
+--	component EmitInstruction is
+--		Port( 
+--				clock 		: in STD_LOGIC;
+--				enable 		: in STD_LOGIC; 		-- 0 - initializing, 1 - ready for writing
+--				instruction : in STD_LOGIC_VECTOR(31 downto 0);
+--				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
+--				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
+--			 );
+--	end component EmitInstruction;
+
+	component EmitInstruction2 is
 		Port( 
 				clock 		: in STD_LOGIC;
-				enable 		: in STD_LOGIC; 		-- 0 - initializing, 1 - ready for writing
+				reset 		: in STD_LOGIC; 		
 				instruction : in STD_LOGIC_VECTOR(31 downto 0);
 				LCDDataBus	: out STD_LOGIC_VECTOR(7 downto 0); 
-				LCDControl	: out STD_LOGIC_VECTOR(2 downto 0)
+				LCD_E			: out STD_LOGIC;
+				LCD_RS		: out STD_LOGIC;
+				LCD_RW		: out STD_LOGIC
 			 );
-	end component EmitInstruction;
+	end component EmitInstruction2;
 
 	signal lcd_state		: STD_LOGIC := '0';   
+	signal lcd_opstate	: STD_LOGIC_VECTOR (1 downto 0) := "00";  
 	signal enable_lcd		: STD_LOGIC := '0';   
 	signal emit				: STD_LOGIC := '0';  
 	signal emit_done		: STD_LOGIC := '0';  
@@ -103,43 +114,56 @@ architecture Behavioral of ControlUnitSimulateFetch is
 	signal nextPC : STD_LOGIC_VECTOR(31 downto 0); 
 	
 begin
-		
+
+
 	InitCPU : InitializeCPU port map
 	(
 		clock		=> clock, 
 		reset		=> reset,
 		enable_lcd => enable_lcd,
-		lcd_state => lcd_state,
-		firstPC  => nextPC, 
-
-		LCDDataBus => init_LCD_DB,
-		LCDControl(2)  => init_LCD_E,   
-		LCDControl(1)  => init_LCD_RS,  
-		LCDControl(0)  => init_LCD_RW
+		firstPC  => nextPC
 	);
+		
+--	InitCPU : InitializeCPU port map
+--	(
+--		clock		=> clock, 
+--		reset		=> reset,
+--		enable_lcd => enable_lcd,
+--		lcd_state => lcd_state,
+--		firstPC  => nextPC, 
+--
+--		LCDDataBus => init_LCD_DB,
+--		
+--		opstate => lcd_opstate,
+--		
+--		LCDControl(2)  => init_LCD_E,   
+--		LCDControl(1)  => init_LCD_RS,  
+--		LCDControl(0)  => init_LCD_RW
+--	);
 	
-	LCDControl : LCDInterface port map
-	(	
-		reset 					=> reset,	
-		sel 						=> lcd_state,
-		enable_lcd 				=> enable_lcd,
-		
-		init_LCDDataBus 		=> init_LCD_DB,
-		init_LCDControl(2)	=> init_LCD_E,   
-		init_LCDControl(1)	=> init_LCD_RS,  
-		init_LCDControl(0)	=> init_LCD_RW, 
-		
-		write_LCDDataBus 		=> write_LCD_DB,
-		write_LCDControl(2)	=> write_LCD_E,   
-		write_LCDControl(1)	=> write_LCD_RS,  
-		write_LCDControl(0)	=> write_LCD_RW, 
-		
-		LCDDataBus 				=> LCD_DB, 
-		LCDControl(2) 			=> LCD_E,   
-		LCDControl(1) 			=> LCD_RS,  
-		LCDControl(0) 			=> LCD_RW,
-		LED  => LED		
-	);
+--	LCDControl : LCDInterface port map
+--	(	
+--		clock		=> clock, 
+--		reset		=> reset,
+--		sel 						=> lcd_opstate,
+--		enable_lcd 				=> enable_lcd,
+--		
+--		init_LCDDataBus 		=> init_LCD_DB,
+--		init_LCDControl(2)	=> init_LCD_E,   
+--		init_LCDControl(1)	=> init_LCD_RS,  
+--		init_LCDControl(0)	=> init_LCD_RW, 
+--		
+--		write_LCDDataBus 		=> write_LCD_DB,
+--		write_LCDControl(2)	=> write_LCD_E,   
+--		write_LCDControl(1)	=> write_LCD_RS,  
+--		write_LCDControl(0)	=> write_LCD_RW, 
+--		
+--		LCDDataBus 				=> LCD_DB, 
+--		LCDControl(2) 			=> LCD_E,   
+--		LCDControl(1) 			=> LCD_RS,  
+--		LCDControl(0) 			=> LCD_RW,
+--		LED  => LED		
+--	);
 	
 	FetchInstruction : Fetch port map
 	(
@@ -150,15 +174,26 @@ begin
 		instr => R2					-- out next instruction -> ID
 	);
 	
-	EmitInstr : EmitInstruction port map
+--	EmitInstr : EmitInstruction port map
+--	(
+--		clock => clock, 
+--		enable => lcd_state, 	-- 0 - initializing, 1 - ready for writing
+--		instruction => R2,	
+--		LCDDataBus 	=> write_LCD_DB, 
+--		LCDControl(2)  => write_LCD_E,   
+--		LCDControl(1)  => write_LCD_RS,  
+--		LCDControl(0)  => write_LCD_RW
+--	);
+	
+	EmitInstr : EmitInstruction2 port map
 	(
 		clock => clock, 
-		enable => lcd_state, 	-- 0 - initializing, 1 - ready for writing
+		reset => reset, 	
 		instruction => R2,	
-		LCDDataBus 	=> write_LCD_DB, 
-		LCDControl(2)  => write_LCD_E,   
-		LCDControl(1)  => write_LCD_RS,  
-		LCDControl(0)  => write_LCD_RW
+		LCDDataBus 	=> LCD_DB, 
+		LCD_E  => LCD_E,   
+		LCD_RS => LCD_RS,  
+		LCD_RW => LCD_RW
 	);
 	
 end architecture Behavioral;

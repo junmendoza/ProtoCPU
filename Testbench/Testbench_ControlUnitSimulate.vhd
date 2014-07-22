@@ -46,14 +46,7 @@ ARCHITECTURE behavior OF Testbench_ControlUnitSimulate IS
          LCD_E 	: OUT std_logic;
          LCD_RS 	: OUT std_logic;
          LCD_RW 	: OUT std_logic;
-         LCD_DB7 	: OUT std_logic;
-         LCD_DB6 	: OUT std_logic;
-         LCD_DB5 	: OUT std_logic;
-         LCD_DB4 	: OUT std_logic;
-         LCD_DB3 	: OUT std_logic;
-         LCD_DB2 	: OUT std_logic;
-         LCD_DB1 	: OUT std_logic;
-         LCD_DB0 	: OUT std_logic
+         LCD_DB 	: OUT std_logic_vector(7 downto 0)
         );
     END COMPONENT;
     
@@ -67,14 +60,7 @@ ARCHITECTURE behavior OF Testbench_ControlUnitSimulate IS
    signal LCD_E : std_logic;
    signal LCD_RS : std_logic;
    signal LCD_RW : std_logic;
-   signal LCD_DB7 : std_logic;
-   signal LCD_DB6 : std_logic;
-   signal LCD_DB5 : std_logic;
-   signal LCD_DB4 : std_logic;
-   signal LCD_DB3 : std_logic;
-   signal LCD_DB2 : std_logic;
-   signal LCD_DB1 : std_logic;
-   signal LCD_DB0 : std_logic;
+   signal LCD_DB : std_logic_vector(7 downto 0);
  
 	constant clkCycles : integer := 10000000;
 	
@@ -87,14 +73,7 @@ BEGIN
           LCD_E => LCD_E,
           LCD_RS => LCD_RS,
           LCD_RW => LCD_RW,
-          LCD_DB7 => LCD_DB7,
-          LCD_DB6 => LCD_DB6,
-          LCD_DB5 => LCD_DB5,
-          LCD_DB4 => LCD_DB4,
-          LCD_DB3 => LCD_DB3,
-          LCD_DB2 => LCD_DB2,
-          LCD_DB1 => LCD_DB1,
-          LCD_DB0 => LCD_DB0
+          LCD_DB => LCD_DB
         );
 
    -- Stimulus process

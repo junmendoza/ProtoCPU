@@ -90,7 +90,6 @@ begin
 					if writeState = WRITE_INIT then
 						LCDDataBus <= "00001100";
 						if clockCycles > WRITE_CLKWAIT then
-							--LED(6) <= '1';
 							clockCycles := 0;
 							writeState <= W1;
 						end if;
@@ -99,7 +98,6 @@ begin
 						LCDDataBus <= "01000110";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
-							--LED(6) <= '0';
 							clockCycles := 0;
 							writeState <= W2;
 						end if;
@@ -108,7 +106,6 @@ begin
 						LCDDataBus <= "01010000";
 						LCDControl(1) <= '1';		
 						if clockCycles > WRITE_CLKWAIT then
-							--LED(6) <= '1';
 							clockCycles := 0;
 							writeState <= W3;
 						end if;

@@ -97,7 +97,7 @@ type LCD_WRITE_STATE is (
 						 );
 
 
-signal lcdWriteflag 		: LCD_WRITE_FLAG;
+signal lcdWriteflag 		: LCD_WRITE_FLAG := LCD_WRITE_FLAG_OFF;
 signal lcdEnableState 	: LCD_STATE;
 signal lcdWriteState	 	: LCD_WRITE_STATE;
 signal initLCDPowerOn 	: LCD_POWERON;
@@ -105,7 +105,7 @@ signal initLCDPowerOn 	: LCD_POWERON;
 begin
 
 	-- Process to handle incoming data to emit
-	process(reset, instruction)
+	process(instruction)
 	begin
 		ResetState : if reset = '1' then
 			lcdWriteflag <= LCD_WRITE_FLAG_OFF;
@@ -113,6 +113,13 @@ begin
 			lcdWriteflag <= LCD_WRITE_FLAG_ON;
 		end if ResetState;
 	end process;
+
+--	process(reset, instruction)
+--	begin
+--		if reset = '0' then
+--			lcdWriteflag <= LCD_WRITE_FLAG_ON;
+--		end if;
+--	end process;
 	
 	
 	-- Process to handle LCD state

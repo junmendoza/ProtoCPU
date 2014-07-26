@@ -168,7 +168,7 @@ begin
 	FetchInstruction : Fetch port map
 	(
 		clock => clock, 
-		enable => lcd_state,
+		enable => enable_lcd,
 		sel_getnextpc => sel_getnextpc,	-- in fetch op
 		pc => nextPC, 				-- in current pc
 		instr => R2					-- out next instruction -> ID

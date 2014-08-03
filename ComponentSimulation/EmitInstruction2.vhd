@@ -198,85 +198,87 @@ LCD_E <= LCD_E_PowerOn when LCD_DISABLED, LCD_E_Write when others;
 			LCD_RS <= '0';		
 			LCD_E_Write <= '0';
 		elsif reset = '0' then
-			if transmitByteState = TRANSMIT_CMD_OFF then
-				if SendCMD = '1' then	
-					transmitByteState <= TRANSMIT_CMD_ON;
+			ClockSync : if rising_edge(clock) then
+				if transmitByteState = TRANSMIT_CMD_OFF then
+					if SendCMD = '1' then	
+						transmitByteState <= TRANSMIT_CMD_ON;
+					end if;
+				elsif transmitByteState = TRANSMIT_CMD_ON then
+					if transmit4BitState = LCD_TRANSMIT_4BIT_READY then
+						--if clockCycles > TRANSMIT_4BIT_HOLD then
+							transmit4BitState <= LCD_TRANSMIT_4BIT_UPPER;
+							clockCycles := 0;
+						--end if;
+					elsif transmit4BitState = LCD_TRANSMIT_4BIT_UPPER then
+						if transmitNibbleState = LCD_TRANSMIT_NIBBLE_SETUP then
+							if clockCycles < WRITE_SETUP_HOLD then
+								LCDBusWrite <= CmdByte(7 downto 4);
+								LCD_E_Write <= '0';
+							else
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_HOLD;
+								clockCycles := 0;
+							end if;
+						elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_HOLD then
+							if clockCycles < WRITE_HOLD then
+								LCDBusWrite <= CmdByte(7 downto 4);
+								LCD_E_Write <= '1';
+							else
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_NEXT;
+								clockCycles := 0;
+							end if;
+						elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_NEXT then
+							if clockCycles < WRITE_NEXT_HOLD then
+								LCD_E_Write <= '0';
+							else
+								transmit4BitState <= LCD_TRANSMIT_4BIT_LOWER;
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_SETUP;
+								clockCycles := 0;
+							end if;
+						end if;
+					elsif transmit4BitState = LCD_TRANSMIT_4BIT_LOWER then
+					
+						if transmitNibbleState = LCD_TRANSMIT_NIBBLE_SETUP then
+							if clockCycles < WRITE_SETUP_HOLD then
+								LCDBusWrite <= CmdByte(3 downto 0);
+								LCD_E_Write <= '0';
+							else
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_HOLD;
+								clockCycles := 0;
+							end if;
+						elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_HOLD then
+							if clockCycles < WRITE_HOLD then
+								LCDBusWrite <= CmdByte(3 downto 0);
+								LCD_E_Write <= '1';
+							else
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_NEXT;
+								clockCycles := 0;
+							end if;
+						elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_NEXT then
+							if clockCycles < WRITE_NEXT_HOLD then
+								LCD_E_Write <= '0';
+							else
+								transmit4BitState <= LCD_TRANSMIT_4BIT_DONE;
+								transmitNibbleState <= LCD_TRANSMIT_NIBBLE_SETUP;
+								clockCycles := 0;
+							end if;
+						end if;
+					elsif transmit4BitState = LCD_TRANSMIT_4BIT_DONE then
+						if clockCycles < TRANSMIT_4BIT_HOLD then
+							LCD_E_Write <= '0';
+						else
+							transmit4BitState <= LCD_TRANSMIT_4BIT_READY;
+							transmitByteState <= TRANSMIT_CMD_OFF;
+							clockCycles := 0;
+						end if;
+					end if;
+					clockCycles := clockCycles + 1;
 				end if;
-			elsif transmitByteState = TRANSMIT_CMD_ON then
-				if transmit4BitState = LCD_TRANSMIT_4BIT_READY then
-					--if clockCycles > TRANSMIT_4BIT_HOLD then
-						transmit4BitState <= LCD_TRANSMIT_4BIT_UPPER;
-						clockCycles := 0;
-					--end if;
-				elsif transmit4BitState = LCD_TRANSMIT_4BIT_UPPER then
-					if transmitNibbleState = LCD_TRANSMIT_NIBBLE_SETUP then
-						if clockCycles < WRITE_SETUP_HOLD then
-							LCDBusWrite <= CmdByte(7 downto 4);
-							LCD_E_Write <= '0';
-						else
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_HOLD;
-							clockCycles := 0;
-						end if;
-					elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_HOLD then
-						if clockCycles < WRITE_HOLD then
-							LCDBusWrite <= CmdByte(7 downto 4);
-							LCD_E_Write <= '1';
-						else
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_NEXT;
-							clockCycles := 0;
-						end if;
-					elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_NEXT then
-						if clockCycles < WRITE_NEXT_HOLD then
-							LCD_E_Write <= '0';
-						else
-							transmit4BitState <= LCD_TRANSMIT_4BIT_LOWER;
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_SETUP;
-							clockCycles := 0;
-						end if;
-					end if;
-				elsif transmit4BitState = LCD_TRANSMIT_4BIT_LOWER then
-				
-					if transmitNibbleState = LCD_TRANSMIT_NIBBLE_SETUP then
-						if clockCycles < WRITE_SETUP_HOLD then
-							LCDBusWrite <= CmdByte(3 downto 0);
-							LCD_E_Write <= '0';
-						else
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_HOLD;
-							clockCycles := 0;
-						end if;
-					elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_HOLD then
-						if clockCycles < WRITE_HOLD then
-							LCDBusWrite <= CmdByte(3 downto 0);
-							LCD_E_Write <= '1';
-						else
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_NEXT;
-							clockCycles := 0;
-						end if;
-					elsif transmitNibbleState = LCD_TRANSMIT_NIBBLE_NEXT then
-						if clockCycles < WRITE_NEXT_HOLD then
-							LCD_E_Write <= '0';
-						else
-							transmit4BitState <= LCD_TRANSMIT_4BIT_DONE;
-							transmitNibbleState <= LCD_TRANSMIT_NIBBLE_SETUP;
-							clockCycles := 0;
-						end if;
-					end if;
-				elsif transmit4BitState = LCD_TRANSMIT_4BIT_DONE then
-					if clockCycles < TRANSMIT_4BIT_HOLD then
-						LCD_E_Write <= '0';
-					else
-						transmit4BitState <= LCD_TRANSMIT_4BIT_READY;
-						transmitByteState <= TRANSMIT_CMD_OFF;
-						clockCycles := 0;
-					end if;
-				end if;
-				clockCycles := clockCycles + 1;
-			end if;
+			end if ClockSync;
 		end if ResetState;
 	end process;
 	
 	-- Process to handle LCD state
-	ProcLCDState : process(clock, reset, transmit4BitState)
+	ProcLCDState : process(clock, reset)
 	
 	variable clockCycles : integer;
 		
@@ -373,7 +375,7 @@ LCD_E <= LCD_E_PowerOn when LCD_DISABLED, LCD_E_Write when others;
 									-- Reset this command while the current one is being transmitted to the LCD
 									SendCMD <= '0';
 								end if;
-							elsif transmitByteState = TRANSMIT_CMD_OFF then
+							elsif transmitByteState = TRANSMIT_CMD_OFF and SendCMD = '0' then
 								IsTransmitReady : if transmit4BitState = LCD_TRANSMIT_4BIT_READY then
 									WriteState : if lcdWriteState = LCD_CONFIG_FUNCTION_SET then
 										CmdByte <= kSetupFunctionSet;

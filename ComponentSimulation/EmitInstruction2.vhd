@@ -1,5 +1,6 @@
 
 
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -165,14 +166,83 @@ signal LCD_E_PowerOn : STD_LOGIC;
 signal LCD_E_Write : STD_LOGIC;
 signal SendCMD : STD_LOGIC;
 
+signal MuxLCDData : STD_LOGIC := '0';
+signal MuxLCD_E : STD_LOGIC := '0';
+
 begin
 
 
-with lcdEnableState select
-LCDDataBus(7 downto 4) <= LCDBusPowerOn when LCD_DISABLED, LCDBusWrite when others; 
+--	with lcdEnableState select
+--	LCDDataBus(7 downto 4) <= 	LCDBusPowerOn when LCD_DISABLED, 
+--										LCDBusWrite when others; 
+							
+									
+	process(LCDBusPowerOn, LCDBusWrite)
+	begin
+		ResetState : if reset = '1' then
+			MuxLCDData <= '0';
+		elsif reset = '0' then
+			if MuxLCDData = '1' then
+				MuxLCDData <= '0';
+			else
+				MuxLCDData <= '1';
+			end if;
+		end if ResetState;
+	end process;							
+									
+	process(clock, reset)
+	begin
+		ResetState : if reset = '1' then
+		
+		elsif reset = '0' then
+			if rising_edge(clock) then
+				if MuxLCDData = '1' then 
+					if lcdEnableState = LCD_DISABLED then
+						LCDDataBus(7 downto 4) <= LCDBusPowerOn;
+					elsif lcdEnableState = LCD_ENABLED then
+						LCDDataBus(7 downto 4) <= LCDBusWrite;
+					end if;
+				end if;
+			end if;
+		end if ResetState;
+	end process;
+	
+--
+--	with lcdEnableState select
+--	LCD_E <= LCD_E_PowerOn when LCD_DISABLED, 
+--				LCD_E_Write when others; 
 
-with lcdEnableState select
-LCD_E <= LCD_E_PowerOn when LCD_DISABLED, LCD_E_Write when others; 
+					
+	process(LCD_E_PowerOn, LCD_E_Write)
+	begin
+		ResetState : if reset = '1' then
+			MuxLCD_E <= '0';
+		elsif reset = '0' then
+			if MuxLCD_E = '1' then
+				MuxLCD_E <= '0';
+			else
+				MuxLCD_E <= '1';
+			end if;
+		end if ResetState;
+	end process;							
+									
+	process(clock, reset)
+	begin
+		ResetState : if reset = '1' then
+		elsif reset = '0' then
+			if rising_edge(clock) then
+				if MuxLCDData = '1' then 
+					if lcdEnableState = LCD_DISABLED then
+						LCD_E <= LCD_E_PowerOn;
+					elsif lcdEnableState = LCD_ENABLED then
+						LCD_E <= LCD_E_Write;
+					end if;
+				end if;
+			end if;
+		end if ResetState;
+	end process;
+	
+--				
 
 	-- Process to handle incoming data to emit
 	process(instruction)
@@ -205,10 +275,8 @@ LCD_E <= LCD_E_PowerOn when LCD_DISABLED, LCD_E_Write when others;
 					end if;
 				elsif transmitByteState = TRANSMIT_CMD_ON then
 					if transmit4BitState = LCD_TRANSMIT_4BIT_READY then
-						--if clockCycles > TRANSMIT_4BIT_HOLD then
-							transmit4BitState <= LCD_TRANSMIT_4BIT_UPPER;
-							clockCycles := 0;
-						--end if;
+						transmit4BitState <= LCD_TRANSMIT_4BIT_UPPER;
+						clockCycles := 0;
 					elsif transmit4BitState = LCD_TRANSMIT_4BIT_UPPER then
 						if transmitNibbleState = LCD_TRANSMIT_NIBBLE_SETUP then
 							if clockCycles < WRITE_SETUP_HOLD then
